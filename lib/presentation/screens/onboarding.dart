@@ -145,7 +145,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   Positioned(
                     bottom: 10.h,
                     child: CircularButton(
-                        color: AppColours.dark_blue.withOpacity(0.6),
+                        color: AppColours.light_blue.withOpacity(0.6),
                         width: 30.w,
                         icon: Icons.arrow_right_alt_sharp,
                         condition:

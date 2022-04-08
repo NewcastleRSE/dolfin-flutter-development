@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/data/models/task_model.dart';
 
 class FireStoreCrud {
@@ -11,6 +12,11 @@ class FireStoreCrud {
     await taskcollection.add(task.tojson());
   }
 
+  Future<void> addChild({required ChildModel child}) async {
+    var childcollection = _firestore.collection('children');
+    await childcollection.add(child.tojson());
+  }
+
   Stream<List<TaskModel>> getTasks({required String mydate}) {
     return _firestore
         .collection('tasks')
@@ -18,6 +24,15 @@ class FireStoreCrud {
         .snapshots(includeMetadataChanges: true)
         .map((snapshor) => snapshor.docs
             .map((doc) => TaskModel.fromjson(doc.data(), doc.id))
+            .toList());
+  }
+
+  Stream<List<ChildModel>> getChildren() {
+    return _firestore
+        .collection('children')
+        .snapshots(includeMetadataChanges: true)
+        .map((snapshot) => snapshot.docs
+            .map((doc) => ChildModel.fromjson(doc.data(), doc.id))
             .toList());
   }
 
@@ -42,8 +57,25 @@ class FireStoreCrud {
     });
   }
 
+  Future<void> updateChild({
+    required String name,
+    dob,
+    docid,
+  }) async {
+    var taskcollection = _firestore.collection('children');
+    await taskcollection.doc(docid).update({
+      'name': name,
+      'dob': dob,
+    });
+  }
+
   Future<void> deleteTask({required String docid}) async {
     var taskcollection = _firestore.collection('tasks');
     await taskcollection.doc(docid).delete();
+  }
+
+  Future<void> deleteChild({required String docid}) async {
+    var childcollection = _firestore.collection('children');
+    await childcollection.doc(docid).delete();
   }
 }

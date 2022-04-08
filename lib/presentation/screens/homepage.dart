@@ -1,6 +1,8 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:dolfin_flutter/data/models/child_model.dart';
+import 'package:dolfin_flutter/presentation/widgets/child_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -165,13 +167,14 @@ class _HomePageState extends State<HomePage> {
                           )
                         ],
                       ),
+                      SizedBox(
+                        height: 3.h,
+                      ),
                       Expanded(
                           child: StreamBuilder(
-                        stream: FireStoreCrud().getTasks(
-                          mydate: DateFormat('yyyy-MM-dd').format(currentdate),
-                        ),
+                        stream: FireStoreCrud().getChildren(),
                         builder: (BuildContext context,
-                            AsyncSnapshot<List<TaskModel>> snapshot) {
+                            AsyncSnapshot<List<ChildModel>> snapshot) {
                           if (snapshot.hasError) {
                             return _nodatawidget();
                           }
@@ -185,20 +188,18 @@ class _HomePageState extends State<HomePage> {
                                   physics: const BouncingScrollPhysics(),
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
-                                    var task = snapshot.data![index];
-                                    Widget _taskcontainer = TaskContainer(
-                                      id: task.id,
-                                      color: colors[task.colorindex],
-                                      title: task.title,
-                                      starttime: task.starttime,
-                                      endtime: task.endtime,
-                                      note: task.note,
+                                    var child = snapshot.data![index];
+                                    Widget _taskcontainer = ChildContainer(
+                                      id: child.id,
+                                      studyID: child.studyID,
+                                      name: child.name,
+                                      dob: child.dob,
                                     );
                                     return InkWell(
                                         onTap: () {
                                           Navigator.pushNamed(
-                                              context, addtaskpage,
-                                              arguments: task);
+                                              context, addchildpage,
+                                              arguments: child);
                                         },
                                         child: index % 2 == 0
                                             ? BounceInLeft(

@@ -1,5 +1,5 @@
+import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:flutter/material.dart';
-import 'package:dolfin_flutter/data/models/task_model.dart';
 import 'package:dolfin_flutter/presentation/screens/addchild_page.dart';
 import 'package:dolfin_flutter/presentation/screens/login_page.dart';
 import 'package:dolfin_flutter/presentation/screens/homepage.dart';
@@ -35,10 +35,10 @@ class AppRoute {
         }
       case addchildpage:
         {
-          final task = settings.arguments as TaskModel?;
+          final child = settings.arguments as ChildModel?;
           return MaterialPageRoute(
               builder: (_) => AddChildPage(
-                    task: task,
+                    child: child,
                   ));
         }
       default:

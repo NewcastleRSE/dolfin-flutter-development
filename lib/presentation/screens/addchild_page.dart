@@ -1,9 +1,9 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
+import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
-import 'package:dolfin_flutter/data/models/task_model.dart';
 import 'package:dolfin_flutter/data/repositories/firestore_crud.dart';
 import 'package:dolfin_flutter/presentation/widgets/mybutton.dart';
 import 'package:dolfin_flutter/presentation/widgets/mytextfield.dart';
@@ -13,10 +13,10 @@ import 'package:dolfin_flutter/shared/styles/colours.dart';
 import '../../shared/services/notification_service.dart';
 
 class AddChildPage extends StatefulWidget {
-  final TaskModel? task;
+  final ChildModel? child;
 
   const AddChildPage({
-    this.task,
+    this.child,
     Key? key,
   }) : super(key: key);
 
@@ -25,27 +25,31 @@ class AddChildPage extends StatefulWidget {
 }
 
 class _AddChildPageState extends State<AddChildPage> {
-  get isEditMote => widget.task != null;
+  get isEditMote => widget.child != null;
 
-  late TextEditingController _titlecontroller;
-  late TextEditingController _notecontroller;
+  late TextEditingController _trialIDcontroller;
+  late TextEditingController _namecontroller;
+
+  late DateTime dateOfBirth;
 
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _titlecontroller =
-        TextEditingController(text: isEditMote ? widget.task!.title : '');
-    _notecontroller =
-        TextEditingController(text: isEditMote ? widget.task!.note : '');
+    _namecontroller =
+        TextEditingController(text: isEditMote ? widget.child!.name : '');
+    _trialIDcontroller =
+        TextEditingController(text: isEditMote ? widget.child!.studyID : '');
+    dateOfBirth =
+        isEditMote ? DateTime.parse(widget.child!.dob) : DateTime.now();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _titlecontroller.dispose();
-    _notecontroller.dispose();
+    _namecontroller.dispose();
+    _trialIDcontroller.dispose();
   }
 
   @override
@@ -77,7 +81,7 @@ class _AddChildPageState extends State<AddChildPage> {
             height: 3.h,
           ),
           Text(
-            'Title',
+            'Trial ID',
             style: Theme.of(context)
                 .textTheme
                 .headline1!
@@ -87,7 +91,31 @@ class _AddChildPageState extends State<AddChildPage> {
             height: 1.h,
           ),
           MyTextfield(
-            hint: "Name",
+            hint: "Trial ID",
+            icon: Icons.title,
+            showicon: false,
+            validator: (value) {
+              return value!.isEmpty
+                  ? "Please enter the your child's Trial ID"
+                  : null;
+            },
+            textEditingController: _trialIDcontroller,
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
+          Text(
+            'Name',
+            style: Theme.of(context)
+                .textTheme
+                .headline1!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 1.h,
+          ),
+          MyTextfield(
+            hint: "First Name",
             icon: Icons.title,
             showicon: false,
             validator: (value) {
@@ -95,13 +123,13 @@ class _AddChildPageState extends State<AddChildPage> {
                   ? "Please Enter Your Child's First Name"
                   : null;
             },
-            textEditingController: _titlecontroller,
+            textEditingController: _namecontroller,
           ),
           SizedBox(
             height: 2.h,
           ),
           Text(
-            'Date of Birth',
+            'Birth Date',
             style: Theme.of(context)
                 .textTheme
                 .headline1!
@@ -111,16 +139,18 @@ class _AddChildPageState extends State<AddChildPage> {
             height: 1.h,
           ),
           MyTextfield(
-            hint: "Date of Birth",
-            icon: Icons.ac_unit,
+            hint: DateFormat('dd/MM/yyyy').format(dateOfBirth),
+            icon: Icons.calendar_today,
+            readonly: true,
             showicon: false,
-            maxlenght: 40,
-            validator: (value) {
-              return value!.isEmpty
-                  ? "Please Enter Your Child's Date of Birth"
-                  : null;
+            validator: (value) {},
+            ontap: () {
+              _showdatepicker();
             },
-            textEditingController: _notecontroller,
+            textEditingController: TextEditingController(),
+          ),
+          SizedBox(
+            height: 2.h,
           ),
           SizedBox(
             height: 1.h,
@@ -131,7 +161,7 @@ class _AddChildPageState extends State<AddChildPage> {
               MyButton(
                 color: isEditMote ? AppColours.green : AppColours.dark_blue,
                 width: 40.w,
-                title: isEditMote ? "Update Child" : 'Add Child',
+                title: isEditMote ? "Update Details" : 'Add Child',
                 func: () {
                   _addChild();
                 },
@@ -143,7 +173,38 @@ class _AddChildPageState extends State<AddChildPage> {
     );
   }
 
-  _addChild() {}
+  _addChild() {
+    if (_formKey.currentState!.validate()) {
+      ChildModel child = ChildModel(
+        name: _namecontroller.text,
+        dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
+        studyID: _trialIDcontroller.text,
+        id: '',
+      );
+      isEditMote
+          ? FireStoreCrud().updateChild(
+              docid: widget.child!.id,
+              name: _namecontroller.text,
+              dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
+            )
+          : FireStoreCrud().addChild(child: child);
+
+      Navigator.pop(context);
+    }
+  }
+
+  _showdatepicker() async {
+    var selecteddate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2022),
+      lastDate: DateTime.now(),
+      currentDate: DateTime.now(),
+    );
+    setState(() {
+      selecteddate != null ? dateOfBirth = selecteddate : null;
+    });
+  }
 
   Row _buildAppBar(BuildContext context) {
     return Row(

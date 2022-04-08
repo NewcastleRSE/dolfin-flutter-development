@@ -21,3 +21,8 @@ The application uses Flutter.
 * The instructions for installing Flutter on various platforms are [here](https://docs.flutter.dev/get-started/install).
 * Instructions for setting up VS Code are [here](https://docs.flutter.dev/development/tools/vs-code). 
 
+### Firebase
+
+To get the app to work correctly with Firebase:
+
+* **Android** - download google-services.json for the app on Firebase and copy it to the "android/app" folder.

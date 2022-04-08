@@ -26,3 +26,12 @@ The application uses Flutter.
 To get the app to work correctly with Firebase:
 
 * **Android** - download google-services.json for the app on Firebase and copy it to the "android/app" folder.
+
+## Roadmap
+
+- [ ] Initial Development  
+- [ ] Minimum viable product  
+- [ ] Feature-Complete
+
+## Acknowledgements
+This work was funded by a grant from the UK Research Councils, EPSRC grant ref. EP/L012345/1, “Example project title, please update”.

@@ -19,47 +19,27 @@ class ChildContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
-      key: Key(id),
-      onDismissed: (direction) {
-        FireStoreCrud().deleteChild(docid: id);
-      },
-      background: Container(
-        padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.red,
-        ),
-        child: const Icon(
-          Icons.delete,
-          color: Colors.white,
-          size: 40,
-        ),
-        alignment: Alignment.centerLeft,
+    return Container(
+      width: 100.w,
+      height: 10.h,
+      margin: EdgeInsets.symmetric(vertical: 1.h),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 28),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: AppColours.light_blue,
       ),
-      child: Container(
-        width: 100.w,
-        height: 10.h,
-        margin: EdgeInsets.symmetric(vertical: 1.h),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: AppColours.light_blue,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              name,
-              style: Theme.of(context).textTheme.headline1!.copyWith(
-                    color: Colors.white,
-                    fontSize: 15.sp,
-                  ),
-            ),
-          ],
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            name,
+            style: Theme.of(context).textTheme.headline1!.copyWith(
+                  color: Colors.white,
+                  fontSize: 15.sp,
+                ),
+          ),
+        ],
       ),
     );
   }

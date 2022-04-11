@@ -34,6 +34,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static var currentdate = DateTime.now();
+  static bool? notificationPrefs = true;
 
   final TextEditingController _usercontroller = TextEditingController(
       text: FirebaseAuth.instance.currentUser!.displayName);
@@ -245,8 +246,25 @@ class _HomePageState extends State<HomePage> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Text(
+                      'Settings',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline1!
+                          .copyWith(fontSize: 14.sp),
+                    ),
                     SizedBox(
                       height: 3.h,
+                    ),
+                    Text(
+                      'User Display Name',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline2!
+                          .copyWith(fontSize: 12.sp),
+                    ),
+                    SizedBox(
+                      height: 2.h,
                     ),
                     (user)
                         ? Container()
@@ -255,6 +273,32 @@ class _HomePageState extends State<HomePage> {
                             icon: Icons.person,
                             validator: (value) {},
                             textEditingController: _usercontroller),
+                    SizedBox(
+                      height: 3.h,
+                    ),
+                    Text(
+                      'Notification Preferences',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline2!
+                          .copyWith(fontSize: 12.sp),
+                    ),
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Text(
+                        'Daily Notifications Enabled: ',
+                        style: TextStyle(fontSize: 12.0),
+                      ),
+                      Checkbox(
+                        checkColor: AppColours.dark_blue,
+                        activeColor: AppColours.white,
+                        value: notificationPrefs,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            notificationPrefs = value;
+                          });
+                        },
+                      ),
+                    ]),
                     SizedBox(
                       height: 3.h,
                     ),
@@ -286,7 +330,7 @@ class _HomePageState extends State<HomePage> {
                             },
                           ),
                     SizedBox(
-                      height: 3.h,
+                      height: 1.h,
                     ),
                     MyButton(
                       color: Colors.red,
@@ -295,9 +339,6 @@ class _HomePageState extends State<HomePage> {
                       func: () {
                         authenticationCubit.signout();
                       },
-                    ),
-                    SizedBox(
-                      height: 3.h,
                     ),
                   ],
                 ),

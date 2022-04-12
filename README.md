@@ -19,13 +19,19 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin ante a
 The application uses Flutter.
 
 * The instructions for installing Flutter on various platforms are [here](https://docs.flutter.dev/get-started/install).
-* Instructions for setting up VS Code are [here](https://docs.flutter.dev/development/tools/vs-code). 
+* Instructions for configuring VS Code are [here](https://docs.flutter.dev/development/tools/vs-code). 
 
-### Firebase
+These include instructions for installing and configuring the Flutter SDK and Android Studio, including setting up a device emulator.
+
+### Firebase Setup
 
 To get the app to work correctly with Firebase:
 
 * **Android** - download google-services.json for the app on Firebase and copy it to the "android/app" folder.
+
+### Debugging the App (Android)
+
+Once Flutter, Android Studio and VS Code are installed and configured, you can run the app on the Android device emulator. The Android Emulator should appear in the list of avaiable devices in VS Code and, once selected, can be run with "Run -> Start Debugging" (or F5).
 
 ## Roadmap
 

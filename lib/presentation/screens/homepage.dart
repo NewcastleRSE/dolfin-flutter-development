@@ -199,7 +199,7 @@ class _HomePageState extends State<HomePage> {
                                     return InkWell(
                                         onTap: () {
                                           Navigator.pushNamed(
-                                              context, childinfopage,
+                                              context, addchildpage,
                                               arguments: child);
                                         },
                                         child: index % 2 == 0

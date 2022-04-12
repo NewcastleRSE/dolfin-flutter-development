@@ -20,6 +20,9 @@ import 'package:dolfin_flutter/shared/styles/themes.dart';
 
 import 'bloc/auth/authentication_cubit.dart';
 
+import 'package:flutter/widgets.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -39,14 +42,21 @@ Future<void> main() async {
       ),
     ],
   );
-
   final prefs = await SharedPreferences.getInstance();
   final bool? seen = prefs.getBool('seen');
-  runApp(
-    MyApp(
+
+  await SentryFlutter.init(
+    (options) {
+      options.dsn =
+          'https://e506dae22f9c478a93be1d6467770cd6@o1080315.ingest.sentry.io/6324285';
+      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+      // We recommend adjusting this value in production.
+      options.tracesSampleRate = 1.0;
+    },
+    appRunner: () => runApp(MyApp(
       seen: seen,
       approute: AppRoute(),
-    ),
+    )),
   );
 }
 

@@ -24,6 +24,12 @@ jobs:
         uses: subosito/flutter-action@v1
         with:
           channel: 'stable'
+      - name: Create Secrets
+        run: |
+          echo "$GOOGLE_SERVICES" >> android/app/google-services.json
+        shell: bash
+        env:
+          GOOGLE_SERVICES : ${{secrets.GOOGLE_SERVICES}}
       - name: Install pub Dependencies
         run: flutter pub get
       # - name: Run Tests

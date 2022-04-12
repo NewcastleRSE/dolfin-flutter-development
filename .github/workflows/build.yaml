@@ -50,7 +50,7 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: com.example.todo_app
-          releaseFiles: build/app/outputs/apk/release/app-armeabi-v7a-release.apk'
+          releaseFiles: ${{ github.workspace }}/build/app/outputs/apk/release/*.apk'
           track: internal
           whatsNewDirectory: distribution/whatsnew
           mappingFile: build/app/outputs/mapping/release/mapping.txt

@@ -8,6 +8,7 @@ name: Build and Release Apps
 jobs:
   build:
     name: Build Apps
+    runs-on: ubuntu-latest
     # runs-on: macos-latest
     steps:
       - name: Export Release Timestamp

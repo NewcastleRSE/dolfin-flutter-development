@@ -45,15 +45,6 @@ jobs:
       #     ln -s ../Runner.app
       #     cd ..
       #     zip -r app.ipa Payload
-      - name: Upload Android Release to Play Store
-        uses: r0adkll/upload-google-play@v1
-        with:
-          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-          packageName: com.example.todo_app
-          releaseFiles: ./build/app/outputs/apk/release/*.apk'
-          track: internal
-          whatsNewDirectory: distribution/whatsnew
-          mappingFile: ./build/app/outputs/mapping/release/mapping.txt
       - name: Release Apps
         uses: ncipollo/release-action@v1
         with:
@@ -62,3 +53,25 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: 'build/app/outputs/apk/release/*.apk'
           # artifacts: 'build/app/outputs/apk/release/*.apk,build/ios/iphoneos/app.ipa'
+  release:
+    name: Release Android
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Downloading build
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.APP_VERSION }}
+        run: |
+          ls 
+          echo ${{ github.workspace }}
+      - name: Upload Android Release to Play Store
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: com.example.todo_app
+          releaseFiles: '*.apk'
+          track: internal
+          # whatsNewDirectory: distribution/whatsnew
+          # mappingFile: ${{ github.workspace }}/build/app/outputs/mapping/release/mapping.txt
+

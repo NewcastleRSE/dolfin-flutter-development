@@ -1,4 +1,5 @@
 import 'package:dolfin_flutter/data/models/child_model.dart';
+import 'package:dolfin_flutter/presentation/screens/childinfo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dolfin_flutter/presentation/screens/addchild_page.dart';
 import 'package:dolfin_flutter/presentation/screens/login_page.dart';
@@ -32,6 +33,10 @@ class AppRoute {
       case homepage:
         {
           return MaterialPageRoute(builder: (_) => const HomePage());
+        }
+      case childinfopage:
+        {
+          return MaterialPageRoute(builder: (_) => const ChildInfoPage());
         }
       case addchildpage:
         {

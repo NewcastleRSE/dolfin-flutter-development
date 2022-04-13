@@ -1,0 +1,64 @@
+on:
+  push:
+    branches:
+      - main
+      - build-deploy
+
+name: Build and Release Apps
+jobs:
+  build:
+    name: Build Apps
+    runs-on: ubuntu-latest
+    # runs-on: macos-latest
+    steps:
+      - name: Export Release Timestamp
+        run: echo "APP_VERSION=v$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '15'
+          distribution: 'adopt'
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+      - name: Create Secrets
+        run: |
+          echo "$GOOGLE_SERVICES" >> android/app/google-services.json
+        shell: bash
+        env:
+          GOOGLE_SERVICES : ${{secrets.GOOGLE_SERVICES}}
+      - name: Install pub Dependencies
+        run: flutter pub get
+      # - name: Run Tests
+      #   run: flutter test
+      - name: Build Android App
+        run: flutter build apk --split-per-abi
+      # - name: Build iOS App
+      #   run: |
+      #     flutter build ios --no-codesign
+      #     cd build/ios/iphoneos
+      #     mkdir Payload
+      #     cd Payload
+      #     ln -s ../Runner.app
+      #     cd ..
+      #     zip -r app.ipa Payload
+      - name: Upload Android Release to Play Store
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: com.example.todo_app
+          releaseFiles: ./build/app/outputs/apk/release/*.apk'
+          track: internal
+          whatsNewDirectory: distribution/whatsnew
+          mappingFile: ./build/app/outputs/mapping/release/mapping.txt
+      - name: Release Apps
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ env.APP_VERSION }}
+          name: ${{ env.APP_VERSION }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: 'build/app/outputs/apk/release/*.apk'
+          # artifacts: 'build/app/outputs/apk/release/*.apk,build/ios/iphoneos/app.ipa'

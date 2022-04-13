@@ -25,14 +25,14 @@ import 'package:dolfin_flutter/shared/constants/strings.dart';
 import 'package:dolfin_flutter/shared/services/notification_service.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class ChildInfoPage extends StatefulWidget {
+  const ChildInfoPage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<ChildInfoPage> createState() => _ChildInfoPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ChildInfoPageState extends State<ChildInfoPage> {
   static var currentdate = DateTime.now();
   static bool? notificationPrefs = true;
 
@@ -115,6 +115,22 @@ class _HomePageState extends State<HomePage> {
                           ),
                           InkWell(
                             onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                homepage,
+                              );
+                            },
+                            child: Icon(
+                              Icons.home_rounded,
+                              size: 25.sp,
+                              color: AppColours.black,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 3.w,
+                          ),
+                          InkWell(
+                            onTap: () {
                               _showBottomSheet(context, authenticationCubit);
                             },
                             child: Icon(
@@ -156,9 +172,9 @@ class _HomePageState extends State<HomePage> {
                           ),
                           const Spacer(),
                           MyButton(
-                            color: AppColours.dark_blue,
+                            color: AppColours.green,
                             width: 40.w,
-                            title: '+ Add Child',
+                            title: 'Edit Child',
                             func: () {
                               Navigator.pushNamed(
                                 context,
@@ -199,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                                     return InkWell(
                                         onTap: () {
                                           Navigator.pushNamed(
-                                              context, childinfopage,
+                                              context, addchildpage,
                                               arguments: child);
                                         },
                                         child: index % 2 == 0

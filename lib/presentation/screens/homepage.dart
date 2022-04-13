@@ -173,7 +173,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Expanded(
                           child: StreamBuilder(
-                        stream: FireStoreCrud().getChildren(),
+                        stream: FireStoreCrud().getChildren(
+                            parentID: FirebaseAuth.instance.currentUser!.uid),
                         builder: (BuildContext context,
                             AsyncSnapshot<List<ChildModel>> snapshot) {
                           if (snapshot.hasError) {

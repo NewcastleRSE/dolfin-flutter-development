@@ -27,9 +27,10 @@ class FireStoreCrud {
             .toList());
   }
 
-  Stream<List<ChildModel>> getChildren() {
+  Stream<List<ChildModel>> getChildren({required String parentID}) {
     return _firestore
         .collection('children')
+        .where('parent_id', isEqualTo: parentID)
         .snapshots(includeMetadataChanges: true)
         .map((snapshot) => snapshot.docs
             .map((doc) => ChildModel.fromjson(doc.data(), doc.id))

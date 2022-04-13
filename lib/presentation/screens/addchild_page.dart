@@ -130,7 +130,7 @@ class _AddChildPageState extends State<AddChildPage> {
             height: 2.h,
           ),
           Text(
-            'Birth Date',
+            'Discharge Date',
             style: Theme.of(context)
                 .textTheme
                 .headline1!

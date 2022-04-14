@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Todo App',
+            title: 'DOLFIN App',
             themeMode: ThemeMode.light,
             theme: MyTheme.lightTheme,
             darkTheme: MyTheme.darkTheme,

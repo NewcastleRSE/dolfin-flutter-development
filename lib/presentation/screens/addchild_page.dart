@@ -1,6 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
@@ -25,7 +26,7 @@ class AddChildPage extends StatefulWidget {
 }
 
 class _AddChildPageState extends State<AddChildPage> {
-  get isEditMote => widget.child != null;
+  get isEditMode => widget.child != null;
 
   late TextEditingController _trialIDcontroller;
   late TextEditingController _namecontroller;
@@ -38,11 +39,11 @@ class _AddChildPageState extends State<AddChildPage> {
   void initState() {
     super.initState();
     _namecontroller =
-        TextEditingController(text: isEditMote ? widget.child!.name : '');
+        TextEditingController(text: isEditMode ? widget.child!.name : '');
     _trialIDcontroller =
-        TextEditingController(text: isEditMote ? widget.child!.studyID : '');
+        TextEditingController(text: isEditMode ? widget.child!.studyID : '');
     dateOfBirth =
-        isEditMote ? DateTime.parse(widget.child!.dob) : DateTime.now();
+        isEditMode ? DateTime.parse(widget.child!.dob) : DateTime.now();
   }
 
   @override
@@ -91,6 +92,7 @@ class _AddChildPageState extends State<AddChildPage> {
             height: 1.h,
           ),
           MyTextfield(
+            readonly: isEditMode ? true : false,
             hint: "Trial ID",
             icon: Icons.title,
             showicon: false,
@@ -129,7 +131,7 @@ class _AddChildPageState extends State<AddChildPage> {
             height: 2.h,
           ),
           Text(
-            'Birth Date',
+            'Discharge Date',
             style: Theme.of(context)
                 .textTheme
                 .headline1!
@@ -159,9 +161,9 @@ class _AddChildPageState extends State<AddChildPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               MyButton(
-                color: isEditMote ? AppColours.green : AppColours.dark_blue,
+                color: isEditMode ? AppColours.green : AppColours.dark_blue,
                 width: 40.w,
-                title: isEditMote ? "Update Details" : 'Add Child',
+                title: isEditMode ? "Update Details" : 'Add Child',
                 func: () {
                   _addChild();
                 },
@@ -179,9 +181,10 @@ class _AddChildPageState extends State<AddChildPage> {
         name: _namecontroller.text,
         dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
         studyID: _trialIDcontroller.text,
+        parentID: FirebaseAuth.instance.currentUser!.uid,
         id: '',
       );
-      isEditMote
+      isEditMode
           ? FireStoreCrud().updateChild(
               docid: widget.child!.id,
               name: _namecontroller.text,
@@ -220,7 +223,7 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
         ),
         Text(
-          isEditMote ? 'Edit Child' : 'Add a Child',
+          isEditMode ? 'Edit Child' : 'Add a Child',
           style: Theme.of(context).textTheme.headline1,
         ),
         const SizedBox()

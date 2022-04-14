@@ -5,3 +5,5 @@ const String signuppage = '/signup_page';
 const String homepage = '/homepage';
 //const String addtaskpage = '/addtask_page';
 const String addchildpage = '/addchild_page';
+const String childinfopage = '/childinfo_page';
+const String addrecordpage = '/addrecord_page';

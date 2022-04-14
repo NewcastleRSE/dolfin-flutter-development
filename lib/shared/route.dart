@@ -1,4 +1,7 @@
 import 'package:dolfin_flutter/data/models/child_model.dart';
+import 'package:dolfin_flutter/data/models/record_model.dart';
+import 'package:dolfin_flutter/presentation/screens/addrecord_page.dart';
+import 'package:dolfin_flutter/presentation/screens/childinfo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dolfin_flutter/presentation/screens/addchild_page.dart';
 import 'package:dolfin_flutter/presentation/screens/login_page.dart';
@@ -33,6 +36,14 @@ class AppRoute {
         {
           return MaterialPageRoute(builder: (_) => const HomePage());
         }
+      case childinfopage:
+        {
+          final child = settings.arguments as ChildModel?;
+          return MaterialPageRoute(
+              builder: (_) => ChildInfoPage(
+                    child: child,
+                  ));
+        }
       case addchildpage:
         {
           final child = settings.arguments as ChildModel?;
@@ -40,6 +51,22 @@ class AppRoute {
               builder: (_) => AddChildPage(
                     child: child,
                   ));
+        }
+      case addrecordpage:
+        {
+          final arg = settings.arguments;
+
+          if (arg is ChildModel?) {
+            return MaterialPageRoute(
+                builder: (_) => AddRecordPage(
+                      child: arg as ChildModel?,
+                    ));
+          } else {
+            return MaterialPageRoute(
+                builder: (_) => AddRecordPage(
+                      record: arg as RecordModel?,
+                    ));
+          }
         }
       default:
         throw 'No Page Found!!';

@@ -45,6 +45,13 @@ jobs:
       #     ln -s ../Runner.app
       #     cd ..
       #     zip -r app.ipa Payload
+      - name: Sign Release
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: build/app/outputs/bundle/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.KEY_STORE_ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
       - name: Release Apps
         uses: ncipollo/release-action@v1
         with:
@@ -53,13 +60,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: 'build/app/outputs/bundle/release/app-release.aab'
           # artifacts: 'build/app/outputs/apk/release/*.apk,build/ios/iphoneos/app.ipa'
-      - name: Sign Release
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: build/app/outputs/bundle/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.KEY_STORE_ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
       - name: Upload Android Release to Play Store
         uses: r0adkll/upload-google-play@v1.0.15
         with:

@@ -6,7 +6,7 @@ import 'package:dolfin_flutter/shared/styles/colours.dart';
 List<OnBoardingModel> onboardinglist = const [
   OnBoardingModel(
     img: MyAssets.onboradingone,
-    title: 'Get Reiminders',
+    title: 'Get Reminders',
     description:
         'Daily reminders to give your child supplements and submit their data.',
   ),

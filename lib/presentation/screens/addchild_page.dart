@@ -1,6 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
@@ -130,7 +131,7 @@ class _AddChildPageState extends State<AddChildPage> {
             height: 2.h,
           ),
           Text(
-            'Birth Date',
+            'Discharge Date',
             style: Theme.of(context)
                 .textTheme
                 .headline1!
@@ -180,6 +181,7 @@ class _AddChildPageState extends State<AddChildPage> {
         name: _namecontroller.text,
         dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
         studyID: _trialIDcontroller.text,
+        parentID: FirebaseAuth.instance.currentUser!.uid,
         id: '',
       );
       isEditMode

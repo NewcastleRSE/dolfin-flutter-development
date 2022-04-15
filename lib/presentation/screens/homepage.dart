@@ -1,26 +1,19 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/presentation/widgets/child_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:dolfin_flutter/bloc/auth/authentication_cubit.dart';
 import 'package:dolfin_flutter/bloc/connectivity/connectivity_cubit.dart';
-import 'package:dolfin_flutter/data/models/task_model.dart';
 import 'package:dolfin_flutter/data/repositories/firestore_crud.dart';
-import 'package:dolfin_flutter/presentation/screens/onboarding.dart';
 import 'package:dolfin_flutter/presentation/widgets/mybutton.dart';
 import 'package:dolfin_flutter/presentation/widgets/myindicator.dart';
 import 'package:dolfin_flutter/presentation/widgets/mysnackbar.dart';
 import 'package:dolfin_flutter/presentation/widgets/mytextfield.dart';
-import 'package:dolfin_flutter/presentation/widgets/task_container.dart';
 import 'package:dolfin_flutter/shared/constants/assets_path.dart';
-import 'package:dolfin_flutter/shared/constants/consts_variables.dart';
 import 'package:dolfin_flutter/shared/constants/strings.dart';
 import 'package:dolfin_flutter/shared/services/notification_service.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
@@ -173,7 +166,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Expanded(
                           child: StreamBuilder(
-                        stream: FireStoreCrud().getChildren(),
+                        stream: FireStoreCrud().getChildren(
+                            parentID: FirebaseAuth.instance.currentUser!.uid),
                         builder: (BuildContext context,
                             AsyncSnapshot<List<ChildModel>> snapshot) {
                           if (snapshot.hasError) {
@@ -190,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
                                     var child = snapshot.data![index];
-                                    Widget _taskcontainer = ChildContainer(
+                                    Widget _childcontainer = ChildContainer(
                                       id: child.id,
                                       studyID: child.studyID,
                                       name: child.name,
@@ -206,11 +200,11 @@ class _HomePageState extends State<HomePage> {
                                             ? BounceInLeft(
                                                 duration: const Duration(
                                                     milliseconds: 1000),
-                                                child: _taskcontainer)
+                                                child: _childcontainer)
                                             : BounceInRight(
                                                 duration: const Duration(
                                                     milliseconds: 1000),
-                                                child: _taskcontainer));
+                                                child: _childcontainer));
                                   },
                                 )
                               : _nodatawidget();
@@ -288,16 +282,7 @@ class _HomePageState extends State<HomePage> {
                         'Daily Notifications Enabled: ',
                         style: TextStyle(fontSize: 12.0),
                       ),
-                      Checkbox(
-                        checkColor: AppColours.dark_blue,
-                        activeColor: AppColours.white,
-                        value: notificationPrefs,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            notificationPrefs = value;
-                          });
-                        },
-                      ),
+                      MyStatefulWidget()
                     ]),
                     SizedBox(
                       height: 3.h,
@@ -371,6 +356,31 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class MyStatefulWidget extends StatefulWidget {
+  const MyStatefulWidget({Key? key}) : super(key: key);
+
+  @override
+  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+}
+
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  bool? isChecked = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Checkbox(
+      checkColor: AppColours.dark_blue,
+      activeColor: AppColours.white,
+      value: isChecked,
+      onChanged: (bool? value) {
+        setState(() {
+          isChecked = value;
+        });
+      },
     );
   }
 }

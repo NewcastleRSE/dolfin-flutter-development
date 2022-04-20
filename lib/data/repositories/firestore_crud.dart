@@ -12,9 +12,9 @@ class FireStoreCrud {
     await childcollection.add(child.tojson());
   }
 
-  Future<void> addRecord({required RecordModel child}) async {
+  Future<void> addRecord({required RecordModel record}) async {
     var recordcollection = _firestore.collection('records');
-    await recordcollection.add(child.tojson());
+    await recordcollection.add(record.tojson());
   }
 
   Stream<List<ChildModel>> getChildren({required String parentID}) {
@@ -50,7 +50,7 @@ class FireStoreCrud {
   }
 
   Future<void> updateRecord({
-    required String supplement,
+    required SupplementOptions supplement,
     weight,
     docid,
   }) async {

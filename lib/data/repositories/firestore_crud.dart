@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/data/models/record_model.dart';
 
+import '../models/parent_model.dart';
+
 class FireStoreCrud {
   FireStoreCrud();
 
@@ -10,6 +12,11 @@ class FireStoreCrud {
   Future<void> addChild({required ChildModel child}) async {
     var childcollection = _firestore.collection('children');
     await childcollection.add(child.tojson());
+  }
+
+  Future<void> addParent({required ParentModel parent}) async {
+    var parentcollection = _firestore.collection('parent');
+    await parentcollection.add(parent.tojson());
   }
 
   Future<void> addRecord({required RecordModel child}) async {
@@ -46,6 +53,18 @@ class FireStoreCrud {
     await childcollection.doc(docid).update({
       'name': name,
       'dob': dob,
+    });
+  }
+
+  Future<void> updateParent({
+    required String uid,
+    fcmToken,
+    docid,
+  }) async {
+    var parentcollection = _firestore.collection('parent');
+    await parentcollection.doc(docid).update({
+      'uid': uid,
+      'fcmToken': fcmToken,
     });
   }
 

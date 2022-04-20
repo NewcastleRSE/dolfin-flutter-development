@@ -37,11 +37,44 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    // todo check this
+    // todo request permission for ios?
     // NotificationsHandler.requestpermission(context);
+
+    // Get FCM notification token
     FirebaseMessaging.instance.getToken().then((value) {
       print('TOKEN');
       print(value);
+    });
+
+    // todo function that checks if token has changed from what's stored and updated it if necessary
+
+    // todo probably navigate to a new form submission?
+    // When user clicks background notification and opens app
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      print('Message clicked!');
+    });
+
+    // push notification when app running in foreground
+    // todo what to display in popup here- probably click to go to form
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.notification!.body!}');
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Notification"),
+              content: Text(message.notification!.body!),
+              actions: [
+                TextButton(
+                  child: Text("Ok"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
     });
 
   }

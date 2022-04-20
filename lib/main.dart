@@ -30,23 +30,13 @@ Future<void> main() async {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-
-
-
-  // push notification when in foreground
-  // todo set up how to display foreground message
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('Got a message whilst in the foreground!');
-    print('Message data: ${message.data}');
-    // AwesomeNotifications().createNotificationFromJsonData(message.data);
-    if (message.notification != null) {
-      print('Message also contained a notification: ${message.notification}');
-    }
-  });
-
+  // Firebase Cloud Messaging
   // push notification when in background
   FirebaseMessaging.onBackgroundMessage(_firebasePushHandler);
-
+  // todo probably navigate to a new form submission?
+  FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    print('Message clicked!');
+  });
 
   final prefs = await SharedPreferences.getInstance();
   final bool? seen = prefs.getBool('seen');
@@ -120,6 +110,4 @@ class MyApp extends StatelessWidget {
 
 Future<void> _firebasePushHandler(RemoteMessage message) async{
   print('Message from push notification whilst running in background is ${message.data}');
-
-  // AwesomeNotifications().createNotificationFromJsonData(message.data);
 }

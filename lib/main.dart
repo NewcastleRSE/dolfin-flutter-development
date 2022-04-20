@@ -32,16 +32,13 @@ Future<void> main() async {
 
 
 
-  FirebaseMessaging.instance.getToken().then((value) {
-    print('TOKEN');
-    print(value);
-  });
 
-  // foreground message
+  // push notification when in foreground
+  // todo set up how to display foreground message
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     print('Got a message whilst in the foreground!');
     print('Message data: ${message.data}');
-    AwesomeNotifications().createNotificationFromJsonData(message.data);
+    // AwesomeNotifications().createNotificationFromJsonData(message.data);
     if (message.notification != null) {
       print('Message also contained a notification: ${message.notification}');
     }
@@ -49,22 +46,6 @@ Future<void> main() async {
 
   // push notification when in background
   FirebaseMessaging.onBackgroundMessage(_firebasePushHandler);
-
-  AwesomeNotifications().initialize(
-    null,
-    [
-      NotificationChannel(
-        channelKey: 'notification_channel_id',
-        channelName: 'notification_channel_id',
-        channelDescription: 'Notification channel for basic tests',
-        importance: NotificationImportance.High,
-        channelShowBadge: true,
-        locked: false,
-      ),
-    ],
-  );
-
-
 
 
   final prefs = await SharedPreferences.getInstance();
@@ -138,7 +119,7 @@ class MyApp extends StatelessWidget {
 
 
 Future<void> _firebasePushHandler(RemoteMessage message) async{
-  print('Message from push notification is ${message.data}');
+  print('Message from push notification whilst running in background is ${message.data}');
 
-  AwesomeNotifications().createNotificationFromJsonData(message.data);
+  // AwesomeNotifications().createNotificationFromJsonData(message.data);
 }

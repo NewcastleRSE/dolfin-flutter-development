@@ -40,7 +40,9 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
   void initState() {
     super.initState();
     _childName = widget.child != null ? widget.child!.name : "Child Name";
-    NotificationsHandler.requestpermission(context);
+
+    // todo check this
+    // NotificationsHandler.requestpermission(context);
   }
 
   @override

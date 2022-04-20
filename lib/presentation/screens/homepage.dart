@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/presentation/widgets/child_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -37,8 +38,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     // todo check this
-    NotificationsHandler.requestpermission(context);
-
+    // NotificationsHandler.requestpermission(context);
+    FirebaseMessaging.instance.getToken().then((value) {
+      print('TOKEN');
+      print(value);
+    });
 
   }
 

@@ -2,6 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,12 +30,32 @@ Future<void> main() async {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
+
+
+  FirebaseMessaging.instance.getToken().then((value) {
+    print('TOKEN');
+    print(value);
+  });
+
+  // foreground message
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print('Got a message whilst in the foreground!');
+    print('Message data: ${message.data}');
+    AwesomeNotifications().createNotificationFromJsonData(message.data);
+    if (message.notification != null) {
+      print('Message also contained a notification: ${message.notification}');
+    }
+  });
+
+  // push notification when in background
+  FirebaseMessaging.onBackgroundMessage(_firebasePushHandler);
+
   AwesomeNotifications().initialize(
     null,
     [
       NotificationChannel(
-        channelKey: 'basic_channel',
-        channelName: 'Basic Notifications',
+        channelKey: 'notification_channel_id',
+        channelName: 'notification_channel_id',
         channelDescription: 'Notification channel for basic tests',
         importance: NotificationImportance.High,
         channelShowBadge: true,
@@ -42,6 +63,10 @@ Future<void> main() async {
       ),
     ],
   );
+
+
+
+
   final prefs = await SharedPreferences.getInstance();
   final bool? seen = prefs.getBool('seen');
 
@@ -109,4 +134,11 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+}
+
+
+Future<void> _firebasePushHandler(RemoteMessage message) async{
+  print('Message from push notification is ${message.data}');
+
+  AwesomeNotifications().createNotificationFromJsonData(message.data);
 }

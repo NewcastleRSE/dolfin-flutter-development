@@ -14,11 +14,6 @@ class FireStoreCrud {
     await childcollection.add(child.tojson());
   }
 
-  Future<void> addParent({required ParentModel parent}) async {
-    var parentcollection = _firestore.collection('parent');
-    await parentcollection.add(parent.tojson());
-  }
-
   Future<void> addRecord({required RecordModel child}) async {
     var recordcollection = _firestore.collection('records');
     await recordcollection.add(child.tojson());
@@ -56,17 +51,6 @@ class FireStoreCrud {
     });
   }
 
-  Future<void> updateParent({
-    required String uid,
-    tokens,
-    docid,
-  }) async {
-    var parentcollection = _firestore.collection('parent');
-    await parentcollection.doc(docid).update({
-      'uid': uid,
-      'tokens': tokens,
-    });
-  }
 
   Future<void> updateRecord({
     required String supplement,

@@ -38,7 +38,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    // todo where to put this code?
     // save parent ID and FCM token to Firestore for push notifications
     // get FCM token
     FirebaseMessaging.instance.getToken().then((value) {
@@ -47,14 +46,12 @@ class _HomePageState extends State<HomePage> {
       saveFCMTokenToDatabase(token!);
     });
 
-    // Any time the token refreshes, store this in the database too.
+    // Any time the token refreshes, store this in the database too
     FirebaseMessaging.instance.onTokenRefresh.listen(saveFCMTokenToDatabase);
 
     // todo request permission for ios?
     // NotificationsHandler.requestpermission(context);
 
-
-    // todo function that checks if token has changed from what's stored and updated it if necessary
 
     // todo probably navigate to a new form submission?
     // When user clicks background notification and opens app
@@ -88,11 +85,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> saveFCMTokenToDatabase(String token) async {
-    // todo check what happens if user is not logged in?
     String? userId = FirebaseAuth.instance.currentUser?.uid;
 
     await FirebaseFirestore.instance
-        .collection('parent')
+        .collection('parents')
         .doc(userId)
         .set({
       'tokens': FieldValue.arrayUnion([token]),

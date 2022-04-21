@@ -45,5 +45,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Contains Firebase settings, should be manually downloaded
+# Contains Firebase and PlayStore settings, should be manually downloaded
 android/app/google-services.json
+android/fastlane/google-services.json

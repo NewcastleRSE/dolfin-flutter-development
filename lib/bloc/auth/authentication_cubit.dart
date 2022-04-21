@@ -43,17 +43,10 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     firebaseauthrepo
         .register(fullname: fullname, email: email, password: password)
         .then((value) {
-          // todo where to put this code and update firestore?
-          print('REGISTERED');
+
           final user = FirebaseAuth.instance.currentUser;
           user!.updateDisplayName(fullname);
 
-          // save parent ID and FCM token to Firestore for push notifications
-          final uid = user.uid;
-
-          // here you write the codes to input the data into firestore
-          print('in auth cubit');
-          print(uid);
       emit(AuthenticationSuccessState());
     }).catchError((e) {
       emit(AuthenticationErrortate(e.toString()));

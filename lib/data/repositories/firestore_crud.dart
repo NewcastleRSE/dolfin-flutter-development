@@ -58,13 +58,13 @@ class FireStoreCrud {
 
   Future<void> updateParent({
     required String uid,
-    fcmToken,
+    tokens,
     docid,
   }) async {
     var parentcollection = _firestore.collection('parent');
     await parentcollection.doc(docid).update({
       'uid': uid,
-      'fcmToken': fcmToken,
+      'tokens': tokens,
     });
   }
 

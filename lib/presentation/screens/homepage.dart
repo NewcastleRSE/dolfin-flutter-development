@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/presentation/widgets/child_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,14 +38,21 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
+    // todo where to put this code?
+    // save parent ID and FCM token to Firestore for push notifications
+    // get FCM token
+    FirebaseMessaging.instance.getToken().then((value) {
+      String? token = value;
+      // Save the initial token to the database
+      saveFCMTokenToDatabase(token!);
+    });
+
+    // Any time the token refreshes, store this in the database too.
+    FirebaseMessaging.instance.onTokenRefresh.listen(saveFCMTokenToDatabase);
+
     // todo request permission for ios?
     // NotificationsHandler.requestpermission(context);
 
-    // Get FCM notification token
-    FirebaseMessaging.instance.getToken().then((value) {
-      print('TOKEN');
-      print(value);
-    });
 
     // todo function that checks if token has changed from what's stored and updated it if necessary
 
@@ -78,6 +86,20 @@ class _HomePageState extends State<HomePage> {
     });
 
   }
+
+  Future<void> saveFCMTokenToDatabase(String token) async {
+    // todo check what happens if user is not logged in?
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+
+    await FirebaseFirestore.instance
+        .collection('parent')
+        .doc(userId)
+        .set({
+      'tokens': FieldValue.arrayUnion([token]),
+    });
+  }
+  
+
 
   @override
   void dispose() {

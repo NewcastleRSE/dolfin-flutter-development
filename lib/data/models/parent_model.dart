@@ -1,25 +1,25 @@
 class ParentModel {
   final String id;
   final String uid;
-  final String fcmToken;
+  final String tokens;
 
   ParentModel({
     required this.id,
     required this.uid,
-    required this.fcmToken,
+    required this.tokens,
   });
 
   factory ParentModel.fromjson(Map<String, dynamic> json, String id) {
     return ParentModel(
         id: id,
         uid: json['uid'],
-        fcmToken: json['fcmToken']);
+        tokens: json['tokens']);
   }
 
   Map<String, dynamic> tojson() {
     return {
       'uid': uid,
-      'fcmToken': fcmToken
+      'tokens': tokens
     };
   }
 }

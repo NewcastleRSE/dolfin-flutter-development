@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/data/models/record_model.dart';
 
+import '../models/parent_model.dart';
+
 class FireStoreCrud {
   FireStoreCrud();
 
@@ -48,6 +50,7 @@ class FireStoreCrud {
       'dob': dob,
     });
   }
+
 
   Future<void> updateRecord({
     required String supplement,

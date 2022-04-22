@@ -1,7 +1,9 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/presentation/widgets/child_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -36,8 +38,62 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    NotificationsHandler.requestpermission(context);
+    // save parent ID and FCM token to Firestore for push notifications
+    // get FCM token
+    FirebaseMessaging.instance.getToken().then((value) {
+      String? token = value;
+      // Save the initial token to the database
+      saveFCMTokenToDatabase(token!);
+    });
+
+    // Any time the token refreshes, store this in the database too
+    FirebaseMessaging.instance.onTokenRefresh.listen(saveFCMTokenToDatabase);
+
+    // todo request permission for ios?
+    // NotificationsHandler.requestpermission(context);
+
+
+    // When user clicks background notification and opens app
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      print('Message clicked!');
+    });
+
+    // push notification when app running in foreground
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.notification!.body!}');
+
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Text(message.notification!.body!),
+              actions: [
+                TextButton(
+                  child: Text("Ok"),
+                  onPressed: () {
+                    Navigator.pushNamed(context, homepage);
+                  },
+                )
+              ],
+            );
+          });
+    });
+
   }
+
+  Future<void> saveFCMTokenToDatabase(String token) async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+
+    await FirebaseFirestore.instance
+        .collection('parents')
+        .doc(userId)
+        .set({
+      'tokens': FieldValue.arrayUnion([token]),
+    });
+  }
+  
+
 
   @override
   void dispose() {

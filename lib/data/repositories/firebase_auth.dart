@@ -21,6 +21,7 @@ class FirebaseAuthRepo implements UserRepository {
     } catch (e) {
       throw e.toString();
     }
+
   }
 
   @override

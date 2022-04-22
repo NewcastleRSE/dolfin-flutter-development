@@ -53,28 +53,26 @@ class _HomePageState extends State<HomePage> {
     // NotificationsHandler.requestpermission(context);
 
 
-    // todo probably navigate to a new form submission?
     // When user clicks background notification and opens app
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       print('Message clicked!');
     });
 
     // push notification when app running in foreground
-    // todo what to display in popup here- probably click to go to form
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
       print('Message data: ${message.notification!.body!}');
+
       showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text("Notification"),
               content: Text(message.notification!.body!),
               actions: [
                 TextButton(
                   child: Text("Ok"),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.pushNamed(context, homepage);
                   },
                 )
               ],

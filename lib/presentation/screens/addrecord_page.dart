@@ -30,6 +30,8 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
   late SupplementOptions? _supplement;
   late ReasonOptions? _reason;
+  late String _dropdownvalue;
+  late bool? _weight;
 
   late DateTime recordDate;
 
@@ -52,6 +54,9 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
     _weightcontroller = TextEditingController(
         text: isEditMode ? widget.record!.weight.toString() : '');
+
+    _dropdownvalue = "1";
+    _weight = true;
   }
 
   @override
@@ -86,6 +91,26 @@ class _AddRecordPageState extends State<AddRecordPage> {
             height: 1.h,
           ),
           _buildAppBar(context),
+          SizedBox(
+            height: 3.h,
+          ),
+          Text(
+            'Thank you for taking part in the DOLFIN trial. It is important you give the DOLFIN supplement to your child every day, unless they are unable to take it because they are too unwell. Please use this form to let us know whether or not your baby has had their supplement today.',
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
+          Text(
+            'If you have any questions or concerns about your baby or giving the supplement, please contact your local clinical team using the contact details in your Parent Discharge Pack. If you are having trouble completing this form, please contact the research team on dolfin@npeu.ox.ac.uk / 01865 617919.',
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(fontSize: 14.sp),
+          ),
           SizedBox(
             height: 3.h,
           ),
@@ -175,16 +200,6 @@ class _AddRecordPageState extends State<AddRecordPage> {
           ),
           SizedBox(
             height: 2.h,
-          ),
-          Text(
-            'Reason',
-            style: Theme.of(context)
-                .textTheme
-                .headline1!
-                .copyWith(fontSize: 14.sp),
-          ),
-          SizedBox(
-            height: 1.h,
           ),
           Text(
             'Thank you for letting us know. It would be helpful for us to know why:',
@@ -287,10 +302,10 @@ class _AddRecordPageState extends State<AddRecordPage> {
             textEditingController: _reasoncontroller,
           ),
           SizedBox(
-            height: 2.h,
+            height: 3.h,
           ),
           Text(
-            'Weight',
+            "We would like you to let us know your baby's weight once a month. Do you have a recent weight for your baby that you would like to let us know about?",
             style: Theme.of(context)
                 .textTheme
                 .headline1!
@@ -299,23 +314,186 @@ class _AddRecordPageState extends State<AddRecordPage> {
           SizedBox(
             height: 1.h,
           ),
+          Column(children: <Widget>[
+            ListTile(
+              title: const Text('Yes'),
+              leading: Radio<bool>(
+                value: true,
+                groupValue: _weight,
+                onChanged: (bool? value) {
+                  setState(() {
+                    _weight = value;
+                  });
+                },
+              ),
+            ),
+            ListTile(
+              title: const Text('No'),
+              leading: Radio<bool>(
+                value: false,
+                groupValue: _weight,
+                onChanged: (bool? value) {
+                  setState(() {
+                    _weight = value;
+                  });
+                },
+              ),
+            ),
+          ]),
+          SizedBox(
+            height: 2.h,
+          ),
+          Text(
+            "Grams",
+            style: Theme.of(context)
+                .textTheme
+                .headline2!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 2.h,
+          ),
           MyTextfield(
             hint: "Enter your child's weight",
             keyboardtype: TextInputType.number,
             icon: Icons.title,
             showicon: false,
             validator: (value) {
-              return value!.isEmpty
-                  ? "Please Enter Your Child's First Name"
-                  : null;
+              return value!.isEmpty ? "Please Enter Your Child's Weight" : null;
             },
             textEditingController: _weightcontroller,
           ),
           SizedBox(
             height: 2.h,
           ),
+          Text(
+            "Ounces",
+            style: Theme.of(context)
+                .textTheme
+                .headline2!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 2.h,
+          ),
+          MyTextfield(
+            hint: "Enter your child's weight",
+            keyboardtype: TextInputType.number,
+            icon: Icons.title,
+            showicon: false,
+            validator: (value) {
+              return null;
+              //value!.isEmpty ? "Please Enter Your Child's Weight" : null;
+            },
+            textEditingController: _weightcontroller,
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
+          Text(
+            'When was this weight recorded?',
+            style: Theme.of(context)
+                .textTheme
+                .headline2!
+                .copyWith(fontSize: 14.sp),
+          ),
           SizedBox(
             height: 1.h,
+          ),
+          MyTextfield(
+            hint: DateFormat('dd/MM/yyyy').format(recordDate),
+            icon: Icons.calendar_today,
+            readonly: true,
+            showicon: false,
+            validator: (value) {},
+            ontap: () {
+              _showdatepicker();
+            },
+            textEditingController: TextEditingController(),
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
+          Text(
+            'How many scoops of supplement per day are you giving your baby at the moment??',
+            style: Theme.of(context)
+                .textTheme
+                .headline1!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
+          DropdownButton<String>(
+            value: _dropdownvalue,
+            icon: const Icon(Icons.arrow_downward),
+            elevation: 16,
+            style: const TextStyle(color: Colors.deepPurple),
+            underline: Container(
+              height: 2,
+              color: Colors.deepPurpleAccent,
+            ),
+            onChanged: (String? newValue) {
+              setState(() {
+                _dropdownvalue = newValue!;
+              });
+            },
+            items: <String>[
+              '0',
+              '1',
+              '2',
+              '3',
+              '4',
+              '5',
+              '6',
+              '7',
+              '8',
+              '9',
+              '10',
+              '11',
+              '12'
+            ].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
+          Text(
+            "Getting low on supplement? If you have less than 30 sachets of supplement left, please contact the research team on dolfin@npeu.ox.ac.uk / 01865 617919",
+            style: Theme.of(context)
+                .textTheme
+                .headline1!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
+          Text(
+            "The DOLFIN supplement dosing chart can be seen at [URL] and is also included in your Parent Discharge Pack.",
+            style: Theme.of(context)
+                .textTheme
+                .headline1!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
+          Text(
+            "Remember: please let your local clinical team know if your baby has an unplanned admission to hospital, as these need to be recorded as part of the DOLFIN trial.",
+            style: Theme.of(context)
+                .textTheme
+                .headline1!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
+          SizedBox(
+            height: 3.h,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

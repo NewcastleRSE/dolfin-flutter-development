@@ -41,19 +41,26 @@ Future<void> main() async {
   final prefs = await SharedPreferences.getInstance();
   final bool? seen = prefs.getBool('seen');
 
-  await SentryFlutter.init(
-    (options) {
-      options.dsn =
-          'https://e506dae22f9c478a93be1d6467770cd6@o1080315.ingest.sentry.io/6324285';
-      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-      // We recommend adjusting this value in production.
-      options.tracesSampleRate = 1.0;
-    },
-    appRunner: () => runApp(MyApp(
+  if (kReleaseMode) {
+    await SentryFlutter.init(
+      (options) {
+        options.dsn =
+            'https://e506dae22f9c478a93be1d6467770cd6@o1080315.ingest.sentry.io/6324285';
+        // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+        // We recommend adjusting this value in production.
+        options.tracesSampleRate = 1.0;
+      },
+      appRunner: () => runApp(MyApp(
+        seen: seen,
+        approute: AppRoute(),
+      )),
+    );
+  } else {
+    runApp(MyApp(
       seen: seen,
       approute: AppRoute(),
-    )),
-  );
+    ));
+  }
 }
 
 class MyApp extends StatelessWidget {

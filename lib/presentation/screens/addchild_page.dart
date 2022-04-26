@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
@@ -10,8 +12,13 @@ import 'package:dolfin_flutter/presentation/widgets/mybutton.dart';
 import 'package:dolfin_flutter/presentation/widgets/mytextfield.dart';
 import 'package:dolfin_flutter/shared/constants/consts_variables.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
+import 'package:http/http.dart' as http;
 
 import '../../shared/services/notification_service.dart';
+import '../widgets/mysnackbar.dart';
+
+// todo check token with oxford before proceeding to save in firestore
+// todo add additional discharge and joining dates to form model and firestore
 
 class AddChildPage extends StatefulWidget {
   final ChildModel? child;
@@ -43,7 +50,7 @@ class _AddChildPageState extends State<AddChildPage> {
     _trialIDcontroller =
         TextEditingController(text: isEditMode ? widget.child!.studyID : '');
     dateOfBirth =
-        isEditMode ? DateTime.parse(widget.child!.dob) : DateTime.now();
+    isEditMode ? DateTime.parse(widget.child!.dob) : DateTime.now();
   }
 
   @override
@@ -83,7 +90,8 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
           Text(
             'Trial ID',
-            style: Theme.of(context)
+            style: Theme
+                .of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -98,7 +106,7 @@ class _AddChildPageState extends State<AddChildPage> {
             showicon: false,
             validator: (value) {
               return value!.isEmpty
-                  ? "Please enter the your child's Trial ID"
+                  ? "Please Enter Your Child's Trial ID"
                   : null;
             },
             textEditingController: _trialIDcontroller,
@@ -108,7 +116,8 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
           Text(
             'Name',
-            style: Theme.of(context)
+            style: Theme
+                .of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -132,7 +141,8 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
           Text(
             'Discharge Date',
-            style: Theme.of(context)
+            style: Theme
+                .of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -176,24 +186,40 @@ class _AddChildPageState extends State<AddChildPage> {
   }
 
   _addChild() {
+    // is form complete and is child registered with Oxford?
     if (_formKey.currentState!.validate()) {
-      ChildModel child = ChildModel(
-        name: _namecontroller.text,
-        dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-        studyID: _trialIDcontroller.text,
-        parentID: FirebaseAuth.instance.currentUser!.uid,
-        id: '',
-      );
-      isEditMode
-          ? FireStoreCrud().updateChild(
+
+      checkChild(_trialIDcontroller.text).then((childExists) {
+        // child is study participant
+        if (childExists) {
+            print('child is a study participant so save to DB');
+
+            ChildModel child = ChildModel(
+              name: _namecontroller.text,
+              dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
+              studyID: _trialIDcontroller.text,
+              parentID: FirebaseAuth.instance.currentUser!.uid,
+              id: '',
+            );
+            isEditMode
+                ? FireStoreCrud().updateChild(
               docid: widget.child!.id,
               name: _namecontroller.text,
               dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
             )
-          : FireStoreCrud().addChild(child: child);
+                : FireStoreCrud().addChild(child: child);
 
-      Navigator.pop(context);
-    }
+            Navigator.pop(context);
+        } else {
+        print('child does not exist in study');
+        MySnackBar.error(
+            message: 'Incorrect child ID',
+            color: Colors.red,
+            context: context);
+        }
+
+      }); // child exists with Oxford
+    } // validate
   }
 
   _showdatepicker() async {
@@ -224,10 +250,33 @@ class _AddChildPageState extends State<AddChildPage> {
         ),
         Text(
           isEditMode ? 'Edit Child' : 'Add a Child',
-          style: Theme.of(context).textTheme.headline1,
+          style: Theme
+              .of(context)
+              .textTheme
+              .headline1,
         ),
         const SizedBox()
       ],
     );
+  }
+
+  // http request to check child's ID/token is valid
+  //todo replace with correct URL from Oxford
+  Future<bool> checkChild(childCheck) async {
+    final response = await http.get(
+        Uri.parse('https://jsonplaceholder.typicode.com/users/' + childCheck));
+    // todo any other checks to be done on response?
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> child= jsonDecode(response.body);
+        if (child.containsKey('id')) {
+          print('returned from http');
+          print(child);
+          // success
+          return true;
+        }
+    }
+      return false;
+
   }
 }

@@ -39,6 +39,7 @@ class _AddChildPageState extends State<AddChildPage> {
   late TextEditingController _namecontroller;
 
   late DateTime dateOfBirth;
+  late DateTime dischargeDate;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -51,6 +52,8 @@ class _AddChildPageState extends State<AddChildPage> {
         TextEditingController(text: isEditMode ? widget.child!.studyID : '');
     dateOfBirth =
     isEditMode ? DateTime.parse(widget.child!.dob) : DateTime.now();
+    dischargeDate =
+    isEditMode ? DateTime.parse(widget.child!.dischargeDate) : DateTime.now();
   }
 
   @override
@@ -140,7 +143,7 @@ class _AddChildPageState extends State<AddChildPage> {
             height: 2.h,
           ),
           Text(
-            'Discharge Date',
+            'Date of birth',
             style: Theme
                 .of(context)
                 .textTheme
@@ -157,7 +160,29 @@ class _AddChildPageState extends State<AddChildPage> {
             showicon: false,
             validator: (value) {},
             ontap: () {
-              _showdatepicker();
+              _showdatepickerdob();
+            },
+            textEditingController: TextEditingController(),
+          ),
+          Text(
+            'Discharge date',
+            style: Theme
+                .of(context)
+                .textTheme
+                .headline1!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 1.h,
+          ),
+          MyTextfield(
+            hint: DateFormat('dd/MM/yyyy').format(dischargeDate),
+            icon: Icons.calendar_today,
+            readonly: true,
+            showicon: false,
+            validator: (value) {},
+            ontap: () {
+              _showdatepickerdd();
             },
             textEditingController: TextEditingController(),
           ),
@@ -197,6 +222,7 @@ class _AddChildPageState extends State<AddChildPage> {
             ChildModel child = ChildModel(
               name: _namecontroller.text,
               dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
+              dischargeDate: DateFormat('yyyy-MM-dd').format(dischargeDate),
               studyID: _trialIDcontroller.text,
               parentID: FirebaseAuth.instance.currentUser!.uid,
               id: '',
@@ -222,7 +248,7 @@ class _AddChildPageState extends State<AddChildPage> {
     } // validate
   }
 
-  _showdatepicker() async {
+  _showdatepickerdob() async {
     var selecteddate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -232,6 +258,19 @@ class _AddChildPageState extends State<AddChildPage> {
     );
     setState(() {
       selecteddate != null ? dateOfBirth = selecteddate : null;
+    });
+  }
+
+  _showdatepickerdd() async {
+    var selecteddate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2022),
+      lastDate: DateTime.now(),
+      currentDate: DateTime.now(),
+    );
+    setState(() {
+      selecteddate != null ? dischargeDate = selecteddate : null;
     });
   }
 

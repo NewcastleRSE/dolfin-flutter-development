@@ -3,6 +3,7 @@ class ChildModel {
   final String studyID;
   final String name;
   final String dob;
+  final String dischargeDate;
   final String parentID;
 
   ChildModel({
@@ -10,6 +11,7 @@ class ChildModel {
     required this.studyID,
     required this.name,
     required this.dob,
+    required this.dischargeDate,
     required this.parentID,
   });
 
@@ -19,6 +21,7 @@ class ChildModel {
         studyID: json['study_id'],
         name: json['name'],
         dob: json['dob'],
+        dischargeDate: json['dischargeDate'],
         parentID: json['parent_id']);
   }
 
@@ -27,6 +30,7 @@ class ChildModel {
       'study_id': studyID,
       'name': name,
       'dob': dob,
+      'dischargeDate': dischargeDate,
       'parent_id': parentID
     };
   }

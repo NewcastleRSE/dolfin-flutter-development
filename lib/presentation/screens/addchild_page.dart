@@ -164,6 +164,9 @@ class _AddChildPageState extends State<AddChildPage> {
             },
             textEditingController: TextEditingController(),
           ),
+          SizedBox(
+            height: 1.h,
+          ),
           Text(
             'Discharge date',
             style: Theme

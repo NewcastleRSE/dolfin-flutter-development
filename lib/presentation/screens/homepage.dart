@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
       saveFCMTokenToDatabase(token!);
     });
 
+
     // Any time the token refreshes, store this in the database too
     FirebaseMessaging.instance.onTokenRefresh.listen(saveFCMTokenToDatabase);
 
@@ -91,7 +92,7 @@ class _HomePageState extends State<HomePage> {
         .collection('parents')
         .doc(userId)
         .set({
-      'tokens': FieldValue.arrayUnion([token]),
+      'tokens': FieldValue.arrayUnion([token])
     });
   }
 

@@ -1,25 +1,27 @@
 class ParentModel {
   final String id;
-  final String uid;
-  final String tokens;
+  final List tokens;
+  final bool dailyNotifications;
 
   ParentModel({
     required this.id,
-    required this.uid,
     required this.tokens,
+    required this.dailyNotifications,
   });
 
   factory ParentModel.fromjson(Map<String, dynamic> json, String id) {
     return ParentModel(
         id: id,
-        uid: json['uid'],
-        tokens: json['tokens']);
+        tokens: json['tokens'],
+        dailyNotifications: json['dailyNotifications']
+    );
+
   }
 
   Map<String, dynamic> tojson() {
     return {
-      'uid': uid,
-      'tokens': tokens
+      'tokens': tokens,
+      'dailyNotifications': dailyNotifications
     };
   }
 }

@@ -31,12 +31,14 @@ class _HomePageState extends State<HomePage> {
   static var currentdate = DateTime.now();
   static bool? notificationPrefs = true;
 
+
   final TextEditingController _usercontroller = TextEditingController(
       text: FirebaseAuth.instance.currentUser!.displayName);
 
   @override
   void initState() {
     super.initState();
+
 
     // save parent ID and FCM token to Firestore for push notifications
     // get FCM token
@@ -91,6 +93,38 @@ class _HomePageState extends State<HomePage> {
         .set({
       'tokens': FieldValue.arrayUnion([token]),
     });
+  }
+
+
+  bool checkDailyNotificationsVisibility() {
+    var childrenSnapshot =
+    FireStoreCrud().getChildren(parentID: FirebaseAuth.instance.currentUser!.uid);
+
+    // today's date
+    DateTime now = DateTime.now();
+    DateTime today = DateTime(now.year, now.month, now.day);
+
+    bool past3 = false;
+
+    childrenSnapshot.listen((children) {
+      for(final child in children) {
+        DateTime dischargeDate = DateTime.parse(child.dischargeDate);
+
+        // if it has been over 3 months since hospital discharge show option to turn off daily reminders
+        if(daysBetween(dischargeDate, today) >= 84) {
+         past3 = true;
+          break;
+        }
+      }
+    });
+    return past3;
+  }
+
+
+  int daysBetween(DateTime from, DateTime to) {
+    from = DateTime(from.year, from.month, from.day);
+    to = DateTime(to.year, to.month, to.day);
+    return (to.difference(from).inHours / 24).round();
   }
   
 
@@ -334,11 +368,13 @@ class _HomePageState extends State<HomePage> {
                           .copyWith(fontSize: 12.sp),
                     ),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Text(
-                        'Daily Notifications Enabled: ',
-                        style: TextStyle(fontSize: 12.0),
-                      ),
-                      MyStatefulWidget()
+                      if (1 > 2) ...[
+                        Text(
+                          'Daily Notifications Enabled: ',
+                          style: TextStyle(fontSize: 12.0),
+                        ),
+                        MyStatefulWidget()
+                      ]
                     ]),
                     SizedBox(
                       height: 3.h,

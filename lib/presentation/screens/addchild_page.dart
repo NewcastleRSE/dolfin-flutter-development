@@ -17,8 +17,6 @@ import 'package:http/http.dart' as http;
 import '../../shared/services/notification_service.dart';
 import '../widgets/mysnackbar.dart';
 
-// todo check token with oxford before proceeding to save in firestore
-// todo add additional discharge and joining dates to form model and firestore
 
 class AddChildPage extends StatefulWidget {
   final ChildModel? child;
@@ -40,6 +38,7 @@ class _AddChildPageState extends State<AddChildPage> {
 
   late DateTime dateOfBirth;
   late DateTime dischargeDate;
+  late DateTime dueDate;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -54,6 +53,8 @@ class _AddChildPageState extends State<AddChildPage> {
     isEditMode ? DateTime.parse(widget.child!.dob) : DateTime.now();
     dischargeDate =
     isEditMode ? DateTime.parse(widget.child!.dischargeDate) : DateTime.now();
+    dueDate =
+    isEditMode ? DateTime.parse(widget.child!.dueDate) : DateTime.now();
   }
 
   @override
@@ -143,6 +144,31 @@ class _AddChildPageState extends State<AddChildPage> {
             height: 2.h,
           ),
           Text(
+            'Due date',
+            style: Theme
+                .of(context)
+                .textTheme
+                .headline1!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 1.h,
+          ),
+          MyTextfield(
+            hint: DateFormat('dd/MM/yyyy').format(dueDate),
+            icon: Icons.calendar_today,
+            readonly: true,
+            showicon: false,
+            validator: (value) {},
+            ontap: () {
+              _showdatepickerdued();
+            },
+            textEditingController: TextEditingController(),
+          ),
+          SizedBox(
+            height: 1.h,
+          ),
+          Text(
             'Date of birth',
             style: Theme
                 .of(context)
@@ -226,6 +252,7 @@ class _AddChildPageState extends State<AddChildPage> {
               name: _namecontroller.text,
               dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
               dischargeDate: DateFormat('yyyy-MM-dd').format(dischargeDate),
+              dueDate: DateFormat('yyyy-MM-dd').format(dueDate),
               studyID: _trialIDcontroller.text,
               parentID: FirebaseAuth.instance.currentUser!.uid,
               id: '',
@@ -264,6 +291,18 @@ class _AddChildPageState extends State<AddChildPage> {
     });
   }
 
+  _showdatepickerdued() async {
+    var selecteddate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2022),
+      lastDate: DateTime.now(),
+      currentDate: DateTime.now(),
+    );
+    setState(() {
+      selecteddate != null ? dueDate = selecteddate : null;
+    });
+  }
   _showdatepickerdd() async {
     var selecteddate = await showDatePicker(
       context: context,

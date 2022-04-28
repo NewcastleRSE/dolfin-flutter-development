@@ -19,6 +19,7 @@ import 'package:dolfin_flutter/shared/constants/assets_path.dart';
 import 'package:dolfin_flutter/shared/constants/strings.dart';
 import 'package:dolfin_flutter/shared/services/notification_service.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -595,8 +596,34 @@ class dailyNotificationsCheck extends StatefulWidget {
   State<dailyNotificationsCheck> createState() => _dailyNotificationsCheckState();
 }
 
+
+
 class _dailyNotificationsCheckState extends State<dailyNotificationsCheck> {
+
   bool? isChecked = true;
+
+  @override
+  void initState() {
+    super.initState();
+    getDailyNotificationPref();
+  }
+
+  // check shared prefs to see if user has previously checked or unchecked this
+  getDailyNotificationPref() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? value= prefs.getBool('dailyNotifications');
+    setState(() {
+      // set to true if not value already set
+      isChecked = value?? true;
+    });
+  }
+
+  saveDailyNotificationsPref(value) async {
+    // store value in shared prefs
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('dailyNotifications', value);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -607,6 +634,9 @@ class _dailyNotificationsCheckState extends State<dailyNotificationsCheck> {
       onChanged: (bool? value) {
         setState(() {
           isChecked = value;
+          // store value in shared prefs
+         saveDailyNotificationsPref(value);
+
           // adjust notification preferences in Firestore
           FirebaseFirestore.instance
               .collection('parents')

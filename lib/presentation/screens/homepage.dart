@@ -390,7 +390,8 @@ class _HomePageState extends State<HomePage> {
                       height: 3.h,
                     ),
                     Text(
-                      'Notification Preferences',
+                      '3 months after hospital discharge you will be asked to complete a weekly rather than daily form. You will'
+                          'still receive daily reminders to give the supplement unless you opt out of them here.',
                       style: Theme.of(context)
                           .textTheme
                           .headline2!
@@ -399,10 +400,10 @@ class _HomePageState extends State<HomePage> {
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       // if (1 > 2) ...[
                         Text(
-                          'Daily Notifications Enabled: ',
+                          'Daily Reminders Enabled: ',
                           style: TextStyle(fontSize: 12.0),
                         ),
-                        MyStatefulWidget()
+                        dailyNotificationsCheck()
                       // ]
                     ]),
                     SizedBox(
@@ -587,14 +588,14 @@ class _HomePageState extends State<HomePage> {
 
 
 
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({Key? key}) : super(key: key);
+class dailyNotificationsCheck extends StatefulWidget {
+  const dailyNotificationsCheck({Key? key}) : super(key: key);
 
   @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+  State<dailyNotificationsCheck> createState() => _dailyNotificationsCheckState();
 }
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+class _dailyNotificationsCheckState extends State<dailyNotificationsCheck> {
   bool? isChecked = true;
 
   @override
@@ -606,6 +607,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       onChanged: (bool? value) {
         setState(() {
           isChecked = value;
+          // adjust notification preferences in Firestore
+          FireStoreCrud().updateParent(
+              docid: FirebaseAuth.instance.currentUser?.uid,
+              dailyNotifications: value
+          );
         });
       },
     );

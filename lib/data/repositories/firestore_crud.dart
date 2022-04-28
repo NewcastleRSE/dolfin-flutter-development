@@ -69,6 +69,15 @@ class FireStoreCrud {
     });
   }
 
+  Future<void> updateParent({
+    required docid,
+    dailyNotifications
+  }) async {
+    var parentcollection = _firestore.collection('parents');
+    await parentcollection.doc(docid).update({
+      'dailyNotifications': dailyNotifications,
+    });
+  }
 
   Future<void> updateRecord({
     required SupplementOptions supplement,

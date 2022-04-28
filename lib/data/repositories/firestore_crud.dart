@@ -61,22 +61,44 @@ class FireStoreCrud {
     required String name,
     dob,
     docid,
+    dischargeDate,
+    dueDate
   }) async {
     var childcollection = _firestore.collection('children');
     await childcollection.doc(docid).update({
       'name': name,
       'dob': dob,
+      'dischargeDate': dischargeDate,
+      'dueDate': dueDate
     });
   }
 
+  // update parent with merge setting in order to not overwrite existing fields
   Future<void> updateParent({
     required docid,
-    dailyNotifications
+    dailyNotifications,
+    tokens
   }) async {
     var parentcollection = _firestore.collection('parents');
-    await parentcollection.doc(docid).update({
-      'dailyNotifications': dailyNotifications,
-    });
+
+    // only update fields passed to function
+    if(dailyNotifications && tokens) {
+      print('update both');
+      parentcollection.doc(docid).set({
+        'dailyNotifications': dailyNotifications,
+        'tokens': tokens
+      }, SetOptions(merge: true));
+    } else if(dailyNotifications) {
+      print('update d');
+      parentcollection.doc(docid).set({
+        'dailyNotifications': dailyNotifications
+      }, SetOptions(merge: true));
+    } else if (tokens) {
+      print('update t');
+      parentcollection.doc(docid).set({
+        'tokens': tokens
+      }, SetOptions(merge: true));
+    }
   }
 
   Future<void> updateRecord({

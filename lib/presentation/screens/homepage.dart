@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
         .doc(userId)
         .set({
       'tokens': FieldValue.arrayUnion([token])
-    });
+    }, SetOptions(merge: true));
   }
 
 
@@ -608,10 +608,12 @@ class _dailyNotificationsCheckState extends State<dailyNotificationsCheck> {
         setState(() {
           isChecked = value;
           // adjust notification preferences in Firestore
-          FireStoreCrud().updateParent(
-              docid: FirebaseAuth.instance.currentUser?.uid,
-              dailyNotifications: value
-          );
+          FirebaseFirestore.instance
+              .collection('parents')
+              .doc(FirebaseAuth.instance.currentUser?.uid)
+              .set({
+            'dailyNotifications': value
+          }, SetOptions(merge: true));
         });
       },
     );

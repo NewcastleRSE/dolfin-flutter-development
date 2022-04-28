@@ -29,6 +29,24 @@ class FireStoreCrud {
             .toList());
   }
 
+  Future<List<String>> getDischargeDates({required String parentID}) async {
+    List<String> dates = [];
+
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('children')
+        .where('parent_id', isEqualTo: parentID)
+        .get();
+
+    for (var doc in querySnapshot.docs) {
+      // Getting data directly
+      String date = doc.get('dischargeDate');
+
+      dates.add(date);
+    }
+
+    return dates;
+  }
+
   Stream<List<RecordModel>> getRecords({required String childID}) {
     return _firestore
         .collection('records')

@@ -257,6 +257,7 @@ class _AddChildPageState extends State<AddChildPage> {
               parentID: FirebaseAuth.instance.currentUser!.uid,
               id: '',
             );
+
             isEditMode
                 ? FireStoreCrud().updateChild(
               docid: widget.child!.id,

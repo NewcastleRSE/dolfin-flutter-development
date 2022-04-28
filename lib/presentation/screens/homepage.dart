@@ -35,10 +35,13 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _usercontroller = TextEditingController(
       text: FirebaseAuth.instance.currentUser!.displayName);
 
+  late bool past3;
+
   @override
   void initState() {
     super.initState();
 
+    past3 = checkDailyNotificationsVisibility();
 
     // save parent ID and FCM token to Firestore for push notifications
     // get FCM token
@@ -98,6 +101,7 @@ class _HomePageState extends State<HomePage> {
 
 
   bool checkDailyNotificationsVisibility() {
+    print('check notifications');
     var childrenSnapshot =
     FireStoreCrud().getChildren(parentID: FirebaseAuth.instance.currentUser!.uid);
 
@@ -113,6 +117,7 @@ class _HomePageState extends State<HomePage> {
 
         // if it has been over 3 months since hospital discharge show option to turn off daily reminders
         if(daysBetween(dischargeDate, today) >= 84) {
+          print('past 3 months');
          past3 = true;
           break;
         }
@@ -199,7 +204,30 @@ class _HomePageState extends State<HomePage> {
                           ),
                           InkWell(
                             onTap: () {
-                              _showBottomSheet(context, authenticationCubit);
+                              // todo NOTE not sure this is best practice to put this code here however I cant get it to work putting a function call anywhere else!
+
+                              bool past3 = false;
+                              DateTime now = DateTime.now();
+                              DateTime today = DateTime(now.year, now.month, now.day);
+                             FireStoreCrud().getDischargeDates(parentID: FirebaseAuth.instance.currentUser!.uid).then((dates) {
+                               for(final date in dates) {
+                                 DateTime dischargeDate = DateTime.parse(date);
+                                 int days = daysBetween(dischargeDate, today);
+
+                                 // if it has been over 3 months since hospital discharge show option to turn off daily reminders
+                                 if (days >= 84) {
+                                   print('past 3 months');
+                                   past3 = true;
+                                   break;
+                                 }
+                               }
+                               // display correct settings menu according to how much time past discharge date
+                               if (past3) {
+                                 _showBottomSheetWithNotifications(context, authenticationCubit);
+                               } else {
+                                 _showBottomSheetWithoutNotifications(context, authenticationCubit);
+                               }
+                             });
                             },
                             child: Icon(
                               Icons.settings,
@@ -308,7 +336,7 @@ class _HomePageState extends State<HomePage> {
             )));
   }
 
-  Future<dynamic> _showBottomSheet(
+  Future<dynamic> _showBottomSheetWithNotifications(
       BuildContext context, AuthenticationCubit authenticationCubit) {
     var user = FirebaseAuth.instance.currentUser!.isAnonymous;
     return showModalBottomSheet(
@@ -369,13 +397,13 @@ class _HomePageState extends State<HomePage> {
                           .copyWith(fontSize: 12.sp),
                     ),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      if (1 > 2) ...[
+                      // if (1 > 2) ...[
                         Text(
                           'Daily Notifications Enabled: ',
                           style: TextStyle(fontSize: 12.0),
                         ),
                         MyStatefulWidget()
-                      ]
+                      // ]
                     ]),
                     SizedBox(
                       height: 3.h,
@@ -428,6 +456,110 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<dynamic> _showBottomSheetWithoutNotifications(
+      BuildContext context, AuthenticationCubit authenticationCubit) {
+    var user = FirebaseAuth.instance.currentUser!.isAnonymous;
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(25.0),
+        ),
+      ),
+      builder: (context) {
+        return SingleChildScrollView(
+          padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: StatefulBuilder(
+            builder: ((context, setModalState) {
+              return Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Settings',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline1!
+                          .copyWith(fontSize: 14.sp),
+                    ),
+                    SizedBox(
+                      height: 3.h,
+                    ),
+                    Text(
+                      'User Display Name',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline2!
+                          .copyWith(fontSize: 12.sp),
+                    ),
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    (user)
+                        ? Container()
+                        : MyTextfield(
+                        hint: '',
+                        icon: Icons.person,
+                        validator: (value) {},
+                        textEditingController: _usercontroller),
+                    SizedBox(
+                      height: 3.h,
+                    ),
+                    SizedBox(
+                      height: 3.h,
+                    ),
+                    (user)
+                        ? Container()
+                        : BlocBuilder<AuthenticationCubit, AuthenticationState>(
+                      builder: (context, state) {
+                        if (state is UpdateProfileLoadingState) {
+                          return const MyCircularIndicator();
+                        }
+
+                        return MyButton(
+                          color: Colors.green,
+                          width: 80.w,
+                          title: "Update Profile",
+                          func: () {
+                            if (_usercontroller.text == '') {
+                              MySnackBar.error(
+                                  message: 'Name should not be empty!!',
+                                  color: Colors.red,
+                                  context: context);
+                            } else {
+                              authenticationCubit.updateUserInfo(
+                                  _usercontroller.text, context);
+                              setState(() {});
+                            }
+                          },
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      height: 1.h,
+                    ),
+                    MyButton(
+                      color: Colors.red,
+                      width: 80.w,
+                      title: "Log Out",
+                      func: () {
+                        authenticationCubit.signout();
+                      },
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _nodatawidget() {
     return Center(
       child: Column(
@@ -452,6 +584,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
 
 class MyStatefulWidget extends StatefulWidget {
   const MyStatefulWidget({Key? key}) : super(key: key);

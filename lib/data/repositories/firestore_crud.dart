@@ -62,14 +62,17 @@ class FireStoreCrud {
     dob,
     docid,
     dischargeDate,
-    dueDate
+    dueDate,
+    recruitedAfterDischarge
   }) async {
     var childcollection = _firestore.collection('children');
     await childcollection.doc(docid).update({
       'name': name,
       'dob': dob,
       'dischargeDate': dischargeDate,
-      'dueDate': dueDate
+      'dueDate': dueDate,
+      'recruitedAfterDischarge': recruitedAfterDischarge
+
     });
   }
 

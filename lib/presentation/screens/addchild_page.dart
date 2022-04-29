@@ -13,6 +13,7 @@ import 'package:dolfin_flutter/presentation/widgets/mytextfield.dart';
 import 'package:dolfin_flutter/shared/constants/consts_variables.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
 import 'package:http/http.dart' as http;
+import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../shared/services/notification_service.dart';
 import '../widgets/mysnackbar.dart';
@@ -40,6 +41,8 @@ class _AddChildPageState extends State<AddChildPage> {
   late DateTime dischargeDate;
   late DateTime dueDate;
 
+  late bool recruitedAfterDischarge;
+
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -55,6 +58,7 @@ class _AddChildPageState extends State<AddChildPage> {
     isEditMode ? DateTime.parse(widget.child!.dischargeDate) : DateTime.now();
     dueDate =
     isEditMode ? DateTime.parse(widget.child!.dueDate) : DateTime.now();
+    recruitedAfterDischarge = false;
   }
 
   @override
@@ -218,8 +222,41 @@ class _AddChildPageState extends State<AddChildPage> {
           SizedBox(
             height: 2.h,
           ),
+          Text(
+            'Were you recruited to the study before hospital discharge?',
+            style: Theme
+                .of(context)
+                .textTheme
+                .headline1!
+                .copyWith(fontSize: 14.sp),
+          ),
           SizedBox(
             height: 1.h,
+          ),
+          ToggleSwitch(
+            minWidth: 90.0,
+            cornerRadius: 20.0,
+            activeBgColors: [[AppColours.light_blue], [AppColours.light_blue]],
+            activeFgColor: Colors.white,
+            inactiveBgColor: Colors.grey,
+            inactiveFgColor: Colors.white,
+            initialLabelIndex: 0,
+            totalSwitches: 2,
+            labels: ['Yes', 'No'],
+            radiusStyle: true,
+            onToggle: (index) {
+              print('switched to: $index');
+              // index 0 = recruited before discharge
+              // index 1 = recruited after discharge
+              if (index == 1) {
+                recruitedAfterDischarge = true;
+              } else {
+                recruitedAfterDischarge = false;
+              }
+            },
+          ),
+          SizedBox(
+            height: 2.h,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -256,6 +293,7 @@ class _AddChildPageState extends State<AddChildPage> {
               studyID: _trialIDcontroller.text,
               parentID: FirebaseAuth.instance.currentUser!.uid,
               id: '',
+              recruitedAfterDischarge: recruitedAfterDischarge
             );
 
             isEditMode

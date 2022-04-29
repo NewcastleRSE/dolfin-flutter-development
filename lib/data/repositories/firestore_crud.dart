@@ -73,33 +73,7 @@ class FireStoreCrud {
     });
   }
 
-  // update parent with merge setting in order to not overwrite existing fields
-  Future<void> updateParent({
-    required docid,
-    dailyNotifications,
-    tokens
-  }) async {
-    var parentcollection = _firestore.collection('parents');
 
-    // only update fields passed to function
-    if(dailyNotifications && tokens) {
-      print('update both');
-      parentcollection.doc(docid).set({
-        'dailyNotifications': dailyNotifications,
-        'tokens': tokens
-      }, SetOptions(merge: true));
-    } else if(dailyNotifications) {
-      print('update d');
-      parentcollection.doc(docid).set({
-        'dailyNotifications': dailyNotifications
-      }, SetOptions(merge: true));
-    } else if (tokens) {
-      print('update t');
-      parentcollection.doc(docid).set({
-        'tokens': tokens
-      }, SetOptions(merge: true));
-    }
-  }
 
   Future<void> updateRecord({
     required SupplementOptions supplement,

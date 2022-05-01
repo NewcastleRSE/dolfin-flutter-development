@@ -46,6 +46,7 @@ jobs:
           encodedString: ${{ secrets.KEYSTORE }}
       - name: Check Files
         run: |
+          ls .
           ls ./keys/android
           cat android/key.properties
         shell: bash

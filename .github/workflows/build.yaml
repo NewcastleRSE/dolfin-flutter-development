@@ -49,6 +49,7 @@ jobs:
       - name: Check Files
         working-directory: ./keys/android
         run: |
+          echo ${{ steps.decode_keystore.outputs.filePath }}
           ls .
         shell: bash
       - name: Fastlane Build & Release

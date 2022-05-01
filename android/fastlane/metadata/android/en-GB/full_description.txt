@@ -1,0 +1,1 @@
+Companion app for the DOLFIN clinical trial. The app reminders parents to record child weight after supplement intervention and submit results to the trial team during the length of the trial.

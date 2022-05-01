@@ -44,6 +44,11 @@ jobs:
         with:
           fileName: 'keys/android/upload-keystore.jks'
           encodedString: ${{ secrets.KEYSTORE }}
+      - name: Check Files
+        run: |
+          ls keys/android
+          cat android/key.properties
+        shell: bash
       - name: Fastlane Build & Release
         working-directory: ./android
         run: bundle exec fastlane alpha

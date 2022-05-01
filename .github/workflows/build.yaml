@@ -33,11 +33,13 @@ jobs:
       - name: Create Secrets
         run: |
           echo "$GOOGLE_SERVICES" >> android/app/google-services.json
+          echo "$PLAY_STORE_CREDENTIALS" >> keys/android/play-store-credentials.json
           echo "$KEY_PROPERTIES" >> android/key.properties
           mkdir -p keys/android
         shell: bash
         env:
           GOOGLE_SERVICES: ${{secrets.GOOGLE_SERVICES}}
+          PLAY_STORE_CREDENTIALS: ${{secrets.PLAY_STORE_CREDENTIALS}}
           KEY_PROPERTIES: ${{secrets.KEY_PROPERTIES}}
       - name: Decode Keystore
         id: decode_keystore
@@ -46,12 +48,9 @@ jobs:
           fileDir: 'keys/android/'
           fileName: 'upload-keystore.jks'
           encodedString: ${{ secrets.KEYSTORE }}
-      - name: Check Files
+      - name: Move keystore
         working-directory: ./keys/android
-        run: |
-          mv ${{ steps.decode_keystore.outputs.filePath }} .
-          ls .
-        shell: bash
+        run: mv ${{ steps.decode_keystore.outputs.filePath }} .
       - name: Fastlane Build & Release
         working-directory: ./android
         run: bundle exec fastlane alpha

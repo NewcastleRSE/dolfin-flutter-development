@@ -40,7 +40,9 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
   void initState() {
     super.initState();
     _childName = widget.child != null ? widget.child!.name : "Child Name";
-    NotificationsHandler.requestpermission(context);
+
+    // todo check this
+    // NotificationsHandler.requestpermission(context);
   }
 
   @override
@@ -200,17 +202,17 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                   physics: const BouncingScrollPhysics(),
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
-                                    var child = snapshot.data![index];
+                                    var record = snapshot.data![index];
                                     Widget _taskcontainer = RecordContainer(
-                                        id: child.id,
-                                        date: child.date,
-                                        supplement: "Yes",
-                                        weight: "9kg");
+                                        id: record.id,
+                                        date: record.date,
+                                        supplement: record.supplement,
+                                        weight: record.weight);
                                     return InkWell(
                                         onTap: () {
-                                          // Navigator.pushNamed(
-                                          //     context, addchildpage,
-                                          //     arguments: child);
+                                          Navigator.pushNamed(
+                                              context, addrecordpage,
+                                              arguments: record);
                                         },
                                         child: index % 2 == 0
                                             ? BounceInLeft(

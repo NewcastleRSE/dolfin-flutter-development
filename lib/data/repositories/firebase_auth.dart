@@ -21,6 +21,7 @@ class FirebaseAuthRepo implements UserRepository {
     } catch (e) {
       throw e.toString();
     }
+
   }
 
   @override
@@ -40,7 +41,7 @@ class FirebaseAuthRepo implements UserRepository {
         throw 'Please check your email address.';
       }
     } catch (e) {
-      throw Exception('oops,Something wrong happend!');
+      throw Exception('oops,Something wrong happened!');
     }
   }
 

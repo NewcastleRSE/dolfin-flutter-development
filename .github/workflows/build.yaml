@@ -34,6 +34,7 @@ jobs:
         run: |
           echo "$GOOGLE_SERVICES" >> android/app/google-services.json
           echo "$KEY_PROPERTIES" >> android/key.properties
+          mkdir -p keys/android
         shell: bash
         env:
           GOOGLE_SERVICES: ${{secrets.GOOGLE_SERVICES}}

@@ -32,10 +32,10 @@ jobs:
         run: bundle install
       - name: Create Secrets
         run: |
+          mkdir -p keys/android
           echo "$GOOGLE_SERVICES" >> android/app/google-services.json
           echo "$PLAY_STORE_CREDENTIALS" >> keys/android/play-store-credentials.json
           echo "$KEY_PROPERTIES" >> android/key.properties
-          mkdir -p keys/android
         shell: bash
         env:
           GOOGLE_SERVICES: ${{secrets.GOOGLE_SERVICES}}

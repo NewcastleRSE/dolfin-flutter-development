@@ -43,13 +43,13 @@ jobs:
         id: decode_keystore
         uses: timheuer/base64-to-file@v1
         with:
-          fileDir: './keys/android/'
+          fileDir: 'keys/android/'
           fileName: 'upload-keystore.jks'
           encodedString: ${{ secrets.KEYSTORE }}
       - name: Check Files
         working-directory: ./keys/android
         run: |
-          echo ${{ steps.decode_keystore.outputs.filePath }}
+          mv ${{ steps.decode_keystore.outputs.filePath }} .
           ls .
         shell: bash
       - name: Fastlane Build & Release

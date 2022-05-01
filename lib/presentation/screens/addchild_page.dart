@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
@@ -10,8 +12,11 @@ import 'package:dolfin_flutter/presentation/widgets/mybutton.dart';
 import 'package:dolfin_flutter/presentation/widgets/mytextfield.dart';
 import 'package:dolfin_flutter/shared/constants/consts_variables.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
+import 'package:http/http.dart' as http;
 
 import '../../shared/services/notification_service.dart';
+import '../widgets/mysnackbar.dart';
+
 
 class AddChildPage extends StatefulWidget {
   final ChildModel? child;
@@ -32,6 +37,8 @@ class _AddChildPageState extends State<AddChildPage> {
   late TextEditingController _namecontroller;
 
   late DateTime dateOfBirth;
+  late DateTime dischargeDate;
+  late DateTime dueDate;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -43,7 +50,11 @@ class _AddChildPageState extends State<AddChildPage> {
     _trialIDcontroller =
         TextEditingController(text: isEditMode ? widget.child!.studyID : '');
     dateOfBirth =
-        isEditMode ? DateTime.parse(widget.child!.dob) : DateTime.now();
+    isEditMode ? DateTime.parse(widget.child!.dob) : DateTime.now();
+    dischargeDate =
+    isEditMode ? DateTime.parse(widget.child!.dischargeDate) : DateTime.now();
+    dueDate =
+    isEditMode ? DateTime.parse(widget.child!.dueDate) : DateTime.now();
   }
 
   @override
@@ -83,7 +94,8 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
           Text(
             'Trial ID',
-            style: Theme.of(context)
+            style: Theme
+                .of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -98,7 +110,7 @@ class _AddChildPageState extends State<AddChildPage> {
             showicon: false,
             validator: (value) {
               return value!.isEmpty
-                  ? "Please enter the your child's Trial ID"
+                  ? "Please Enter Your Child's Trial ID"
                   : null;
             },
             textEditingController: _trialIDcontroller,
@@ -108,7 +120,8 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
           Text(
             'Name',
-            style: Theme.of(context)
+            style: Theme
+                .of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -131,8 +144,34 @@ class _AddChildPageState extends State<AddChildPage> {
             height: 2.h,
           ),
           Text(
-            'Discharge Date',
-            style: Theme.of(context)
+            'Due date',
+            style: Theme
+                .of(context)
+                .textTheme
+                .headline1!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 1.h,
+          ),
+          MyTextfield(
+            hint: DateFormat('dd/MM/yyyy').format(dueDate),
+            icon: Icons.calendar_today,
+            readonly: true,
+            showicon: false,
+            validator: (value) {},
+            ontap: () {
+              _showdatepickerdued();
+            },
+            textEditingController: TextEditingController(),
+          ),
+          SizedBox(
+            height: 1.h,
+          ),
+          Text(
+            'Date of birth',
+            style: Theme
+                .of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -147,7 +186,32 @@ class _AddChildPageState extends State<AddChildPage> {
             showicon: false,
             validator: (value) {},
             ontap: () {
-              _showdatepicker();
+              _showdatepickerdob();
+            },
+            textEditingController: TextEditingController(),
+          ),
+          SizedBox(
+            height: 1.h,
+          ),
+          Text(
+            'Discharge date',
+            style: Theme
+                .of(context)
+                .textTheme
+                .headline1!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 1.h,
+          ),
+          MyTextfield(
+            hint: DateFormat('dd/MM/yyyy').format(dischargeDate),
+            icon: Icons.calendar_today,
+            readonly: true,
+            showicon: false,
+            validator: (value) {},
+            ontap: () {
+              _showdatepickerdd();
             },
             textEditingController: TextEditingController(),
           ),
@@ -176,27 +240,46 @@ class _AddChildPageState extends State<AddChildPage> {
   }
 
   _addChild() {
+    // is form complete and is child registered with Oxford?
     if (_formKey.currentState!.validate()) {
-      ChildModel child = ChildModel(
-        name: _namecontroller.text,
-        dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-        studyID: _trialIDcontroller.text,
-        parentID: FirebaseAuth.instance.currentUser!.uid,
-        id: '',
-      );
-      isEditMode
-          ? FireStoreCrud().updateChild(
+
+      checkChild(_trialIDcontroller.text).then((childExists) {
+        // child is study participant
+        if (childExists) {
+            print('child is a study participant so save to DB');
+
+            ChildModel child = ChildModel(
+              name: _namecontroller.text,
+              dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
+              dischargeDate: DateFormat('yyyy-MM-dd').format(dischargeDate),
+              dueDate: DateFormat('yyyy-MM-dd').format(dueDate),
+              studyID: _trialIDcontroller.text,
+              parentID: FirebaseAuth.instance.currentUser!.uid,
+              id: '',
+            );
+
+            isEditMode
+                ? FireStoreCrud().updateChild(
               docid: widget.child!.id,
               name: _namecontroller.text,
               dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
             )
-          : FireStoreCrud().addChild(child: child);
+                : FireStoreCrud().addChild(child: child);
 
-      Navigator.pop(context);
-    }
+            Navigator.pop(context);
+        } else {
+        print('child does not exist in study');
+        MySnackBar.error(
+            message: 'Incorrect child ID',
+            color: Colors.red,
+            context: context);
+        }
+
+      }); // child exists with Oxford
+    } // validate
   }
 
-  _showdatepicker() async {
+  _showdatepickerdob() async {
     var selecteddate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -206,6 +289,31 @@ class _AddChildPageState extends State<AddChildPage> {
     );
     setState(() {
       selecteddate != null ? dateOfBirth = selecteddate : null;
+    });
+  }
+
+  _showdatepickerdued() async {
+    var selecteddate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2022),
+      lastDate: DateTime.now(),
+      currentDate: DateTime.now(),
+    );
+    setState(() {
+      selecteddate != null ? dueDate = selecteddate : null;
+    });
+  }
+  _showdatepickerdd() async {
+    var selecteddate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2022),
+      lastDate: DateTime.now(),
+      currentDate: DateTime.now(),
+    );
+    setState(() {
+      selecteddate != null ? dischargeDate = selecteddate : null;
     });
   }
 
@@ -224,10 +332,33 @@ class _AddChildPageState extends State<AddChildPage> {
         ),
         Text(
           isEditMode ? 'Edit Child' : 'Add a Child',
-          style: Theme.of(context).textTheme.headline1,
+          style: Theme
+              .of(context)
+              .textTheme
+              .headline1,
         ),
         const SizedBox()
       ],
     );
+  }
+
+  // http request to check child's ID/token is valid
+  //todo replace with correct URL from Oxford
+  Future<bool> checkChild(childCheck) async {
+    final response = await http.get(
+        Uri.parse('https://jsonplaceholder.typicode.com/users/' + childCheck));
+    // todo any other checks to be done on response?
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> child= jsonDecode(response.body);
+        if (child.containsKey('id')) {
+          print('returned from http');
+          print(child);
+          // success
+          return true;
+        }
+    }
+      return false;
+
   }
 }

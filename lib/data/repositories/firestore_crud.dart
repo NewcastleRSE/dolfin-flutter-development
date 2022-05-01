@@ -14,9 +14,9 @@ class FireStoreCrud {
     await childcollection.add(child.tojson());
   }
 
-  Future<void> addRecord({required RecordModel child}) async {
+  Future<void> addRecord({required RecordModel record}) async {
     var recordcollection = _firestore.collection('records');
-    await recordcollection.add(child.tojson());
+    await recordcollection.add(record.tojson());
   }
 
   Stream<List<ChildModel>> getChildren({required String parentID}) {
@@ -27,6 +27,24 @@ class FireStoreCrud {
         .map((snapshot) => snapshot.docs
             .map((doc) => ChildModel.fromjson(doc.data(), doc.id))
             .toList());
+  }
+
+  Future<List<String>> getDischargeDates({required String parentID}) async {
+    List<String> dates = [];
+
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('children')
+        .where('parent_id', isEqualTo: parentID)
+        .get();
+
+    for (var doc in querySnapshot.docs) {
+      // Getting data directly
+      String date = doc.get('dischargeDate');
+
+      dates.add(date);
+    }
+
+    return dates;
   }
 
   Stream<List<RecordModel>> getRecords({required String childID}) {
@@ -43,17 +61,22 @@ class FireStoreCrud {
     required String name,
     dob,
     docid,
+    dischargeDate,
+    dueDate
   }) async {
     var childcollection = _firestore.collection('children');
     await childcollection.doc(docid).update({
       'name': name,
       'dob': dob,
+      'dischargeDate': dischargeDate,
+      'dueDate': dueDate
     });
   }
 
 
+
   Future<void> updateRecord({
-    required String supplement,
+    required SupplementOptions supplement,
     weight,
     docid,
   }) async {

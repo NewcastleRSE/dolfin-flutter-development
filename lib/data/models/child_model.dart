@@ -6,6 +6,7 @@ class ChildModel {
   final String dischargeDate;
   final String dueDate;
   final String parentID;
+  final bool recruitedAfterDischarge;
 
   ChildModel({
     required this.id,
@@ -15,6 +16,7 @@ class ChildModel {
     required this.dischargeDate,
     required this.dueDate,
     required this.parentID,
+    required this.recruitedAfterDischarge,
   });
 
   factory ChildModel.fromjson(Map<String, dynamic> json, String id) {
@@ -25,6 +27,7 @@ class ChildModel {
         dob: json['dob'],
         dischargeDate: json['dischargeDate'],
         dueDate: json['dueDate'],
+        recruitedAfterDischarge: json['recruitedAfterDischarge'],
         parentID: json['parent_id']);
   }
 
@@ -35,6 +38,7 @@ class ChildModel {
       'dob': dob,
       'dischargeDate': dischargeDate,
       'dueDate': dueDate,
+      'recruitedAfterDischarge': recruitedAfterDischarge,
       'parent_id': parentID
     };
   }

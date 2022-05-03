@@ -48,6 +48,8 @@ class _HomePageState extends State<HomePage> {
     // save parent ID and FCM token to Firestore for push notifications
     // get FCM token
     FirebaseMessaging.instance.getToken().then((value) {
+      print('get token');
+      print(value);
       String? token = value;
       // Save the initial token to the database
       saveFCMTokenToDatabase(token!);
@@ -91,6 +93,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> saveFCMTokenToDatabase(String token) async {
+    print('save to database');
     String? userId = FirebaseAuth.instance.currentUser?.uid;
 
     await FirebaseFirestore.instance
@@ -98,7 +101,12 @@ class _HomePageState extends State<HomePage> {
         .doc(userId)
         .set({
       'tokens': FieldValue.arrayUnion([token])
-    }, SetOptions(merge: true));
+    }, SetOptions(merge: true)).then((result) {
+      print('success saving fcm token');
+    }).catchError((onError) {
+      print('error saving fcm token');
+      print(onError);
+    });
   }
 
 

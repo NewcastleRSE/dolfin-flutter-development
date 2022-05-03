@@ -19,7 +19,6 @@ class RecordModel {
   final SupplementOptions? supplement;
   final ReasonOptions? reason;
   final String otherReason;
-  final num weight;
 
   RecordModel({
     required this.id,
@@ -28,7 +27,6 @@ class RecordModel {
     required this.supplement,
     required this.reason,
     required this.otherReason,
-    required this.weight,
   });
 
   factory RecordModel.fromjson(Map<String, dynamic> json, String id) {
@@ -38,8 +36,7 @@ class RecordModel {
         date: json['date'],
         supplement: deserialiseSupplement(json['supplement']),
         reason: deserialiseReason(json['reason']),
-        otherReason: json['other_reason'],
-        weight: json['weight']);
+        otherReason: json['other_reason']);
   }
 
   Map<String, dynamic> tojson() {
@@ -49,7 +46,6 @@ class RecordModel {
       'supplement': supplement.toString(),
       'reason': reason.toString(),
       'other_reason': otherReason,
-      'weight': weight
     };
   }
 }

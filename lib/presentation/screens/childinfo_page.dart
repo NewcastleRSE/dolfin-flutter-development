@@ -206,8 +206,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                     Widget _taskcontainer = RecordContainer(
                                         id: record.id,
                                         date: record.date,
-                                        supplement: record.supplement,
-                                        weight: record.weight);
+                                        supplement: record.supplement);
                                     return InkWell(
                                         onTap: () {
                                           Navigator.pushNamed(

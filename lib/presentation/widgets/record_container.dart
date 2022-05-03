@@ -8,14 +8,12 @@ class RecordContainer extends StatelessWidget {
   final String id;
   final String date;
   final SupplementOptions? supplement;
-  final num weight;
 
   const RecordContainer({
     Key? key,
     required this.id,
     required this.date,
     required this.supplement,
-    required this.weight,
   }) : super(key: key);
 
   String supplementToString(SupplementOptions? options) {
@@ -82,15 +80,6 @@ class RecordContainer extends StatelessWidget {
                     ),
               ),
             ]),
-            Column(children: [
-              Text(
-                weight.toStringAsFixed(1) + " kg",
-                style: Theme.of(context).textTheme.headline2!.copyWith(
-                      color: Colors.white,
-                      fontSize: 15.sp,
-                    ),
-              ),
-            ])
           ])
         ],
       ),

@@ -32,6 +32,8 @@ class _AddRecordPageState extends State<AddRecordPage> {
   late String _dropdownvalue;
 
   late DateTime recordDate;
+  late bool _moreInfoVisible;
+  late bool _otherReasonVisible;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -49,6 +51,16 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
     recordDate =
         isEditMode ? DateTime.parse(widget.record!.date) : DateTime.now();
+
+    _moreInfoVisible =
+        (isEditMode && widget.record!.supplement == SupplementOptions.noDose)
+            ? true
+            : false;
+
+    _otherReasonVisible =
+        (isEditMode && widget.record!.reason == ReasonOptions.other)
+            ? true
+            : false;
 
     _dropdownvalue = "1";
   }
@@ -161,6 +173,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                   onChanged: (SupplementOptions? value) {
                     setState(() {
                       _supplement = value;
+                      _moreInfoVisible = false;
                     });
                   },
                 ),
@@ -173,6 +186,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                   onChanged: (SupplementOptions? value) {
                     setState(() {
                       _supplement = value;
+                      _moreInfoVisible = false;
                     });
                   },
                 ),
@@ -185,6 +199,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                   onChanged: (SupplementOptions? value) {
                     setState(() {
                       _supplement = value;
+                      _moreInfoVisible = true;
                     });
                   },
                 ),
@@ -194,108 +209,123 @@ class _AddRecordPageState extends State<AddRecordPage> {
           SizedBox(
             height: 2.h,
           ),
-          Text(
-            'Thank you for letting us know. It would be helpful for us to know why:',
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(fontSize: 14.sp),
-          ),
-          SizedBox(
-            height: 1.h,
-          ),
-          //MyStatefulWidget(),
-          Column(
-            children: <Widget>[
-              ListTile(
-                title: const Text('I Forgot'),
-                leading: Radio<ReasonOptions>(
-                  value: ReasonOptions.forgot,
-                  groupValue: _reason,
-                  onChanged: (ReasonOptions? value) {
-                    setState(() {
-                      _reason = value;
-                    });
-                  },
+          Visibility(
+            visible: _moreInfoVisible,
+            child: Column(
+              children: [
+                Text(
+                  'Thank you for letting us know. It would be helpful for us to know why:',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(fontSize: 14.sp),
                 ),
-              ),
-              ListTile(
-                title: const Text('We have run out'),
-                leading: Radio<ReasonOptions>(
-                  value: ReasonOptions.ranOut,
-                  groupValue: _reason,
-                  onChanged: (ReasonOptions? value) {
-                    setState(() {
-                      _reason = value;
-                    });
-                  },
+                SizedBox(
+                  height: 1.h,
                 ),
-              ),
-              ListTile(
-                title: const Text('My baby refused it'),
-                leading: Radio<ReasonOptions>(
-                  value: ReasonOptions.refused,
-                  groupValue: _reason,
-                  onChanged: (ReasonOptions? value) {
-                    setState(() {
-                      _reason = value;
-                    });
-                  },
+                Column(
+                  children: <Widget>[
+                    ListTile(
+                      title: const Text('I Forgot'),
+                      leading: Radio<ReasonOptions>(
+                        value: ReasonOptions.forgot,
+                        groupValue: _reason,
+                        onChanged: (ReasonOptions? value) {
+                          setState(() {
+                            _reason = value;
+                            _otherReasonVisible = false;
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('We have run out'),
+                      leading: Radio<ReasonOptions>(
+                        value: ReasonOptions.ranOut,
+                        groupValue: _reason,
+                        onChanged: (ReasonOptions? value) {
+                          setState(() {
+                            _reason = value;
+                            _otherReasonVisible = false;
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('My baby refused it'),
+                      leading: Radio<ReasonOptions>(
+                        value: ReasonOptions.refused,
+                        groupValue: _reason,
+                        onChanged: (ReasonOptions? value) {
+                          setState(() {
+                            _reason = value;
+                            _otherReasonVisible = false;
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('My baby spat it out'),
+                      leading: Radio<ReasonOptions>(
+                        value: ReasonOptions.spatOut,
+                        groupValue: _reason,
+                        onChanged: (ReasonOptions? value) {
+                          setState(() {
+                            _reason = value;
+                            _otherReasonVisible = false;
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('My baby is unwell'),
+                      leading: Radio<ReasonOptions>(
+                        value: ReasonOptions.unwell,
+                        groupValue: _reason,
+                        onChanged: (ReasonOptions? value) {
+                          setState(() {
+                            _reason = value;
+                            _otherReasonVisible = false;
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('Other'),
+                      leading: Radio<ReasonOptions>(
+                        value: ReasonOptions.other,
+                        groupValue: _reason,
+                        onChanged: (ReasonOptions? value) {
+                          setState(() {
+                            _reason = value;
+                            _otherReasonVisible = true;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              ListTile(
-                title: const Text('My baby spat it out'),
-                leading: Radio<ReasonOptions>(
-                  value: ReasonOptions.spatOut,
-                  groupValue: _reason,
-                  onChanged: (ReasonOptions? value) {
-                    setState(() {
-                      _reason = value;
-                    });
-                  },
+                SizedBox(
+                  height: 1.h,
                 ),
-              ),
-              ListTile(
-                title: const Text('My baby is unwell'),
-                leading: Radio<ReasonOptions>(
-                  value: ReasonOptions.unwell,
-                  groupValue: _reason,
-                  onChanged: (ReasonOptions? value) {
-                    setState(() {
-                      _reason = value;
-                    });
-                  },
+                Visibility(
+                  visible: _otherReasonVisible,
+                  child: MyTextfield(
+                    readonly: false,
+                    hint: "Please give details",
+                    icon: Icons.title,
+                    showicon: false,
+                    validator: (value) {
+                      return null;
+                    },
+                    textEditingController: _reasoncontroller,
+                  ),
                 ),
-              ),
-              ListTile(
-                title: const Text('Other'),
-                leading: Radio<ReasonOptions>(
-                  value: ReasonOptions.other,
-                  groupValue: _reason,
-                  onChanged: (ReasonOptions? value) {
-                    setState(() {
-                      _reason = value;
-                    });
-                  },
+                SizedBox(
+                  height: 3.h,
                 ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 1.h,
-          ),
-          MyTextfield(
-            readonly: isEditMode ? true : false,
-            hint: "Please give details",
-            icon: Icons.title,
-            showicon: false,
-            validator: (value) {
-              return null;
-            },
-            textEditingController: _reasoncontroller,
-          ),
-          SizedBox(
-            height: 3.h,
+              ],
+            ),
           ),
           Text(
             'How many scoops of supplement per day are you giving your baby at the moment??',
@@ -403,13 +433,15 @@ class _AddRecordPageState extends State<AddRecordPage> {
         supplement: _supplement,
         reason: _reason,
         otherReason: _reasoncontroller.text,
-        child: widget.child!.id,
+        child: isEditMode ? widget.record!.child : widget.child!.id,
         id: '',
       );
       isEditMode
           ? FireStoreCrud().updateRecord(
               docid: widget.record!.id,
-              supplement: SupplementOptions.fullDose,
+              supplement: _supplement.toString(),
+              reason: _reason.toString(),
+              otherReason: _reasoncontroller.text,
             )
           : FireStoreCrud().addRecord(record: record);
 

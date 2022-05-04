@@ -93,7 +93,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> saveFCMTokenToDatabase(String token) async {
-    print('save to database');
     String? userId = FirebaseAuth.instance.currentUser?.uid;
 
     await FirebaseFirestore.instance
@@ -102,7 +101,6 @@ class _HomePageState extends State<HomePage> {
         .set({
       'tokens': FieldValue.arrayUnion([token])
     }, SetOptions(merge: true)).then((result) {
-      print('success saving fcm token');
     }).catchError((onError) {
       print('error saving fcm token');
       print(onError);
@@ -111,7 +109,6 @@ class _HomePageState extends State<HomePage> {
 
 
   bool checkDailyNotificationsVisibility() {
-    print('check notifications');
     var childrenSnapshot =
     FireStoreCrud().getChildren(parentID: FirebaseAuth.instance.currentUser!.uid);
 
@@ -127,7 +124,6 @@ class _HomePageState extends State<HomePage> {
 
         // if it has been over 3 months since hospital discharge show option to turn off daily reminders
         if(daysBetween(dischargeDate, today) >= 84) {
-          print('past 3 months');
          past3 = true;
           break;
         }
@@ -214,8 +210,6 @@ class _HomePageState extends State<HomePage> {
                           ),
                           InkWell(
                             onTap: () {
-                              // todo NOTE not sure this is best practice to put this code here however I cant get it to work putting a function call anywhere else!
-
                               bool past3 = false;
                               DateTime now = DateTime.now();
                               DateTime today = DateTime(now.year, now.month, now.day);
@@ -226,7 +220,6 @@ class _HomePageState extends State<HomePage> {
 
                                  // if it has been over 3 months since hospital discharge show option to turn off daily reminders
                                  if (days >= 84) {
-                                   print('past 3 months');
                                    past3 = true;
                                    break;
                                  }

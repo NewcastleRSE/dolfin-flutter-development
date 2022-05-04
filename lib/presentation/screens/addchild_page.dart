@@ -245,7 +245,6 @@ class _AddChildPageState extends State<AddChildPage> {
             labels: ['Yes', 'No'],
             radiusStyle: true,
             onToggle: (index) {
-              print('switched to: $index');
               // index 0 = recruited before discharge
               // index 1 = recruited after discharge
               if (index == 1) {

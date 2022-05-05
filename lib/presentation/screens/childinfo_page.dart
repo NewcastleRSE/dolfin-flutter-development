@@ -166,7 +166,8 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                               Navigator.pushNamed(context, addchildpage,
                                   arguments: widget.child);
                             },
-                          )
+                          ),
+                         HospitalAdmissionWidget(child: widget.child)
                         ],
                       ),
                       SizedBox(
@@ -262,4 +263,48 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
       ),
     );
   }
+}
+
+class HospitalAdmissionWidget extends StatelessWidget {
+
+  const HospitalAdmissionWidget({Key? key, this.child}) : super(key: key);
+
+  final ChildModel? child;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () => showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          content: const Text('Have you had any new unplanned hospital admissions in the last week?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: ()  {
+                // save entry in Firestore db for this child and today's date
+               var study_id = child!.studyID;
+               var child_id = child!.id;
+                FireStoreCrud().addChildHospitalAdmission(child_id, study_id);
+               Navigator.pop(context);
+              },
+              child: const Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+          ],
+        ),
+      ),
+      child: Icon(Icons.domain_add_outlined, color: Colors.white),
+      style: ElevatedButton.styleFrom(
+          shape: CircleBorder(),
+          padding: EdgeInsets.all(12),
+          primary: AppColours.light_blue
+      ),
+    );
+  }
+
+
+
 }

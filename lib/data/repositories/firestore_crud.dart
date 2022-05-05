@@ -19,6 +19,17 @@ class FireStoreCrud {
     await recordcollection.add(record.tojson());
   }
 
+  Future<void> addChildHospitalAdmission(String child_id, String study_id) async {
+    DateTime now = DateTime.now();
+    String today = DateTime(now.year, now.month, now.day).toString();
+    // strip time from date
+    today = today.split(' ')[0];
+
+    await FirebaseFirestore.instance
+        .collection('admissions')
+        .add({ 'child_id': child_id, 'study_id': study_id, 'date_submitted': today });
+  }
+
   Stream<List<ChildModel>> getChildren({required String parentID}) {
     return _firestore
         .collection('children')

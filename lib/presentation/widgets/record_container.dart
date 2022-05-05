@@ -65,7 +65,7 @@ class RecordContainer extends StatelessWidget {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Column(children: [
               Text(
-                DateFormat('yyyy-mm-dd').format(date),
+                DateFormat('yyyy-MM-dd').format(date),
                 style: Theme.of(context).textTheme.headline1!.copyWith(
                       color: Colors.white,
                       fontSize: 15.sp,

@@ -49,8 +49,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
     _reasoncontroller = TextEditingController(
         text: isEditMode ? widget.record!.otherReason : '');
 
-    recordDate =
-        isEditMode ? DateTime.parse(widget.record!.date) : DateTime.now();
+    recordDate = isEditMode ? widget.record!.date : DateTime.now();
 
     _moreInfoVisible =
         (isEditMode && widget.record!.supplement == SupplementOptions.noDose)
@@ -429,7 +428,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
   _addRecord() {
     if (_formKey.currentState!.validate()) {
       RecordModel record = RecordModel(
-        date: DateFormat('yyyy-MM-dd').format(recordDate),
+        date: recordDate,
         supplement: _supplement,
         reason: _reason,
         otherReason: _reasoncontroller.text,

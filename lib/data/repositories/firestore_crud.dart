@@ -57,6 +57,21 @@ class FireStoreCrud {
             .toList());
   }
 
+  Stream<List<RecordModel>> getRecordsRange(
+      {required String childID,
+      required DateTime start,
+      required DateTime end}) {
+    return _firestore
+        .collection('records')
+        .where('child_id', isEqualTo: childID)
+        .where('date', isGreaterThan: Timestamp.fromDate(start))
+        .where('date', isLessThan: Timestamp.fromDate(end))
+        .snapshots(includeMetadataChanges: true)
+        .map((snapshot) => snapshot.docs
+            .map((doc) => RecordModel.fromjson(doc.data(), doc.id))
+            .toList());
+  }
+
   Future<void> updateChild(
       {required String name,
       dob,

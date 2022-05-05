@@ -59,6 +59,9 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
     final user = FirebaseAuth.instance.currentUser;
     String username = user!.isAnonymous ? 'Anonymous' : 'User';
 
+    DateTime today = DateTime.now();
+    DateTime lastWeek = today.subtract(const Duration(days: 7));
+
     return Scaffold(
         body: MultiBlocListener(
             listeners: [
@@ -185,8 +188,10 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                       ),
                       Expanded(
                           child: StreamBuilder(
-                        stream: FireStoreCrud()
-                            .getRecords(childID: widget.child!.id),
+                        stream: FireStoreCrud().getRecordsRange(
+                            childID: widget.child!.id,
+                            start: lastWeek,
+                            end: today),
                         builder: (BuildContext context,
                             AsyncSnapshot<List<RecordModel>> snapshot) {
                           if (snapshot.hasError) {

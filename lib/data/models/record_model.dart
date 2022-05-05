@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolfin_flutter/presentation/screens/addrecord_page.dart';
 
 enum SupplementOptions { fullDose, partialDose, noDose }
@@ -15,11 +16,10 @@ ReasonOptions? deserialiseReason(String str) {
 class RecordModel {
   final String id;
   final String child;
-  final String date;
+  final DateTime date;
   final SupplementOptions? supplement;
   final ReasonOptions? reason;
   final String otherReason;
-  final num weight;
 
   RecordModel({
     required this.id,
@@ -28,18 +28,17 @@ class RecordModel {
     required this.supplement,
     required this.reason,
     required this.otherReason,
-    required this.weight,
   });
 
   factory RecordModel.fromjson(Map<String, dynamic> json, String id) {
+    final Timestamp timestamp = json['date'];
     return RecordModel(
         id: id,
         child: json['child_id'],
-        date: json['date'],
+        date: timestamp.toDate(),
         supplement: deserialiseSupplement(json['supplement']),
         reason: deserialiseReason(json['reason']),
-        otherReason: json['other_reason'],
-        weight: json['weight']);
+        otherReason: json['other_reason']);
   }
 
   Map<String, dynamic> tojson() {
@@ -49,7 +48,6 @@ class RecordModel {
       'supplement': supplement.toString(),
       'reason': reason.toString(),
       'other_reason': otherReason,
-      'weight': weight
     };
   }
 }

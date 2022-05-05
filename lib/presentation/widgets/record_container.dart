@@ -2,20 +2,19 @@ import 'package:dolfin_flutter/data/models/record_model.dart';
 import 'package:dolfin_flutter/presentation/screens/addrecord_page.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
 class RecordContainer extends StatelessWidget {
   final String id;
-  final String date;
+  final DateTime date;
   final SupplementOptions? supplement;
-  final num weight;
 
   const RecordContainer({
     Key? key,
     required this.id,
     required this.date,
     required this.supplement,
-    required this.weight,
   }) : super(key: key);
 
   String supplementToString(SupplementOptions? options) {
@@ -66,7 +65,7 @@ class RecordContainer extends StatelessWidget {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Column(children: [
               Text(
-                date,
+                DateFormat('yyyy-mm-dd').format(date),
                 style: Theme.of(context).textTheme.headline1!.copyWith(
                       color: Colors.white,
                       fontSize: 15.sp,
@@ -82,15 +81,6 @@ class RecordContainer extends StatelessWidget {
                     ),
               ),
             ]),
-            Column(children: [
-              Text(
-                weight.toStringAsFixed(1) + " kg",
-                style: Theme.of(context).textTheme.headline2!.copyWith(
-                      color: Colors.white,
-                      fontSize: 15.sp,
-                    ),
-              ),
-            ])
           ])
         ],
       ),

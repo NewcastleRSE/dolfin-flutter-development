@@ -57,14 +57,28 @@ class FireStoreCrud {
             .toList());
   }
 
-  Future<void> updateChild({
-    required String name,
-    dob,
-    docid,
-    dischargeDate,
-    dueDate,
-    recruitedAfterDischarge
-  }) async {
+  Stream<List<RecordModel>> getRecordsRange(
+      {required String childID,
+      required DateTime start,
+      required DateTime end}) {
+    return _firestore
+        .collection('records')
+        .where('child_id', isEqualTo: childID)
+        .where('date', isGreaterThan: Timestamp.fromDate(start))
+        .where('date', isLessThan: Timestamp.fromDate(end))
+        .snapshots(includeMetadataChanges: true)
+        .map((snapshot) => snapshot.docs
+            .map((doc) => RecordModel.fromjson(doc.data(), doc.id))
+            .toList());
+  }
+
+  Future<void> updateChild(
+      {required String name,
+      dob,
+      docid,
+      dischargeDate,
+      dueDate,
+      recruitedAfterDischarge}) async {
     var childcollection = _firestore.collection('children');
     await childcollection.doc(docid).update({
       'name': name,
@@ -72,21 +86,20 @@ class FireStoreCrud {
       'dischargeDate': dischargeDate,
       'dueDate': dueDate,
       'recruitedAfterDischarge': recruitedAfterDischarge
-
     });
   }
 
-
-
   Future<void> updateRecord({
-    required SupplementOptions supplement,
-    weight,
+    required String supplement,
+    reason,
+    otherReason,
     docid,
   }) async {
     var recordcollection = _firestore.collection('records');
     await recordcollection.doc(docid).update({
       'supplement': supplement,
-      'weight': weight,
+      'reason': reason,
+      'other_reason': otherReason
     });
   }
 

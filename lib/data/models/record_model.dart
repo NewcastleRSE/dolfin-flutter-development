@@ -16,6 +16,7 @@ ReasonOptions? deserialiseReason(String str) {
 class RecordModel {
   final String id;
   final String child;
+  final String studyID;
   final DateTime date;
   final SupplementOptions? supplement;
   final ReasonOptions? reason;
@@ -24,6 +25,7 @@ class RecordModel {
   RecordModel({
     required this.id,
     required this.child,
+    required this.studyID,
     required this.date,
     required this.supplement,
     required this.reason,
@@ -35,6 +37,7 @@ class RecordModel {
     return RecordModel(
         id: id,
         child: json['child_id'],
+        studyID: json['study_id'],
         date: timestamp.toDate(),
         supplement: deserialiseSupplement(json['supplement']),
         reason: deserialiseReason(json['reason']),
@@ -44,6 +47,7 @@ class RecordModel {
   Map<String, dynamic> tojson() {
     return {
       'child_id': child,
+      'study_id': studyID,
       'date': date,
       'supplement': supplement.toString(),
       'reason': reason.toString(),

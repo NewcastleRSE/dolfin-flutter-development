@@ -25,6 +25,8 @@ class AddRecordPage extends StatefulWidget {
 class _AddRecordPageState extends State<AddRecordPage> {
   get isEditMode => widget.record != null;
 
+  late String _childStudyID;
+
   late TextEditingController _reasoncontroller;
 
   late SupplementOptions? _supplement;
@@ -60,6 +62,8 @@ class _AddRecordPageState extends State<AddRecordPage> {
         (isEditMode && widget.record!.reason == ReasonOptions.other)
             ? true
             : false;
+
+    _childStudyID = isEditMode ? widget.record!.studyID : widget.child!.studyID;
 
     _dropdownvalue = "1";
   }
@@ -432,7 +436,8 @@ class _AddRecordPageState extends State<AddRecordPage> {
         supplement: _supplement,
         reason: _reason,
         otherReason: _reasoncontroller.text,
-        child: isEditMode ? widget.record!.child : widget.child!.id,
+        child: widget.child!.id,
+        studyID: widget.child!.studyID,
         id: '',
       );
       isEditMode

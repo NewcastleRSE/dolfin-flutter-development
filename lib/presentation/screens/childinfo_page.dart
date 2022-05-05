@@ -158,16 +158,18 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                 .copyWith(fontSize: 17.sp),
                           ),
                           const Spacer(),
-                          MyButton(
-                            color: AppColours.light_blue,
-                            width: 40.w,
-                            title: 'Edit Child',
-                            func: () {
+                          ElevatedButton(
+                            onPressed: () {
                               Navigator.pushNamed(context, addchildpage,
                                   arguments: widget.child);
                             },
+                            child: Icon(Icons.edit, color: Colors.white),
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                padding: EdgeInsets.all(12),
+                                primary: AppColours.light_blue),
                           ),
-                         HospitalAdmissionWidget(child: widget.child)
+                          HospitalAdmissionWidget(child: widget.child)
                         ],
                       ),
                       SizedBox(
@@ -266,7 +268,6 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
 }
 
 class HospitalAdmissionWidget extends StatelessWidget {
-
   const HospitalAdmissionWidget({Key? key, this.child}) : super(key: key);
 
   final ChildModel? child;
@@ -277,15 +278,16 @@ class HospitalAdmissionWidget extends StatelessWidget {
       onPressed: () => showDialog<String>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          content: const Text('Have you had any new unplanned hospital admissions in the last week?'),
+          content: const Text(
+              'Have you had any new unplanned hospital admissions in the last week?'),
           actions: <Widget>[
             TextButton(
-              onPressed: ()  {
+              onPressed: () {
                 // save entry in Firestore db for this child and today's date
-               var study_id = child!.studyID;
-               var child_id = child!.id;
+                var study_id = child!.studyID;
+                var child_id = child!.id;
                 FireStoreCrud().addChildHospitalAdmission(child_id, study_id);
-               Navigator.pop(context);
+                Navigator.pop(context);
               },
               child: const Text('Yes'),
             ),
@@ -300,11 +302,7 @@ class HospitalAdmissionWidget extends StatelessWidget {
       style: ElevatedButton.styleFrom(
           shape: CircleBorder(),
           padding: EdgeInsets.all(12),
-          primary: AppColours.light_blue
-      ),
+          primary: AppColours.light_blue),
     );
   }
-
-
-
 }

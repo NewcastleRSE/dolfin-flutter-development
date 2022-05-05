@@ -11,10 +11,12 @@ import 'package:dolfin_flutter/shared/styles/colours.dart';
 class AddRecordPage extends StatefulWidget {
   final ChildModel? child;
   final RecordModel? record;
+  final DateTime? date;
 
   const AddRecordPage({
     this.child,
     this.record,
+    this.date,
     Key? key,
   }) : super(key: key);
 
@@ -51,7 +53,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
     _reasoncontroller = TextEditingController(
         text: isEditMode ? widget.record!.otherReason : '');
 
-    recordDate = isEditMode ? widget.record!.date : DateTime.now();
+    recordDate = isEditMode ? widget.record!.date : widget.date!;
 
     _moreInfoVisible =
         (isEditMode && widget.record!.supplement == SupplementOptions.noDose)
@@ -138,9 +140,6 @@ class _AddRecordPageState extends State<AddRecordPage> {
             readonly: true,
             showicon: false,
             validator: (value) {},
-            ontap: () {
-              _showdatepicker();
-            },
             textEditingController: TextEditingController(),
           ),
           SizedBox(
@@ -436,8 +435,8 @@ class _AddRecordPageState extends State<AddRecordPage> {
         supplement: _supplement,
         reason: _reason,
         otherReason: _reasoncontroller.text,
-        child: widget.child!.id,
-        studyID: widget.child!.studyID,
+        child: isEditMode ? widget.record!.child : widget.child!.id,
+        studyID: isEditMode ? widget.record!.studyID : widget.child!.studyID,
         id: '',
       );
       isEditMode

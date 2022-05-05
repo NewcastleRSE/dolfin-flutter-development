@@ -54,17 +54,19 @@ class AppRoute {
         }
       case addrecordpage:
         {
-          final arg = settings.arguments;
+          final arg = settings.arguments as Map<String, dynamic>;
 
-          if (arg is ChildModel?) {
+          if (arg["data"] is ChildModel?) {
             return MaterialPageRoute(
                 builder: (_) => AddRecordPage(
-                      child: arg as ChildModel?,
+                      child: arg["data"] as ChildModel?,
+                      date: arg["date"] as DateTime?,
                     ));
           } else {
             return MaterialPageRoute(
                 builder: (_) => AddRecordPage(
-                      record: arg as RecordModel?,
+                      record: arg["data"] as RecordModel?,
+                      date: arg["date"] as DateTime?,
                     ));
           }
         }

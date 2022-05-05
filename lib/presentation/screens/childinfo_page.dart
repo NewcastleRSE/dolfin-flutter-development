@@ -17,6 +17,12 @@ import 'package:dolfin_flutter/shared/constants/strings.dart';
 import 'package:dolfin_flutter/shared/services/notification_service.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
 
+extension DateOnlyCompare on DateTime {
+  bool isSameDate(DateTime other) {
+    return year == other.year && month == other.month && day == other.day;
+  }
+}
+
 class ChildInfoPage extends StatefulWidget {
   final ChildModel? child;
 
@@ -173,20 +179,6 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                         ],
                       ),
                       SizedBox(
-                        height: 3.h,
-                      ),
-                      Center(
-                        child: MyButton(
-                          color: AppColours.dark_blue,
-                          width: 60.w,
-                          title: '+ Add New Record',
-                          func: () {
-                            Navigator.pushNamed(context, addrecordpage,
-                                arguments: widget.child);
-                          },
-                        ),
-                      ),
-                      SizedBox(
                         height: 5.h,
                       ),
                       Expanded(
@@ -205,16 +197,19 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                             return const MyCircularIndicator();
                           }
 
-                          return snapshot.data!.isNotEmpty
+                          List<RecordModel>? records =
+                              formatRecordData(snapshot.data, lastWeek, today);
+
+                          return records!.isNotEmpty
                               ? ListView.builder(
                                   physics: const BouncingScrollPhysics(),
-                                  itemCount: snapshot.data!.length,
+                                  itemCount: records.length,
                                   itemBuilder: (context, index) {
-                                    var record = snapshot.data![index];
+                                    var record = records[index];
                                     Widget _taskcontainer = RecordContainer(
-                                        id: record.id,
-                                        date: record.date,
-                                        supplement: record.supplement);
+                                        record: record,
+                                        child: widget.child,
+                                        editable: index <= 2);
                                     return InkWell(
                                         onTap: () {
                                           Navigator.pushNamed(
@@ -240,6 +235,40 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                 ));
               },
             )));
+  }
+
+  List<RecordModel>? formatRecordData(
+      List<RecordModel>? record, DateTime start, DateTime end) {
+    List<RecordModel>? results = [];
+
+    DateTime currentDate = end;
+    String child = record![0].child;
+    String studyID = record[0].studyID;
+
+    for (int i = 0; i < 7; i++) {
+      bool found = false;
+      for (RecordModel r in record!) {
+        if (r.date.isSameDate(currentDate)) {
+          results.add(r);
+          found = true;
+        }
+      }
+
+      if (!found) {
+        results.add(RecordModel(
+            id: "0",
+            child: child,
+            studyID: studyID,
+            date: currentDate,
+            supplement: SupplementOptions.fullDose,
+            reason: ReasonOptions.forgot,
+            otherReason: ""));
+      }
+
+      currentDate = currentDate.subtract(Duration(days: 1));
+    }
+
+    return results;
   }
 
   Widget _nodatawidget() {

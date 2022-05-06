@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dolfin_flutter/shared/styles/colours.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -43,10 +44,10 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     firebaseauthrepo
         .register(fullname: fullname, email: email, password: password)
         .then((value) {
-      emit(AuthenticationSuccessState());
-
       final user = FirebaseAuth.instance.currentUser;
       user!.updateDisplayName(fullname);
+
+      emit(AuthenticationSuccessState());
     }).catchError((e) {
       emit(AuthenticationErrortate(e.toString()));
       emit(UnAuthenticationState());
@@ -81,7 +82,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
           ? Navigator.pop(context)
           : MySnackBar.error(
               message: 'Please Click Another Time !!',
-              color: Colors.indigo,
+              color: AppColours.dark_blue,
               context: context);
     }).catchError((e) {
       emit(UpdateProfileErrorState());

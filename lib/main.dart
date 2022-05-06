@@ -2,6 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,35 +30,37 @@ Future<void> main() async {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  AwesomeNotifications().initialize(
-    null,
-    [
-      NotificationChannel(
-        channelKey: 'basic_channel',
-        channelName: 'Basic Notifications',
-        channelDescription: 'Notification channel for basic tests',
-        importance: NotificationImportance.High,
-        channelShowBadge: true,
-        locked: false,
-      ),
-    ],
-  );
+  // Firebase Cloud Messaging
+  // push notification when in background
+  FirebaseMessaging.onBackgroundMessage(_firebasePushHandler);
+  // todo probably navigate to a new form submission?
+  FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    print('Message clicked!');
+  });
+
   final prefs = await SharedPreferences.getInstance();
   final bool? seen = prefs.getBool('seen');
 
-  await SentryFlutter.init(
-    (options) {
-      options.dsn =
-          'https://e506dae22f9c478a93be1d6467770cd6@o1080315.ingest.sentry.io/6324285';
-      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-      // We recommend adjusting this value in production.
-      options.tracesSampleRate = 1.0;
-    },
-    appRunner: () => runApp(MyApp(
+  if (kReleaseMode) {
+    await SentryFlutter.init(
+      (options) {
+        options.dsn =
+            'https://e506dae22f9c478a93be1d6467770cd6@o1080315.ingest.sentry.io/6324285';
+        // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+        // We recommend adjusting this value in production.
+        options.tracesSampleRate = 1.0;
+      },
+      appRunner: () => runApp(MyApp(
+        seen: seen,
+        approute: AppRoute(),
+      )),
+    );
+  } else {
+    runApp(MyApp(
       seen: seen,
       approute: AppRoute(),
-    )),
-  );
+    ));
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -84,7 +87,7 @@ class MyApp extends StatelessWidget {
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Todo App',
+            title: 'DOLFIN App',
             themeMode: ThemeMode.light,
             theme: MyTheme.lightTheme,
             darkTheme: MyTheme.darkTheme,
@@ -109,4 +112,9 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+}
+
+
+Future<void> _firebasePushHandler(RemoteMessage message) async{
+  print('Message from push notification whilst running in background is ${message.data}');
 }

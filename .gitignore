@@ -47,3 +47,19 @@ app.*.map.json
 
 # Contains Firebase settings, should be manually downloaded
 android/app/google-services.json
+
+# Contains keys and certs for api access to app stores
+keys/
+!keys/android/.gitkeep
+
+# fastlane specific
+**/fastlane/report.xml
+
+# deliver temporary files
+**/fastlane/Preview.html
+
+# snapshot generated screenshots
+**/fastlane/screenshots
+
+# scan temporary files
+**/fastlane/test_output

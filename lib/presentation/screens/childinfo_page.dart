@@ -1,40 +1,43 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
-import 'package:dolfin_flutter/presentation/widgets/child_container.dart';
+import 'package:dolfin_flutter/data/models/record_model.dart';
+import 'package:dolfin_flutter/presentation/widgets/record_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:dolfin_flutter/bloc/auth/authentication_cubit.dart';
 import 'package:dolfin_flutter/bloc/connectivity/connectivity_cubit.dart';
-import 'package:dolfin_flutter/data/models/task_model.dart';
 import 'package:dolfin_flutter/data/repositories/firestore_crud.dart';
-import 'package:dolfin_flutter/presentation/screens/onboarding.dart';
 import 'package:dolfin_flutter/presentation/widgets/mybutton.dart';
 import 'package:dolfin_flutter/presentation/widgets/myindicator.dart';
 import 'package:dolfin_flutter/presentation/widgets/mysnackbar.dart';
-import 'package:dolfin_flutter/presentation/widgets/mytextfield.dart';
-import 'package:dolfin_flutter/presentation/widgets/task_container.dart';
 import 'package:dolfin_flutter/shared/constants/assets_path.dart';
-import 'package:dolfin_flutter/shared/constants/consts_variables.dart';
 import 'package:dolfin_flutter/shared/constants/strings.dart';
 import 'package:dolfin_flutter/shared/services/notification_service.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
 
+extension DateOnlyCompare on DateTime {
+  bool isSameDate(DateTime other) {
+    return year == other.year && month == other.month && day == other.day;
+  }
+}
+
 class ChildInfoPage extends StatefulWidget {
-  const ChildInfoPage({Key? key}) : super(key: key);
+  final ChildModel? child;
+
+  const ChildInfoPage({
+    this.child,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ChildInfoPage> createState() => _ChildInfoPageState();
 }
 
 class _ChildInfoPageState extends State<ChildInfoPage> {
+  late String _childName;
   static var currentdate = DateTime.now();
-  static bool? notificationPrefs = true;
 
   final TextEditingController _usercontroller = TextEditingController(
       text: FirebaseAuth.instance.currentUser!.displayName);
@@ -42,8 +45,10 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
   @override
   void initState() {
     super.initState();
+    _childName = widget.child != null ? widget.child!.name : "Child Name";
 
-    NotificationsHandler.requestpermission(context);
+    // todo check this
+    // NotificationsHandler.requestpermission(context);
   }
 
   @override
@@ -59,6 +64,9 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
     ConnectivityCubit connectivitycubit = BlocProvider.of(context);
     final user = FirebaseAuth.instance.currentUser;
     String username = user!.isAnonymous ? 'Anonymous' : 'User';
+
+    DateTime today = DateTime.now();
+    DateTime lastWeek = today.subtract(const Duration(days: 7));
 
     return Scaffold(
         body: MultiBlocListener(
@@ -103,9 +111,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                         children: [
                           Expanded(
                             child: Text(
-                              user.displayName != null
-                                  ? 'Hello ${user.displayName}'
-                                  : ' Hello $username',
+                              "Records",
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context)
                                   .textTheme
@@ -122,19 +128,6 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                             },
                             child: Icon(
                               Icons.home_rounded,
-                              size: 25.sp,
-                              color: AppColours.black,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 3.w,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              _showBottomSheet(context, authenticationCubit);
-                            },
-                            child: Icon(
-                              Icons.settings,
                               size: 25.sp,
                               color: AppColours.black,
                             ),
@@ -164,34 +157,38 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            DateFormat('MMMM, dd').format(currentdate),
+                            _childName,
                             style: Theme.of(context)
                                 .textTheme
                                 .headline1!
                                 .copyWith(fontSize: 17.sp),
                           ),
                           const Spacer(),
-                          MyButton(
-                            color: AppColours.green,
-                            width: 40.w,
-                            title: 'Edit Child',
-                            func: () {
-                              Navigator.pushNamed(
-                                context,
-                                addchildpage,
-                              );
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, addchildpage,
+                                  arguments: widget.child);
                             },
-                          )
+                            child: Icon(Icons.edit, color: Colors.white),
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                padding: EdgeInsets.all(12),
+                                primary: AppColours.light_blue),
+                          ),
+                          HospitalAdmissionWidget(child: widget.child)
                         ],
                       ),
                       SizedBox(
-                        height: 3.h,
+                        height: 5.h,
                       ),
                       Expanded(
                           child: StreamBuilder(
-                        stream: FireStoreCrud().getChildren(),
+                        stream: FireStoreCrud().getRecordsRange(
+                            childID: widget.child!.id,
+                            start: lastWeek,
+                            end: today),
                         builder: (BuildContext context,
-                            AsyncSnapshot<List<ChildModel>> snapshot) {
+                            AsyncSnapshot<List<RecordModel>> snapshot) {
                           if (snapshot.hasError) {
                             return _nodatawidget();
                           }
@@ -200,23 +197,24 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                             return const MyCircularIndicator();
                           }
 
-                          return snapshot.data!.isNotEmpty
+                          List<RecordModel>? records =
+                              formatRecordData(snapshot.data, lastWeek, today);
+
+                          return records!.isNotEmpty
                               ? ListView.builder(
                                   physics: const BouncingScrollPhysics(),
-                                  itemCount: snapshot.data!.length,
+                                  itemCount: records.length,
                                   itemBuilder: (context, index) {
-                                    var child = snapshot.data![index];
-                                    Widget _taskcontainer = ChildContainer(
-                                      id: child.id,
-                                      studyID: child.studyID,
-                                      name: child.name,
-                                      dob: child.dob,
-                                    );
+                                    var record = records[index];
+                                    Widget _taskcontainer = RecordContainer(
+                                        record: record,
+                                        child: widget.child,
+                                        editable: index <= 2);
                                     return InkWell(
                                         onTap: () {
                                           Navigator.pushNamed(
-                                              context, addchildpage,
-                                              arguments: child);
+                                              context, addrecordpage,
+                                              arguments: record);
                                         },
                                         child: index % 2 == 0
                                             ? BounceInLeft(
@@ -239,131 +237,38 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
             )));
   }
 
-  Future<dynamic> _showBottomSheet(
-      BuildContext context, AuthenticationCubit authenticationCubit) {
-    var user = FirebaseAuth.instance.currentUser!.isAnonymous;
-    return showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(25.0),
-        ),
-      ),
-      builder: (context) {
-        return SingleChildScrollView(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: StatefulBuilder(
-            builder: ((context, setModalState) {
-              return Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Settings',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline1!
-                          .copyWith(fontSize: 14.sp),
-                    ),
-                    SizedBox(
-                      height: 3.h,
-                    ),
-                    Text(
-                      'User Display Name',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline2!
-                          .copyWith(fontSize: 12.sp),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    (user)
-                        ? Container()
-                        : MyTextfield(
-                            hint: '',
-                            icon: Icons.person,
-                            validator: (value) {},
-                            textEditingController: _usercontroller),
-                    SizedBox(
-                      height: 3.h,
-                    ),
-                    Text(
-                      'Notification Preferences',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline2!
-                          .copyWith(fontSize: 12.sp),
-                    ),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Text(
-                        'Daily Notifications Enabled: ',
-                        style: TextStyle(fontSize: 12.0),
-                      ),
-                      Checkbox(
-                        checkColor: AppColours.dark_blue,
-                        activeColor: AppColours.white,
-                        value: notificationPrefs,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            notificationPrefs = value;
-                          });
-                        },
-                      ),
-                    ]),
-                    SizedBox(
-                      height: 3.h,
-                    ),
-                    (user)
-                        ? Container()
-                        : BlocBuilder<AuthenticationCubit, AuthenticationState>(
-                            builder: (context, state) {
-                              if (state is UpdateProfileLoadingState) {
-                                return const MyCircularIndicator();
-                              }
+  List<RecordModel>? formatRecordData(
+      List<RecordModel>? record, DateTime start, DateTime end) {
+    List<RecordModel>? results = [];
 
-                              return MyButton(
-                                color: Colors.green,
-                                width: 80.w,
-                                title: "Update Profile",
-                                func: () {
-                                  if (_usercontroller.text == '') {
-                                    MySnackBar.error(
-                                        message: 'Name shoud not be empty!!',
-                                        color: Colors.red,
-                                        context: context);
-                                  } else {
-                                    authenticationCubit.updateUserInfo(
-                                        _usercontroller.text, context);
-                                    setState(() {});
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                    SizedBox(
-                      height: 1.h,
-                    ),
-                    MyButton(
-                      color: Colors.red,
-                      width: 80.w,
-                      title: "Log Out",
-                      func: () {
-                        authenticationCubit.signout();
-                      },
-                    ),
-                  ],
-                ),
-              );
-            }),
-          ),
-        );
-      },
-    );
+    DateTime currentDate = end;
+    String child = record![0].child;
+    String studyID = record[0].studyID;
+
+    for (int i = 0; i < 7; i++) {
+      bool found = false;
+      for (RecordModel r in record!) {
+        if (r.date.isSameDate(currentDate)) {
+          results.add(r);
+          found = true;
+        }
+      }
+
+      if (!found) {
+        results.add(RecordModel(
+            id: "0",
+            child: child,
+            studyID: studyID,
+            date: currentDate,
+            supplement: SupplementOptions.fullDose,
+            reason: ReasonOptions.forgot,
+            otherReason: ""));
+      }
+
+      currentDate = currentDate.subtract(Duration(days: 1));
+    }
+
+    return results;
   }
 
   Widget _nodatawidget() {
@@ -376,9 +281,9 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
             MyAssets.clipboard,
             height: 30.h,
           ),
-          SizedBox(height: 3.h),
+          SizedBox(height: 5.h),
           Text(
-            'You have not added any children, add a child to continue',
+            'You currently have no records for this child. Add a record to continue.',
             textAlign: TextAlign.center,
             style: Theme.of(context)
                 .textTheme
@@ -387,6 +292,46 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class HospitalAdmissionWidget extends StatelessWidget {
+  const HospitalAdmissionWidget({Key? key, this.child}) : super(key: key);
+
+  final ChildModel? child;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () => showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          content: const Text(
+              'Have you had any new unplanned hospital admissions in the last week?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // save entry in Firestore db for this child and today's date
+                var study_id = child!.studyID;
+                var child_id = child!.id;
+                FireStoreCrud().addChildHospitalAdmission(child_id, study_id);
+                Navigator.pop(context);
+              },
+              child: const Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+          ],
+        ),
+      ),
+      child: Icon(Icons.domain_add_outlined, color: Colors.white),
+      style: ElevatedButton.styleFrom(
+          shape: CircleBorder(),
+          padding: EdgeInsets.all(12),
+          primary: AppColours.light_blue),
     );
   }
 }

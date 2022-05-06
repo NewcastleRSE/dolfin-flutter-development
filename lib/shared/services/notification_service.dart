@@ -44,44 +44,44 @@ class NotificationsHandler {
     });
   }
 
-  static Future<void> createNotification() async {
-    await AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: createUniqueId(),
-        channelKey: 'basic_channel',
-        title: '${Emojis.time_watch} It Is Time For Your Task!!!',
-        body: 'Check Your Tasks Now !!',
-        notificationLayout: NotificationLayout.Default,
-        backgroundColor: Colors.amber,
-        color: AppColours.purple,
-      ),
-    );
-  }
+  // static Future<void> createNotification() async {
+  //   await AwesomeNotifications().createNotification(
+  //     content: NotificationContent(
+  //       id: createUniqueId(),
+  //       channelKey: 'basic_channel',
+  //       title: '${Emojis.time_watch} It Is Time For Your Task!!!',
+  //       body: 'Check Your Tasks Now !!',
+  //       notificationLayout: NotificationLayout.Default,
+  //       backgroundColor: Colors.amber,
+  //       color: AppColours.purple,
+  //     ),
+  //   );
+  // }
 
-  static Future<void> createScheduledNotification({
-    required int date,
-    required int hour,
-    required int minute,
-    required String title,
-    required String body,
-  }) async {
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: createUniqueId(),
-          channelKey: 'basic_channel',
-          title: title,
-          body: body,
-          notificationLayout: NotificationLayout.Default,
-          backgroundColor: Colors.amber,
-          color: AppColours.purple,
-        ),
-        schedule: NotificationCalendar(
-          timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier(),
-          day: date,
-          hour: hour,
-          minute: minute,
-          second: 0,
-          millisecond: 0,
-        ));
-  }
+  // static Future<void> createScheduledNotification({
+  //   required int date,
+  //   required int hour,
+  //   required int minute,
+  //   required String title,
+  //   required String body,
+  // }) async {
+  //   await AwesomeNotifications().createNotification(
+  //       content: NotificationContent(
+  //         id: createUniqueId(),
+  //         channelKey: 'basic_channel',
+  //         title: title,
+  //         body: body,
+  //         notificationLayout: NotificationLayout.Default,
+  //         backgroundColor: Colors.amber,
+  //         color: AppColours.purple,
+  //       ),
+  //       schedule: NotificationCalendar(
+  //         timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier(),
+  //         day: date,
+  //         hour: hour,
+  //         minute: minute,
+  //         second: 0,
+  //         millisecond: 0,
+  //       ));
+  // }
 }

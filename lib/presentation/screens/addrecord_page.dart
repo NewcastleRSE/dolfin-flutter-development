@@ -330,7 +330,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             ),
           ),
           Text(
-            'How many scoops of supplement per day are you giving your baby at the moment??',
+            'How many scoops of supplement per day are you giving your baby at the moment?',
             style: Theme.of(context)
                 .textTheme
                 .headline1!
@@ -451,19 +451,6 @@ class _AddRecordPageState extends State<AddRecordPage> {
       Navigator.pop(context);
     }
   }
-
-  // _showdatepicker() async {
-  //   var selecteddate = await showDatePicker(
-  //     context: context,
-  //     initialDate: DateTime.now(),
-  //     firstDate: DateTime.now().subtract(const Duration(days: 7)),
-  //     lastDate: DateTime.now(),
-  //     currentDate: DateTime.now(),
-  //   );
-  //   setState(() {
-  //     selecteddate != null ? recordDate = selecteddate : null;
-  //   });
-  // }
 
   Row _buildAppBar(BuildContext context) {
     return Row(

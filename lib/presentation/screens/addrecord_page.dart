@@ -188,7 +188,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                   onChanged: (SupplementOptions? value) {
                     setState(() {
                       _supplement = value;
-                      _moreInfoVisible = false;
+                      _moreInfoVisible = true;
                     });
                   },
                 ),
@@ -452,18 +452,18 @@ class _AddRecordPageState extends State<AddRecordPage> {
     }
   }
 
-  _showdatepicker() async {
-    var selecteddate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 7)),
-      lastDate: DateTime.now(),
-      currentDate: DateTime.now(),
-    );
-    setState(() {
-      selecteddate != null ? recordDate = selecteddate : null;
-    });
-  }
+  // _showdatepicker() async {
+  //   var selecteddate = await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime.now().subtract(const Duration(days: 7)),
+  //     lastDate: DateTime.now(),
+  //     currentDate: DateTime.now(),
+  //   );
+  //   setState(() {
+  //     selecteddate != null ? recordDate = selecteddate : null;
+  //   });
+  // }
 
   Row _buildAppBar(BuildContext context) {
     return Row(

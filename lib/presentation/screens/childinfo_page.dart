@@ -175,6 +175,18 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                 padding: EdgeInsets.all(12),
                                 primary: AppColours.light_blue),
                           ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, addweightpage,
+                                  arguments: widget.child);
+                            },
+                            child: Icon(Icons.add_chart_rounded,
+                                color: Colors.white),
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                padding: EdgeInsets.all(12),
+                                primary: AppColours.light_blue),
+                          ),
                           HospitalAdmissionWidget(child: widget.child)
                         ],
                       ),

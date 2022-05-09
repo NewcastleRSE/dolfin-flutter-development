@@ -259,7 +259,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
 
     for (int i = 0; i < 7; i++) {
       bool found = false;
-      for (RecordModel r in record!) {
+      for (RecordModel r in record) {
         if (r.date.isSameDate(currentDate)) {
           results.add(r);
           found = true;

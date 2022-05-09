@@ -1,5 +1,6 @@
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/data/models/record_model.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
@@ -7,6 +8,7 @@ import 'package:dolfin_flutter/data/repositories/firestore_crud.dart';
 import 'package:dolfin_flutter/presentation/widgets/mybutton.dart';
 import 'package:dolfin_flutter/presentation/widgets/mytextfield.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AddRecordPage extends StatefulWidget {
   final ChildModel? child;
@@ -387,12 +389,37 @@ class _AddRecordPageState extends State<AddRecordPage> {
           SizedBox(
             height: 3.h,
           ),
-          Text(
-            "The DOLFIN supplement dosing chart can be seen at [URL] and is also included in your Parent Discharge Pack.",
-            style: Theme.of(context)
-                .textTheme
-                .headline1!
-                .copyWith(fontSize: 14.sp),
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: 'The DOLFIN supplement dosing chart can be seen at ',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline1!
+                      .copyWith(fontSize: 14.sp),
+                ),
+                TextSpan(
+                  text: '[URL]',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline1!
+                      .copyWith(fontSize: 14.sp, color: AppColours.light_blue),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      launch(
+                          'https://docs.flutter.io/flutter/services/UrlLauncher-class.html');
+                    },
+                ),
+                TextSpan(
+                  text: ' and is also included in your Parent Discharge Pack.',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline1!
+                      .copyWith(fontSize: 14.sp),
+                ),
+              ],
+            ),
           ),
           SizedBox(
             height: 3.h,

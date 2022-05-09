@@ -216,7 +216,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
             "Getting low on supplement? If you have less than 30 sachets of supplement left, please contact the research team on dolfin@npeu.ox.ac.uk / 01865 617919",
             style: Theme.of(context)
                 .textTheme
-                .headline2!
+                .headline1!
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(

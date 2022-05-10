@@ -191,7 +191,21 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                         ],
                       ),
                       SizedBox(
-                        height: 5.h,
+                        height: 4.h,
+                      ),
+                      Center(
+                        child: MyButton(
+                          color: AppColours.dark_blue,
+                          width: 60.w,
+                          title: '+ Add Weekly Record',
+                          func: () {
+                            Navigator.pushNamed(context, addweeklyrecordpage,
+                                arguments: widget.child);
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 4.h,
                       ),
                       Expanded(
                           child: StreamBuilder(

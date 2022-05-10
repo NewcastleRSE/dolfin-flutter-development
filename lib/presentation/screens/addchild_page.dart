@@ -18,7 +18,6 @@ import 'package:toggle_switch/toggle_switch.dart';
 import '../../shared/services/notification_service.dart';
 import '../widgets/mysnackbar.dart';
 
-
 class AddChildPage extends StatefulWidget {
   final ChildModel? child;
 
@@ -53,11 +52,12 @@ class _AddChildPageState extends State<AddChildPage> {
     _trialIDcontroller =
         TextEditingController(text: isEditMode ? widget.child!.studyID : '');
     dateOfBirth =
-    isEditMode ? DateTime.parse(widget.child!.dob) : DateTime.now();
-    dischargeDate =
-    isEditMode ? DateTime.parse(widget.child!.dischargeDate) : DateTime.now();
+        isEditMode ? DateTime.parse(widget.child!.dob) : DateTime.now();
+    dischargeDate = isEditMode
+        ? DateTime.parse(widget.child!.dischargeDate)
+        : DateTime.now();
     dueDate =
-    isEditMode ? DateTime.parse(widget.child!.dueDate) : DateTime.now();
+        isEditMode ? DateTime.parse(widget.child!.dueDate) : DateTime.now();
     recruitedAfterDischarge = false;
   }
 
@@ -98,8 +98,7 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
           Text(
             'Trial ID',
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -124,8 +123,7 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
           Text(
             'Name',
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -149,8 +147,7 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
           Text(
             'Due date',
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -174,8 +171,7 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
           Text(
             'Date of birth',
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -199,8 +195,7 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
           Text(
             'Discharge date',
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -224,8 +219,7 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
           Text(
             'Were you recruited to the study before hospital discharge?',
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -236,7 +230,10 @@ class _AddChildPageState extends State<AddChildPage> {
           ToggleSwitch(
             minWidth: 90.0,
             cornerRadius: 20.0,
-            activeBgColors: [[AppColours.light_blue], [AppColours.light_blue]],
+            activeBgColors: [
+              [AppColours.light_blue],
+              [AppColours.light_blue]
+            ],
             activeFgColor: Colors.white,
             inactiveBgColor: Colors.grey,
             inactiveFgColor: Colors.white,
@@ -278,13 +275,12 @@ class _AddChildPageState extends State<AddChildPage> {
   _addChild() {
     // is form complete and is child registered with Oxford?
     if (_formKey.currentState!.validate()) {
-
       checkChild(_trialIDcontroller.text).then((childExists) {
         // child is study participant
         if (childExists) {
-            print('child is a study participant so save to DB');
+          print('child is a study participant so save to DB');
 
-            ChildModel child = ChildModel(
+          ChildModel child = ChildModel(
               name: _namecontroller.text,
               dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
               dischargeDate: DateFormat('yyyy-MM-dd').format(dischargeDate),
@@ -292,26 +288,24 @@ class _AddChildPageState extends State<AddChildPage> {
               studyID: _trialIDcontroller.text,
               parentID: FirebaseAuth.instance.currentUser!.uid,
               id: '',
-              recruitedAfterDischarge: recruitedAfterDischarge
-            );
+              recruitedAfterDischarge: recruitedAfterDischarge);
 
-            isEditMode
-                ? FireStoreCrud().updateChild(
-              docid: widget.child!.id,
-              name: _namecontroller.text,
-              dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-            )
-                : FireStoreCrud().addChild(child: child);
+          isEditMode
+              ? FireStoreCrud().updateChild(
+                  docid: widget.child!.id,
+                  name: _namecontroller.text,
+                  dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
+                )
+              : FireStoreCrud().addChild(child: child);
 
-            Navigator.pop(context);
+          Navigator.pop(context);
         } else {
-        print('child does not exist in study');
-        MySnackBar.error(
-            message: 'Incorrect child ID',
-            color: Colors.red,
-            context: context);
+          print('child does not exist in study');
+          MySnackBar.error(
+              message: 'Incorrect child ID',
+              color: Colors.red,
+              context: context);
         }
-
       }); // child exists with Oxford
     } // validate
   }
@@ -341,6 +335,7 @@ class _AddChildPageState extends State<AddChildPage> {
       selecteddate != null ? dueDate = selecteddate : null;
     });
   }
+
   _showdatepickerdd() async {
     var selecteddate = await showDatePicker(
       context: context,
@@ -369,10 +364,7 @@ class _AddChildPageState extends State<AddChildPage> {
         ),
         Text(
           isEditMode ? 'Edit Child' : 'Add a Child',
-          style: Theme
-              .of(context)
-              .textTheme
-              .headline1,
+          style: Theme.of(context).textTheme.headline1,
         ),
         const SizedBox()
       ],
@@ -386,16 +378,15 @@ class _AddChildPageState extends State<AddChildPage> {
         Uri.parse('https://jsonplaceholder.typicode.com/users/' + childCheck));
     // todo any other checks to be done on response?
 
-      if (response.statusCode == 200) {
-        Map<String, dynamic> child= jsonDecode(response.body);
-        if (child.containsKey('id')) {
-          print('returned from http');
-          print(child);
-          // success
-          return true;
-        }
+    if (response.statusCode == 200) {
+      Map<String, dynamic> child = jsonDecode(response.body);
+      if (child.containsKey('id')) {
+        print('returned from http');
+        print(child);
+        // success
+        return true;
+      }
     }
-      return false;
-
+    return false;
   }
 }

@@ -268,15 +268,19 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
     List<RecordModel>? results = [];
 
     DateTime currentDate = end;
-    String child = record![0].child;
-    String studyID = record[0].studyID;
+
+    String child = widget.child!.id;
+    String studyID = widget.child!.studyID;
 
     for (int i = 0; i < 7; i++) {
       bool found = false;
-      for (RecordModel r in record) {
-        if (r.date.isSameDate(currentDate)) {
-          results.add(r);
-          found = true;
+
+      if (record != null) {
+        for (RecordModel r in record) {
+          if (r.date.isSameDate(currentDate)) {
+            results.add(r);
+            found = true;
+          }
         }
       }
 

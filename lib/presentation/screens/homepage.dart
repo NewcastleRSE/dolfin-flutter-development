@@ -88,17 +88,10 @@ class _HomePageState extends State<HomePage> {
             );
           });
     });
-
-    getPackageInfo().then((packageInfo) => setPackageInfo(packageInfo));
   }
 
-  void setPackageInfo(PackageInfo packageInfo) {
-    _versionNo = packageInfo.version;
-    _buildNo = packageInfo.buildNumber;
-  }
-
-  Future<PackageInfo> getPackageInfo() async {
-    return await PackageInfo.fromPlatform();
+  Future<PackageInfo> _getPackageInfo() {
+    return PackageInfo.fromPlatform();
   }
 
   Future<void> saveFCMTokenToDatabase(String token) async {
@@ -351,12 +344,33 @@ class _HomePageState extends State<HomePage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            "v" + _versionNo + "-" + _buildNo,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall!
-                                .copyWith(fontSize: 12.sp),
+                          Center(
+                            child: FutureBuilder<PackageInfo>(
+                              future: _getPackageInfo(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<PackageInfo> snapshot) {
+                                if (snapshot.hasError) {
+                                  return const Text('ERROR');
+                                } else if (!snapshot.hasData) {
+                                  return const Text('Loading...');
+                                }
+
+                                final data = snapshot.data!;
+
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'v${data.version}-${data.buildNumber}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .copyWith(fontSize: 12.sp),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
                           )
                         ],
                       ),

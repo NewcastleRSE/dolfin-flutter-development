@@ -1,5 +1,6 @@
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/data/models/weight_model.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
@@ -7,6 +8,7 @@ import 'package:dolfin_flutter/data/repositories/firestore_crud.dart';
 import 'package:dolfin_flutter/presentation/widgets/mybutton.dart';
 import 'package:dolfin_flutter/presentation/widgets/mytextfield.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AddWeightPage extends StatefulWidget {
   final ChildModel? child;
@@ -174,40 +176,55 @@ class _AddWeightPageState extends State<AddWeightPage> {
           SizedBox(
             height: 3.h,
           ),
-          DropdownButton<String>(
-            value: _dropdownvalue,
-            icon: const Icon(Icons.arrow_downward),
-            elevation: 16,
-            style: const TextStyle(color: Colors.deepPurple),
-            underline: Container(
-              height: 2,
-              color: Colors.deepPurpleAccent,
-            ),
-            onChanged: (String? newValue) {
-              setState(() {
-                _dropdownvalue = newValue!;
-              });
-            },
-            items: <String>[
-              '0',
-              '1',
-              '2',
-              '3',
-              '4',
-              '5',
-              '6',
-              '7',
-              '8',
-              '9',
-              '10',
-              '11',
-              '12'
-            ].map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Please select a value:",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline2!
+                    .copyWith(fontSize: 14.sp),
+              ),
+              SizedBox(
+                width: 6.h,
+              ),
+              DropdownButton<String>(
+                value: _dropdownvalue,
+                icon: const Icon(Icons.arrow_downward),
+                elevation: 16,
+                style: const TextStyle(color: Colors.deepPurple),
+                underline: Container(
+                  height: 2,
+                  color: Colors.deepPurpleAccent,
+                ),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _dropdownvalue = newValue!;
+                  });
+                },
+                items: <String>[
+                  '0',
+                  '1',
+                  '2',
+                  '3',
+                  '4',
+                  '5',
+                  '6',
+                  '7',
+                  '8',
+                  '9',
+                  '10',
+                  '11',
+                  '12'
+                ].map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              )
+            ],
           ),
           SizedBox(
             height: 3.h,
@@ -222,6 +239,41 @@ class _AddWeightPageState extends State<AddWeightPage> {
           SizedBox(
             height: 3.h,
           ),
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: 'The DOLFIN supplement dosing chart can be seen at ',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline1!
+                      .copyWith(fontSize: 14.sp),
+                ),
+                TextSpan(
+                  text: '[URL]',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline1!
+                      .copyWith(fontSize: 14.sp, color: AppColours.light_blue),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      launch(
+                          'https://docs.flutter.io/flutter/services/UrlLauncher-class.html');
+                    },
+                ),
+                TextSpan(
+                  text: ' and is also included in your Parent Discharge Pack.',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline1!
+                      .copyWith(fontSize: 14.sp),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 5.h,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -234,7 +286,10 @@ class _AddWeightPageState extends State<AddWeightPage> {
                 },
               )
             ],
-          )
+          ),
+          SizedBox(
+            height: 5.h,
+          ),
         ],
       ),
     );
@@ -247,6 +302,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
         weight: _weightcontroller.text,
         child: widget.child!.id,
         studyID: widget.child!.studyID,
+        numScoops: _dropdownvalue,
         id: '',
       );
       FireStoreCrud().addWeight(record: record);
@@ -282,8 +338,9 @@ class _AddWeightPageState extends State<AddWeightPage> {
           ),
         ),
         Text(
-          'Add a Weight Record',
-          style: Theme.of(context).textTheme.headline1,
+          'Baby Weight Check',
+          style:
+              Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14.sp),
         ),
         const SizedBox()
       ],

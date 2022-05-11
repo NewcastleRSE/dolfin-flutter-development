@@ -143,7 +143,7 @@ class _AddChildPageState extends State<AddChildPage> {
             textEditingController: _namecontroller,
           ),
           SizedBox(
-            height: 2.h,
+            height: 3.h,
           ),
           Text(
             'Due date',
@@ -167,7 +167,7 @@ class _AddChildPageState extends State<AddChildPage> {
             textEditingController: TextEditingController(),
           ),
           SizedBox(
-            height: 1.h,
+            height: 3.h,
           ),
           Text(
             'Date of birth',
@@ -191,7 +191,7 @@ class _AddChildPageState extends State<AddChildPage> {
             textEditingController: TextEditingController(),
           ),
           SizedBox(
-            height: 1.h,
+            height: 3.h,
           ),
           Text(
             'Discharge date',
@@ -215,7 +215,7 @@ class _AddChildPageState extends State<AddChildPage> {
             textEditingController: TextEditingController(),
           ),
           SizedBox(
-            height: 2.h,
+            height: 3.h,
           ),
           Text(
             'Were you recruited to the study before hospital discharge?',
@@ -225,34 +225,36 @@ class _AddChildPageState extends State<AddChildPage> {
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
-            height: 1.h,
+            height: 2.h,
           ),
-          ToggleSwitch(
-            minWidth: 90.0,
-            cornerRadius: 20.0,
-            activeBgColors: [
-              [AppColours.light_blue],
-              [AppColours.light_blue]
-            ],
-            activeFgColor: Colors.white,
-            inactiveBgColor: Colors.grey,
-            inactiveFgColor: Colors.white,
-            initialLabelIndex: 0,
-            totalSwitches: 2,
-            labels: ['Yes', 'No'],
-            radiusStyle: true,
-            onToggle: (index) {
-              // index 0 = recruited before discharge
-              // index 1 = recruited after discharge
-              if (index == 1) {
-                recruitedAfterDischarge = true;
-              } else {
-                recruitedAfterDischarge = false;
-              }
-            },
+          Center(
+            child: ToggleSwitch(
+              minWidth: 90.0,
+              cornerRadius: 20.0,
+              activeBgColors: [
+                [AppColours.light_blue],
+                [AppColours.light_blue]
+              ],
+              activeFgColor: Colors.white,
+              inactiveBgColor: Colors.grey,
+              inactiveFgColor: Colors.white,
+              initialLabelIndex: 0,
+              totalSwitches: 2,
+              labels: ['Yes', 'No'],
+              radiusStyle: true,
+              onToggle: (index) {
+                // index 0 = recruited before discharge
+                // index 1 = recruited after discharge
+                if (index == 1) {
+                  recruitedAfterDischarge = true;
+                } else {
+                  recruitedAfterDischarge = false;
+                }
+              },
+            ),
           ),
           SizedBox(
-            height: 2.h,
+            height: 5.h,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -266,7 +268,10 @@ class _AddChildPageState extends State<AddChildPage> {
                 },
               )
             ],
-          )
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
         ],
       ),
     );

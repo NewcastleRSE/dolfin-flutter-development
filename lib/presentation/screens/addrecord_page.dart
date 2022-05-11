@@ -35,11 +35,11 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
   late SupplementOptions? _supplement;
   late ReasonOptions? _reason;
-  late String _dropdownvalue;
 
   late DateTime recordDate;
   late bool _moreInfoVisible;
   late bool _otherReasonVisible;
+  late bool _ranOutVisible;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -67,9 +67,12 @@ class _AddRecordPageState extends State<AddRecordPage> {
             ? true
             : false;
 
-    _childStudyID = isEditMode ? widget.record!.studyID : widget.child!.studyID;
+    _ranOutVisible =
+        (isEditMode && widget.record!.reason == ReasonOptions.ranOut)
+            ? true
+            : false;
 
-    _dropdownvalue = "1";
+    _childStudyID = isEditMode ? widget.record!.studyID : widget.child!.studyID;
   }
 
   @override
@@ -238,6 +241,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                           setState(() {
                             _reason = value;
                             _otherReasonVisible = false;
+                            _ranOutVisible = false;
                           });
                         },
                       ),
@@ -251,6 +255,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                           setState(() {
                             _reason = value;
                             _otherReasonVisible = false;
+                            _ranOutVisible = true;
                           });
                         },
                       ),
@@ -264,6 +269,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                           setState(() {
                             _reason = value;
                             _otherReasonVisible = false;
+                            _ranOutVisible = false;
                           });
                         },
                       ),
@@ -277,6 +283,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                           setState(() {
                             _reason = value;
                             _otherReasonVisible = false;
+                            _ranOutVisible = false;
                           });
                         },
                       ),
@@ -290,6 +297,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                           setState(() {
                             _reason = value;
                             _otherReasonVisible = false;
+                            _ranOutVisible = false;
                           });
                         },
                       ),
@@ -303,14 +311,28 @@ class _AddRecordPageState extends State<AddRecordPage> {
                           setState(() {
                             _reason = value;
                             _otherReasonVisible = true;
+                            _ranOutVisible = false;
                           });
                         },
                       ),
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 1.h,
+                Visibility(
+                  visible: _ranOutVisible || _otherReasonVisible,
+                  child: SizedBox(
+                    height: 2.h,
+                  ),
+                ),
+                Visibility(
+                  visible: _ranOutVisible,
+                  child: Text(
+                    "If you have run out of supplement, please contact the research team at dolfin@npeu.ox.ac.uk / 01865 617919",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline1!
+                        .copyWith(fontSize: 14.sp),
+                  ),
                 ),
                 Visibility(
                   visible: _otherReasonVisible,
@@ -325,66 +347,8 @@ class _AddRecordPageState extends State<AddRecordPage> {
                     textEditingController: _reasoncontroller,
                   ),
                 ),
-                SizedBox(
-                  height: 3.h,
-                ),
               ],
             ),
-          ),
-          Text(
-            'How many scoops of supplement per day are you giving your baby at the moment?',
-            style: Theme.of(context)
-                .textTheme
-                .headline1!
-                .copyWith(fontSize: 14.sp),
-          ),
-          SizedBox(
-            height: 3.h,
-          ),
-          DropdownButton<String>(
-            value: _dropdownvalue,
-            icon: const Icon(Icons.arrow_downward),
-            elevation: 16,
-            style: const TextStyle(color: Colors.deepPurple),
-            underline: Container(
-              height: 2,
-              color: Colors.deepPurpleAccent,
-            ),
-            onChanged: (String? newValue) {
-              setState(() {
-                _dropdownvalue = newValue!;
-              });
-            },
-            items: <String>[
-              '0',
-              '1',
-              '2',
-              '3',
-              '4',
-              '5',
-              '6',
-              '7',
-              '8',
-              '9',
-              '10',
-              '11',
-              '12'
-            ].map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          ),
-          SizedBox(
-            height: 3.h,
-          ),
-          Text(
-            "Getting low on supplement? If you have less than 30 sachets of supplement left, please contact the research team on dolfin@npeu.ox.ac.uk / 01865 617919",
-            style: Theme.of(context)
-                .textTheme
-                .headline1!
-                .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
             height: 3.h,
@@ -434,8 +398,15 @@ class _AddRecordPageState extends State<AddRecordPage> {
           SizedBox(
             height: 3.h,
           ),
+          Text(
+            "Thank you for completing this daily supplement check.",
+            style: Theme.of(context)
+                .textTheme
+                .headline1!
+                .copyWith(fontSize: 14.sp),
+          ),
           SizedBox(
-            height: 3.h,
+            height: 5.h,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -449,7 +420,10 @@ class _AddRecordPageState extends State<AddRecordPage> {
                 },
               )
             ],
-          )
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
         ],
       ),
     );
@@ -493,8 +467,9 @@ class _AddRecordPageState extends State<AddRecordPage> {
           ),
         ),
         Text(
-          isEditMode ? 'Edit Record' : 'Add a Record',
-          style: Theme.of(context).textTheme.headline1,
+          isEditMode ? 'Edit Record' : 'Daily Supplement Check',
+          style:
+              Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14.sp),
         ),
         const SizedBox()
       ],

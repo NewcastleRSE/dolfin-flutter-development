@@ -475,6 +475,41 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
           SizedBox(
             height: 3.h,
           ),
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: 'The DOLFIN supplement dosing chart can be seen at ',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline1!
+                      .copyWith(fontSize: 14.sp),
+                ),
+                TextSpan(
+                  text: '[URL]',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline1!
+                      .copyWith(fontSize: 14.sp, color: AppColours.light_blue),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      launch(
+                          'https://docs.flutter.io/flutter/services/UrlLauncher-class.html');
+                    },
+                ),
+                TextSpan(
+                  text: ' and is also included in your Parent Discharge Pack.',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline1!
+                      .copyWith(fontSize: 14.sp),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
           Text(
             "Thank you for completing this weekly supplement check. The information you have given will XXXX. Don’t forget to complete the form again on the same day next week; we will send you a reminder to do this.",
             style: Theme.of(context)

@@ -7,6 +7,7 @@ class WeightModel {
   final String studyID;
   final DateTime date;
   final String weight;
+  final String numScoops;
 
   WeightModel({
     required this.id,
@@ -14,6 +15,7 @@ class WeightModel {
     required this.studyID,
     required this.date,
     required this.weight,
+    required this.numScoops,
   });
 
   factory WeightModel.fromjson(Map<String, dynamic> json, String id) {
@@ -23,7 +25,8 @@ class WeightModel {
         child: json['child_id'],
         studyID: json['study_id'],
         date: timestamp.toDate(),
-        weight: json['weight']);
+        weight: json['weight'],
+        numScoops: json[['num_scoops']]);
   }
 
   Map<String, dynamic> tojson() {
@@ -32,6 +35,7 @@ class WeightModel {
       'study_id': studyID,
       'date': date,
       'weight': weight,
+      'num_scoops': numScoops,
     };
   }
 }

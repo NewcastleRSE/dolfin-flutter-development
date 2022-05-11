@@ -31,9 +31,19 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   // Firebase Cloud Messaging
+  NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  print('User granted permission: ${settings.authorizationStatus}');
   // push notification when in background
   FirebaseMessaging.onBackgroundMessage(_firebasePushHandler);
-  // todo probably navigate to a new form submission?
+
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
     print('Message clicked!');
   });

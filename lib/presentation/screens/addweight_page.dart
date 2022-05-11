@@ -108,7 +108,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
             height: 1.h,
           ),
           MyTextfield(
-            hint: "Enter your child's weight",
+            hint: "Enter your child's weight (in kilograms)",
             keyboardtype: TextInputType.number,
             icon: Icons.title,
             showicon: false,

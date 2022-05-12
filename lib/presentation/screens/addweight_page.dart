@@ -115,7 +115,12 @@ class _AddWeightPageState extends State<AddWeightPage> {
             icon: Icons.title,
             showicon: false,
             validator: (value) {
-              return value!.isEmpty ? "Please Enter Your Child's Weight" : null;
+              if (value == null || value.isEmpty) {
+                return "Please Enter Your Child's Weight";
+              } else if (int.parse(value) > 15) {
+                return "Please check you have entered the correct weight in kg";
+              }
+              return null;
             },
             textEditingController: _weightcontroller,
           ),

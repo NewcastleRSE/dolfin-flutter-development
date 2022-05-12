@@ -30,10 +30,10 @@ Future<void> main() async {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  // Firebase Cloud Messaging
+
   // push notification when in background
   FirebaseMessaging.onBackgroundMessage(_firebasePushHandler);
-  // todo probably navigate to a new form submission?
+
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
     print('Message clicked!');
   });

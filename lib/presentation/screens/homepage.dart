@@ -478,6 +478,8 @@ class _HomePageState extends State<HomePage> {
                                     authenticationCubit.updateUserInfo(
                                         _usercontroller.text, context);
                                     setState(() {});
+                                    Navigator.pushNamed(context, homepage);
+                                    sleep(Duration(seconds: 2));
                                   }
                                 },
                               );

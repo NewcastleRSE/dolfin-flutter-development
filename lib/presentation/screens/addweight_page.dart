@@ -100,17 +100,17 @@ class _AddWeightPageState extends State<AddWeightPage> {
             height: 1.h,
           ),
           Text(
-            "Please tell us your baby's weight (in kg)",
+            "Please enter the weight here in kilograms. For instance, if your baby weighs 4186 grams, please enter 4.186 kilograms.",
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium!
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
-            height: 1.h,
+            height: 2.h,
           ),
           MyTextfield(
-            hint: "Enter your child's weight (in kilograms)",
+            hint: "Enter your child's weight in (in kg)",
             keyboardtype: TextInputType.number,
             icon: Icons.title,
             showicon: false,
@@ -120,7 +120,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
             textEditingController: _weightcontroller,
           ),
           SizedBox(
-            height: 3.h,
+            height: 4.h,
           ),
           Text(
             'Date',
@@ -140,7 +140,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
-            height: 1.h,
+            height: 2.h,
           ),
           MyTextfield(
             hint: DateFormat('dd/MM/yyyy').format(recordDate),
@@ -154,7 +154,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
             textEditingController: TextEditingController(),
           ),
           SizedBox(
-            height: 3.h,
+            height: 4.h,
           ),
           Text(
             'Supplement',
@@ -227,7 +227,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
             ],
           ),
           SizedBox(
-            height: 3.h,
+            height: 4.h,
           ),
           Text(
             "Getting low on supplement? If you have less than 30 sachets of supplement left, please contact the research team on dolfin@npeu.ox.ac.uk / 01865 617919",
@@ -237,7 +237,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
-            height: 3.h,
+            height: 4.h,
           ),
           RichText(
             text: TextSpan(

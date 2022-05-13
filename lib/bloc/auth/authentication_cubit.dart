@@ -66,24 +66,12 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     emit(UnAuthenticationState());
   }
 
-  var count = 0;
-
   void updateUserInfo(String txt, BuildContext context) {
-    count >= 2 ? count = 0 : null;
     emit(UpdateProfileLoadingState());
     var user = FirebaseAuth.instance.currentUser;
     user!.updateDisplayName(txt).then((value) {
-      count++;
       Future.delayed(const Duration(seconds: 2));
       emit(UpdateProfileSuccessState());
-
-      // You need to click twice to update it
-      count == 2
-          ? Navigator.pop(context)
-          : MySnackBar.error(
-              message: 'Please Click Another Time !!',
-              color: AppColours.dark_blue,
-              context: context);
     }).catchError((e) {
       emit(UpdateProfileErrorState());
       MySnackBar.error(

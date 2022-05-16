@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
@@ -481,6 +483,8 @@ class _HomePageState extends State<HomePage> {
                                     authenticationCubit.updateUserInfo(
                                         _usercontroller.text, context);
                                     setState(() {});
+                                    Navigator.pushNamed(context, homepage);
+                                    sleep(Duration(seconds: 2));
                                   }
                                 },
                               );
@@ -585,6 +589,8 @@ class _HomePageState extends State<HomePage> {
                                     authenticationCubit.updateUserInfo(
                                         _usercontroller.text, context);
                                     setState(() {});
+                                    Navigator.pushNamed(context, homepage);
+                                    sleep(Duration(seconds: 2));
                                   }
                                 },
                               );

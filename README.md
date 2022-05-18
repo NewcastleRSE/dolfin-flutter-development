@@ -23,6 +23,8 @@ The application uses Flutter.
 
 These include instructions for installing and configuring the Flutter SDK and Android Studio, including setting up a device emulator.
 
+The project expects environment variables stored in a `.env` file saved at the project root. See `.env.example` for details of what is required.
+
 ### Firebase Setup
 
 To get the app to work correctly with Firebase:

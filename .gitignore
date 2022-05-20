@@ -48,6 +48,7 @@ app.*.map.json
 
 # Contains Firebase settings, should be manually downloaded
 android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
 
 # Contains keys and certs for api access to app stores
 keys/

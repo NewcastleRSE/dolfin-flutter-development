@@ -1,6 +1,8 @@
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/data/models/record_model.dart';
 import 'package:dolfin_flutter/presentation/screens/addrecord_page.dart';
+import 'package:dolfin_flutter/presentation/screens/addweeklyrecord_page.dart';
+import 'package:dolfin_flutter/presentation/screens/addweight_page.dart';
 import 'package:dolfin_flutter/presentation/screens/childinfo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dolfin_flutter/presentation/screens/addchild_page.dart';
@@ -52,19 +54,37 @@ class AppRoute {
                     child: child,
                   ));
         }
+      case addweightpage:
+        {
+          final child = settings.arguments as ChildModel?;
+          return MaterialPageRoute(
+              builder: (_) => AddWeightPage(
+                    child: child,
+                  ));
+        }
+      case addweeklyrecordpage:
+        {
+          final child = settings.arguments as ChildModel?;
+          return MaterialPageRoute(
+              builder: (_) => AddWeeklyRecordPage(
+                    child: child,
+                  ));
+        }
       case addrecordpage:
         {
-          final arg = settings.arguments;
+          final arg = settings.arguments as Map<String, dynamic>;
 
-          if (arg is ChildModel?) {
+          if (arg["data"] is ChildModel?) {
             return MaterialPageRoute(
                 builder: (_) => AddRecordPage(
-                      child: arg as ChildModel?,
+                      child: arg["data"] as ChildModel?,
+                      date: arg["date"] as DateTime?,
                     ));
           } else {
             return MaterialPageRoute(
                 builder: (_) => AddRecordPage(
-                      record: arg as RecordModel?,
+                      record: arg["data"] as RecordModel?,
+                      date: arg["date"] as DateTime?,
                     ));
           }
         }

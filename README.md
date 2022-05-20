@@ -1,5 +1,5 @@
 # dolfin-flutter
-The Flutter-based app for the Dolfin Project
+The Flutter-based app for the DOLFIN Project
 
 ## About
 
@@ -22,6 +22,8 @@ The application uses Flutter.
 * Instructions for configuring VS Code are [here](https://docs.flutter.dev/development/tools/vs-code). 
 
 These include instructions for installing and configuring the Flutter SDK and Android Studio, including setting up a device emulator.
+
+The project expects environment variables stored in a `.env` file saved at the project root. See `.env.example` for details of what is required.
 
 ### Firebase Setup
 

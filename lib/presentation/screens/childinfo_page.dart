@@ -17,6 +17,12 @@ import 'package:dolfin_flutter/shared/constants/strings.dart';
 import 'package:dolfin_flutter/shared/services/notification_service.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
 
+extension DateOnlyCompare on DateTime {
+  bool isSameDate(DateTime other) {
+    return year == other.year && month == other.month && day == other.day;
+  }
+}
+
 class ChildInfoPage extends StatefulWidget {
   final ChildModel? child;
 
@@ -58,6 +64,9 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
     ConnectivityCubit connectivitycubit = BlocProvider.of(context);
     final user = FirebaseAuth.instance.currentUser;
     String username = user!.isAnonymous ? 'Anonymous' : 'User';
+
+    DateTime today = DateTime.now();
+    DateTime lastWeek = today.subtract(const Duration(days: 7));
 
     return Scaffold(
         body: MultiBlocListener(
@@ -155,38 +164,55 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                 .copyWith(fontSize: 17.sp),
                           ),
                           const Spacer(),
-                          MyButton(
-                            color: AppColours.light_blue,
-                            width: 40.w,
-                            title: 'Edit Child',
-                            func: () {
+                          ElevatedButton(
+                            onPressed: () {
                               Navigator.pushNamed(context, addchildpage,
                                   arguments: widget.child);
                             },
-                          )
+                            child: Icon(Icons.edit, color: Colors.white),
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                padding: EdgeInsets.all(12),
+                                primary: AppColours.light_blue),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, addweightpage,
+                                  arguments: widget.child);
+                            },
+                            child: Icon(Icons.add_chart_rounded,
+                                color: Colors.white),
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                padding: EdgeInsets.all(12),
+                                primary: AppColours.light_blue),
+                          ),
+                          HospitalAdmissionWidget(child: widget.child)
                         ],
                       ),
                       SizedBox(
-                        height: 3.h,
+                        height: 4.h,
                       ),
                       Center(
                         child: MyButton(
                           color: AppColours.dark_blue,
                           width: 60.w,
-                          title: '+ Add New Record',
+                          title: '+ Add Weekly Record',
                           func: () {
-                            Navigator.pushNamed(context, addrecordpage,
+                            Navigator.pushNamed(context, addweeklyrecordpage,
                                 arguments: widget.child);
                           },
                         ),
                       ),
                       SizedBox(
-                        height: 5.h,
+                        height: 4.h,
                       ),
                       Expanded(
                           child: StreamBuilder(
-                        stream: FireStoreCrud()
-                            .getRecords(childID: widget.child!.id),
+                        stream: FireStoreCrud().getRecordsRange(
+                            childID: widget.child!.id,
+                            start: lastWeek,
+                            end: today),
                         builder: (BuildContext context,
                             AsyncSnapshot<List<RecordModel>> snapshot) {
                           if (snapshot.hasError) {
@@ -197,17 +223,19 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                             return const MyCircularIndicator();
                           }
 
-                          return snapshot.data!.isNotEmpty
+                          List<RecordModel>? records =
+                              formatRecordData(snapshot.data, lastWeek, today);
+
+                          return records!.isNotEmpty
                               ? ListView.builder(
                                   physics: const BouncingScrollPhysics(),
-                                  itemCount: snapshot.data!.length,
+                                  itemCount: records.length,
                                   itemBuilder: (context, index) {
-                                    var record = snapshot.data![index];
+                                    var record = records[index];
                                     Widget _taskcontainer = RecordContainer(
-                                        id: record.id,
-                                        date: record.date,
-                                        supplement: record.supplement,
-                                        weight: record.weight);
+                                        record: record,
+                                        child: widget.child,
+                                        editable: index <= 2);
                                     return InkWell(
                                         onTap: () {
                                           Navigator.pushNamed(
@@ -235,6 +263,44 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
             )));
   }
 
+  List<RecordModel>? formatRecordData(
+      List<RecordModel>? record, DateTime start, DateTime end) {
+    List<RecordModel>? results = [];
+
+    DateTime currentDate = end;
+
+    String child = widget.child!.id;
+    String studyID = widget.child!.studyID;
+
+    for (int i = 0; i < 7; i++) {
+      bool found = false;
+
+      if (record != null) {
+        for (RecordModel r in record) {
+          if (r.date.isSameDate(currentDate)) {
+            results.add(r);
+            found = true;
+          }
+        }
+      }
+
+      if (!found) {
+        results.add(RecordModel(
+            id: "0",
+            child: child,
+            studyID: studyID,
+            date: currentDate,
+            supplement: SupplementOptions.fullDose,
+            reason: ReasonOptions.forgot,
+            otherReason: ""));
+      }
+
+      currentDate = currentDate.subtract(Duration(days: 1));
+    }
+
+    return results;
+  }
+
   Widget _nodatawidget() {
     return Center(
       child: Column(
@@ -256,6 +322,46 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class HospitalAdmissionWidget extends StatelessWidget {
+  const HospitalAdmissionWidget({Key? key, this.child}) : super(key: key);
+
+  final ChildModel? child;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () => showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          content: const Text(
+              'Have you had any new unplanned hospital admissions in the last week?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // save entry in Firestore db for this child and today's date
+                var study_id = child!.studyID;
+                var child_id = child!.id;
+                FireStoreCrud().addChildHospitalAdmission(child_id, study_id);
+                Navigator.pop(context);
+              },
+              child: const Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+          ],
+        ),
+      ),
+      child: Icon(Icons.domain_add_outlined, color: Colors.white),
+      style: ElevatedButton.styleFrom(
+          shape: CircleBorder(),
+          padding: EdgeInsets.all(12),
+          primary: AppColours.light_blue),
     );
   }
 }

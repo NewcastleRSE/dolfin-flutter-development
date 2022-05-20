@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dolfin_flutter/shared/styles/colours.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -43,9 +44,8 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     firebaseauthrepo
         .register(fullname: fullname, email: email, password: password)
         .then((value) {
-
-          final user = FirebaseAuth.instance.currentUser;
-          user!.updateDisplayName(fullname);
+      final user = FirebaseAuth.instance.currentUser;
+      user!.updateDisplayName(fullname);
 
       emit(AuthenticationSuccessState());
     }).catchError((e) {
@@ -66,24 +66,12 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     emit(UnAuthenticationState());
   }
 
-  var count = 0;
-
   void updateUserInfo(String txt, BuildContext context) {
-    count >= 2 ? count = 0 : null;
     emit(UpdateProfileLoadingState());
     var user = FirebaseAuth.instance.currentUser;
     user!.updateDisplayName(txt).then((value) {
-      count++;
       Future.delayed(const Duration(seconds: 2));
       emit(UpdateProfileSuccessState());
-
-      // You need to click twice to update it
-      count == 2
-          ? Navigator.pop(context)
-          : MySnackBar.error(
-              message: 'Please Click Another Time !!',
-              color: Colors.indigo,
-              context: context);
     }).catchError((e) {
       emit(UpdateProfileErrorState());
       MySnackBar.error(

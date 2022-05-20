@@ -41,6 +41,11 @@ jobs:
           GOOGLE_SERVICES: ${{secrets.GOOGLE_SERVICES}}
           PLAY_STORE_CREDENTIALS: ${{secrets.PLAY_STORE_CREDENTIALS}}
           KEY_PROPERTIES: ${{secrets.KEY_PROPERTIES}}
+          NPEU_URL: ${{secrets.NPEU_URL}}
+          CLIENT_ID: ${{secrets.CLIENT_ID}}
+          SCOPE: ${{secrets.SCOPE}}
+          GRANT_TYPE: ${{secrets.GRANT_TYPE}}
+          CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
       - name: Decode Keystore
         id: decode_keystore
         uses: timheuer/base64-to-file@v1

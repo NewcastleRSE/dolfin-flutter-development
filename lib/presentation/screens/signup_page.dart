@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sizer/sizer.dart';
 import 'package:dolfin_flutter/bloc/auth/authentication_cubit.dart';
 import 'package:dolfin_flutter/bloc/connectivity/connectivity_cubit.dart';
@@ -12,6 +15,7 @@ import 'package:dolfin_flutter/shared/constants/assets_path.dart';
 import 'package:dolfin_flutter/shared/constants/strings.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
 import 'package:dolfin_flutter/shared/validators.dart';
+import 'package:http/http.dart' as http;
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -104,7 +108,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           height: 1.5.h,
                         ),
                         Text(
-                          'Create a New Account',
+                          'Create a new account. Please make sure you use the email'
+                              ' you originally signed up to the trial with.',
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
@@ -168,7 +173,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             } else {
                               MySnackBar.error(
                                   message:
-                                      'Please Check Your Internet Conection',
+                                      'Please Check Your Internet Connection',
                                   color: Colors.red,
                                   context: context);
                             }
@@ -231,11 +236,72 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _signupewithemailandpass(context, AuthenticationCubit cubit) {
+    // is form complete and email registered with Oxford?
     if (_formKey.currentState!.validate()) {
-      cubit.register(
-          fullname: _namecontroller.text,
-          email: _emailcontroller.text,
-          password: _passwordcontroller.text);
+      checkEmail( _emailcontroller.text).then((exists) {
+        if (exists) {
+          cubit.register(
+              fullname: _namecontroller.text,
+              email: _emailcontroller.text,
+              password: _passwordcontroller.text);
+        } else {
+          print('parent does not exist in study');
+          MySnackBar.error(
+              message: "Problem with email, please check you have entered the email you"
+                  " used when you signed up for the study",
+              color: Colors.red,
+              context: context);
+        }
+      });
     }
+  }
+
+  // http request to check child's ID is valid
+  Future<bool> checkEmail(email) async {
+    try {
+      // acquire jwt from NPEU
+      await dotenv.load();
+      var baseUrl = dotenv.get('NPEU_URL');
+      var authUrl = 'https://' + baseUrl + '/identityauthority/connect/token';
+
+      var body = {
+        'client_id': dotenv.get('CLIENT_ID'),
+        'client_secret': dotenv.get('CLIENT_SECRET'),
+        'scope': dotenv.get('SCOPE'),
+        'grant_type': dotenv.get('GRANT_TYPE')
+      };
+
+      var authResponse = await http.post(
+          Uri.parse(authUrl),
+          body:body);
+      if (authResponse.statusCode != 200) {
+        return false;
+      } else {
+        var jwt = jsonDecode(authResponse.body)['access_token'];
+
+        // check if email is valid
+        var queryParameters = {'Email': email};
+        var url = Uri.https(baseUrl,
+            '/dolfindata/api/participant/confirm', queryParameters);
+
+
+        // returns true or false to indicate if email is valid
+        final response = await http.get(url,
+            headers: {'Authorization': 'Bearer $jwt'});
+
+        if (response.statusCode == 200) {
+          bool b = response.body.toLowerCase() == 'true';
+          return b;
+        } else {
+          return false;
+        }
+      }
+    } catch (err) {
+      print(err);
+      return false;
+    }
+
+
+
   }
 }

@@ -1,7 +1,6 @@
 import 'package:dolfin_flutter/shared/styles/colours.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:dolfin_flutter/data/repositories/firestore_crud.dart';
 
 class ChildContainer extends StatelessWidget {
   final String id;

@@ -18,6 +18,7 @@ import 'package:dolfin_flutter/presentation/widgets/myindicator.dart';
 import 'package:dolfin_flutter/shared/constants/consts_variables.dart';
 import 'package:dolfin_flutter/shared/route.dart';
 import 'package:dolfin_flutter/shared/styles/themes.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'bloc/auth/authentication_cubit.dart';
 
@@ -25,6 +26,8 @@ import 'package:flutter/widgets.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 Future<void> main() async {
+
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 

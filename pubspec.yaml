@@ -41,6 +41,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.1
+  flutter_dotenv: ^5.0.2
   intl: ^0.17.0
   shared_preferences: ^2.0.13
   sizer: ^2.0.15
@@ -72,6 +73,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - .env
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

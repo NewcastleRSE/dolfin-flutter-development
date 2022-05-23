@@ -233,7 +233,6 @@ class _HomePageState extends State<HomePage> {
 
                                   // if it has been over 3 months since hospital discharge show option to turn off daily reminders
                                   if (days >= 84) {
-                                    print('past 3 months');
                                     past3 = true;
                                     break;
                                   }

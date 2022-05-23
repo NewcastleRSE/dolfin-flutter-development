@@ -17,6 +17,7 @@ import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../shared/services/notification_service.dart';
 import '../widgets/mysnackbar.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AddChildPage extends StatefulWidget {
   final ChildModel? child;
@@ -59,6 +60,7 @@ class _AddChildPageState extends State<AddChildPage> {
     dueDate =
         isEditMode ? DateTime.parse(widget.child!.dueDate) : DateTime.now();
     recruitedAfterDischarge = false;
+
   }
 
   @override
@@ -307,7 +309,8 @@ class _AddChildPageState extends State<AddChildPage> {
         } else {
           print('child does not exist in study');
           MySnackBar.error(
-              message: 'Incorrect child ID',
+              message: "Problem with child's trial ID, please check the ID is correct and"
+                  " try again",
               color: Colors.red,
               context: context);
         }
@@ -376,22 +379,53 @@ class _AddChildPageState extends State<AddChildPage> {
     );
   }
 
-  // http request to check child's ID/token is valid
-  //todo replace with correct URL from Oxford
+  // http request to check child's ID is valid
   Future<bool> checkChild(childCheck) async {
-    final response = await http.get(
-        Uri.parse('https://jsonplaceholder.typicode.com/users/' + childCheck));
-    // todo any other checks to be done on response?
+    try {
+      // acquire jwt from NPEU
+      await dotenv.load();
+      var baseUrl = dotenv.get('NPEU_URL');
+      var authUrl = 'https://' + baseUrl + '/identityauthority/connect/token';
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> child = jsonDecode(response.body);
-      if (child.containsKey('id')) {
-        print('returned from http');
-        print(child);
-        // success
-        return true;
+      var body = {
+        'client_id': dotenv.get('CLIENT_ID'),
+        'client_secret': dotenv.get('CLIENT_SECRET'),
+        'scope': dotenv.get('SCOPE'),
+        'grant_type': dotenv.get('GRANT_TYPE')
+      };
+
+      var authResponse = await http.post(
+          Uri.parse(authUrl),
+          body:body);
+      if (authResponse.statusCode != 200) {
+        return false;
+      } else {
+        var jwt = jsonDecode(authResponse.body)['access_token'];
+
+        // check if child and parent are valid
+        var parentEmail = FirebaseAuth.instance.currentUser!.email;
+        var queryParameters = {'Email': parentEmail};
+        var childCheckUrl = Uri.https(baseUrl,
+            '/dolfindata/api/participant/confirm/$childCheck', queryParameters);
+
+
+        // returns true or false to indicate if child is part of study and matches
+        // parent email
+        final response = await http.get(childCheckUrl,
+            headers: {'Authorization': 'Bearer $jwt'});
+        if (response.statusCode == 200) {
+          bool b = response.body.toLowerCase() == 'true';
+          return b;
+        } else {
+          return false;
+        }
       }
+    } catch (err) {
+      print(err);
+          return false;
     }
-    return false;
+
+
+
   }
 }

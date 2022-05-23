@@ -65,3 +65,4 @@ keys/
 
 # scan temporary files
 **/fastlane/test_output
+ios/gc_keys.json

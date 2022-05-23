@@ -48,6 +48,7 @@ fastlane match development
 fastlane match appstore
 pod install
 bundle install
+flutter build ipa
 bundle exec fastlane beta
 ```
 

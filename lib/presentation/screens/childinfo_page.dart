@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/data/models/record_model.dart';
 import 'package:dolfin_flutter/presentation/widgets/record_container.dart';
@@ -49,6 +50,21 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
 
     // todo check this
     // NotificationsHandler.requestpermission(context);
+  }
+
+  Future<HttpsCallableResult> _getChildInfo() async {
+    final functions = FirebaseFunctions.instanceFor(region: "europe-west2");
+    var checkChild = functions.httpsCallable('checkChild');
+    var childDetails = await checkChild
+        .call(<String, String>{"child_id": widget.child!.id}).catchError(
+            (error) => nope(error));
+    return childDetails;
+  }
+
+  void nope(var error) {
+    print(error.code);
+    print(error.details);
+    print(error.message);
   }
 
   @override
@@ -190,46 +206,73 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                           HospitalAdmissionWidget(child: widget.child)
                         ],
                       ),
+//-------------------------------------------------------------------------------
+
                       SizedBox(
                         height: 4.h,
                       ),
-                      Center(
-                        child: MyButton(
-                          color: AppColours.dark_blue,
-                          width: 60.w,
-                          title: '+ Add Weekly Record',
-                          func: () {
-                            Navigator.pushNamed(context, addweeklyrecordpage,
-                                arguments: widget.child);
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        height: 4.h,
-                      ),
-                      Expanded(
-                          child: StreamBuilder(
-                        stream: FireStoreCrud().getRecordsRange(
-                            childID: widget.child!.id,
-                            start: lastWeek,
-                            end: today),
+                      FutureBuilder<HttpsCallableResult>(
+                        future: _getChildInfo(),
                         builder: (BuildContext context,
-                            AsyncSnapshot<List<RecordModel>> snapshot) {
+                            AsyncSnapshot<HttpsCallableResult> snapshot) {
                           if (snapshot.hasError) {
-                            return _nodatawidget();
-                          }
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const MyCircularIndicator();
+                            return const Text('ERROR');
+                          } else if (!snapshot.hasData) {
+                            return const Text('Loading...');
                           }
 
-                          List<RecordModel>? records =
-                              formatRecordData(snapshot.data, lastWeek, today);
+                          final data = snapshot.data!;
 
-                          return records!.isNotEmpty
-                              ? ListView.builder(
+                          bool weekly = data.data["showWeeklyForms"];
+                          //weekly = true;
+
+                          if (weekly) {
+                            return Column(children: [
+                              Text(
+                                "Your next weekly supplement check is due. Please click the button below to submit your child's dosage info for the last 7 days.",
+                                textAlign: TextAlign.left,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline2!
+                                    .copyWith(fontSize: 18.sp),
+                              ),
+                              SizedBox(
+                                height: 4.h,
+                              ),
+                              MyButton(
+                                color: AppColours.dark_blue,
+                                width: 60.w,
+                                title: '+ Add Weekly Record',
+                                func: () {
+                                  Navigator.pushNamed(
+                                      context, addweeklyrecordpage,
+                                      arguments: widget.child);
+                                },
+                              ),
+                            ]);
+                          } else {
+                            return Expanded(
+                                child: StreamBuilder(
+                              stream: FireStoreCrud().getRecordsRange(
+                                  childID: widget.child!.id,
+                                  start: lastWeek,
+                                  end: today),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<List<RecordModel>> snapshot) {
+                                if (snapshot.hasError) {
+                                  return _nodatawidget();
+                                }
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const MyCircularIndicator();
+                                }
+
+                                List<RecordModel>? records = formatRecordData(
+                                    snapshot.data, lastWeek, today);
+
+                                return ListView.builder(
                                   physics: const BouncingScrollPhysics(),
-                                  itemCount: records.length,
+                                  itemCount: records!.length,
                                   itemBuilder: (context, index) {
                                     var record = records[index];
                                     Widget _taskcontainer = RecordContainer(
@@ -252,10 +295,12 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                                     milliseconds: 1000),
                                                 child: _taskcontainer));
                                   },
-                                )
-                              : _nodatawidget();
+                                );
+                              },
+                            ));
+                          }
                         },
-                      )),
+                      ),
                     ],
                   ),
                 ));

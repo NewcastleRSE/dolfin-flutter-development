@@ -218,18 +218,28 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                           if (snapshot.hasError) {
                             return const Text('ERROR');
                           } else if (!snapshot.hasData) {
-                            return const Text('Loading...');
+                            return Column(children: [
+                              Center(
+                                  child: Text('Loading...',
+                                      textAlign: TextAlign.center))
+                            ]);
                           }
 
                           final data = snapshot.data!;
 
                           bool weekly = data.data["showWeeklyForms"];
-                          //weekly = true;
+                          weekly = true;
+
+                          bool showButton = true;
+
+                          String displayText = showButton
+                              ? "Your next weekly supplement check is due. Please click the button below to submit your child's dosage info for the last 7 days."
+                              : "You have already submitted your weekly suplement data for this week.";
 
                           if (weekly) {
                             return Column(children: [
                               Text(
-                                "Your next weekly supplement check is due. Please click the button below to submit your child's dosage info for the last 7 days.",
+                                displayText,
                                 textAlign: TextAlign.left,
                                 style: Theme.of(context)
                                     .textTheme
@@ -239,16 +249,25 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                               SizedBox(
                                 height: 4.h,
                               ),
-                              MyButton(
-                                color: AppColours.dark_blue,
-                                width: 60.w,
-                                title: '+ Add Weekly Record',
-                                func: () {
-                                  Navigator.pushNamed(
-                                      context, addweeklyrecordpage,
-                                      arguments: widget.child);
-                                },
-                              ),
+                              showButton
+                                  ? MyButton(
+                                      color: AppColours.dark_blue,
+                                      width: 60.w,
+                                      title: '+ Add Weekly Record',
+                                      func: () {
+                                        Navigator.pushNamed(
+                                            context, addweeklyrecordpage,
+                                            arguments: widget.child);
+                                      },
+                                    )
+                                  : Text(
+                                      "Your next supplement check is due in X days.",
+                                      textAlign: TextAlign.left,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline2!
+                                          .copyWith(fontSize: 18.sp),
+                                    ),
                             ]);
                           } else {
                             return Expanded(

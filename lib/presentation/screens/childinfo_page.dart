@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
@@ -6,6 +8,7 @@ import 'package:dolfin_flutter/presentation/widgets/record_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 import 'package:dolfin_flutter/bloc/auth/authentication_cubit.dart';
 import 'package:dolfin_flutter/bloc/connectivity/connectivity_cubit.dart';
@@ -61,10 +64,11 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
     return childDetails;
   }
 
-  void nope(var error) {
+  Future<HttpsCallableResult> nope(var error) {
     print(error.code);
     print(error.details);
     print(error.message);
+    return Future<HttpsCallableResult>.error(error);
   }
 
   @override
@@ -228,13 +232,30 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                           final data = snapshot.data!;
 
                           bool weekly = data.data["showWeeklyForms"];
-                          weekly = true;
+                          //weekly = true;
 
                           bool showButton = true;
+                          String dueDate = "";
+
+                          var dateString = data.data["lastWeekSubmittedEnds"];
+                          if (dateString != "0000-00-00") {
+                            var parsedDate = DateTime.parse(dateString);
+                            var now = DateTime.now();
+                            var difference = now.difference(parsedDate).inDays;
+                            if (difference < 7) {
+                              showButton = false;
+
+                              var nextDate = parsedDate.add(Duration(days: 7));
+                              dueDate =
+                                  DateFormat("yyyy-MM-dd").format(nextDate);
+                            }
+                          }
 
                           String displayText = showButton
                               ? "Your next weekly supplement check is due. Please click the button below to submit your child's dosage info for the last 7 days."
-                              : "You have already submitted your weekly suplement data for this week.";
+                              : "You have already submitted your weekly supplement data for " +
+                                  widget.child!.name +
+                                  " this week.";
 
                           if (weekly) {
                             return Column(children: [
@@ -261,7 +282,8 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                       },
                                     )
                                   : Text(
-                                      "Your next supplement check is due in X days.",
+                                      "Your next supplement check is due on: " +
+                                          dueDate,
                                       textAlign: TextAlign.left,
                                       style: Theme.of(context)
                                           .textTheme

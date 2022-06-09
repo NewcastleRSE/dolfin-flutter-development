@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:animate_do/animate_do.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/data/models/record_model.dart';
 import 'package:dolfin_flutter/presentation/widgets/record_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 import 'package:dolfin_flutter/bloc/auth/authentication_cubit.dart';
 import 'package:dolfin_flutter/bloc/connectivity/connectivity_cubit.dart';
@@ -49,6 +53,22 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
 
     // todo check this
     // NotificationsHandler.requestpermission(context);
+  }
+
+  Future<HttpsCallableResult> _getChildInfo() async {
+    final functions = FirebaseFunctions.instanceFor(region: "europe-west2");
+    var checkChild = functions.httpsCallable('checkChild');
+    var childDetails = await checkChild
+        .call(<String, String>{"child_id": widget.child!.id}).catchError(
+            (error) => nope(error));
+    return childDetails;
+  }
+
+  Future<HttpsCallableResult> nope(var error) {
+    print(error.code);
+    print(error.details);
+    print(error.message);
+    return Future<HttpsCallableResult>.error(error);
   }
 
   @override
@@ -175,35 +195,125 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                 padding: EdgeInsets.all(12),
                                 primary: AppColours.light_blue),
                           ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, addweightpage,
+                                  arguments: widget.child);
+                            },
+                            child: Icon(Icons.add_chart_rounded,
+                                color: Colors.white),
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                padding: EdgeInsets.all(12),
+                                primary: AppColours.light_blue),
+                          ),
                           HospitalAdmissionWidget(child: widget.child)
                         ],
                       ),
+//-------------------------------------------------------------------------------
+
                       SizedBox(
-                        height: 5.h,
+                        height: 4.h,
                       ),
-                      Expanded(
-                          child: StreamBuilder(
-                        stream: FireStoreCrud().getRecordsRange(
-                            childID: widget.child!.id,
-                            start: lastWeek,
-                            end: today),
+                      FutureBuilder<HttpsCallableResult>(
+                        future: _getChildInfo(),
                         builder: (BuildContext context,
-                            AsyncSnapshot<List<RecordModel>> snapshot) {
+                            AsyncSnapshot<HttpsCallableResult> snapshot) {
                           if (snapshot.hasError) {
-                            return _nodatawidget();
-                          }
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const MyCircularIndicator();
+                            return const Text('ERROR');
+                          } else if (!snapshot.hasData) {
+                            return Column(children: [
+                              Center(
+                                  child: Text('Loading...',
+                                      textAlign: TextAlign.center))
+                            ]);
                           }
 
-                          List<RecordModel>? records =
-                              formatRecordData(snapshot.data, lastWeek, today);
+                          final data = snapshot.data!;
 
-                          return records!.isNotEmpty
-                              ? ListView.builder(
+                          bool weekly = data.data["showWeeklyForms"];
+                          //weekly = true;
+
+                          bool showButton = true;
+                          String dueDate = "";
+
+                          var dateString = data.data["lastWeekSubmittedEnds"];
+                          if (dateString != "0000-00-00") {
+                            var parsedDate = DateTime.parse(dateString);
+                            var now = DateTime.now();
+                            var difference = now.difference(parsedDate).inDays;
+                            if (difference < 7) {
+                              showButton = false;
+
+                              var nextDate = parsedDate.add(Duration(days: 7));
+                              dueDate =
+                                  DateFormat("yyyy-MM-dd").format(nextDate);
+                            }
+                          }
+
+                          String displayText = showButton
+                              ? "Your next weekly supplement check is due. Please click the button below to submit your child's dosage info for the last 7 days."
+                              : "You have already submitted your weekly supplement data for " +
+                                  widget.child!.name +
+                                  " this week.";
+
+                          if (weekly) {
+                            return Column(children: [
+                              Text(
+                                displayText,
+                                textAlign: TextAlign.left,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline2!
+                                    .copyWith(fontSize: 18.sp),
+                              ),
+                              SizedBox(
+                                height: 4.h,
+                              ),
+                              showButton
+                                  ? MyButton(
+                                      color: AppColours.dark_blue,
+                                      width: 60.w,
+                                      title: '+ Add Weekly Record',
+                                      func: () {
+                                        Navigator.pushNamed(
+                                            context, addweeklyrecordpage,
+                                            arguments: widget.child);
+                                      },
+                                    )
+                                  : Text(
+                                      "Your next supplement check is due on: " +
+                                          dueDate,
+                                      textAlign: TextAlign.left,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline2!
+                                          .copyWith(fontSize: 18.sp),
+                                    ),
+                            ]);
+                          } else {
+                            return Expanded(
+                                child: StreamBuilder(
+                              stream: FireStoreCrud().getRecordsRange(
+                                  childID: widget.child!.id,
+                                  start: lastWeek,
+                                  end: today),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<List<RecordModel>> snapshot) {
+                                if (snapshot.hasError) {
+                                  return _nodatawidget();
+                                }
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const MyCircularIndicator();
+                                }
+
+                                List<RecordModel>? records = formatRecordData(
+                                    snapshot.data, lastWeek, today);
+
+                                return ListView.builder(
                                   physics: const BouncingScrollPhysics(),
-                                  itemCount: records.length,
+                                  itemCount: records!.length,
                                   itemBuilder: (context, index) {
                                     var record = records[index];
                                     Widget _taskcontainer = RecordContainer(
@@ -226,10 +336,12 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                                     milliseconds: 1000),
                                                 child: _taskcontainer));
                                   },
-                                )
-                              : _nodatawidget();
+                                );
+                              },
+                            ));
+                          }
                         },
-                      )),
+                      ),
                     ],
                   ),
                 ));
@@ -242,15 +354,19 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
     List<RecordModel>? results = [];
 
     DateTime currentDate = end;
-    String child = record![0].child;
-    String studyID = record[0].studyID;
+
+    String child = widget.child!.id;
+    String studyID = widget.child!.studyID;
 
     for (int i = 0; i < 7; i++) {
       bool found = false;
-      for (RecordModel r in record!) {
-        if (r.date.isSameDate(currentDate)) {
-          results.add(r);
-          found = true;
+
+      if (record != null) {
+        for (RecordModel r in record) {
+          if (r.date.isSameDate(currentDate)) {
+            results.add(r);
+            found = true;
+          }
         }
       }
 

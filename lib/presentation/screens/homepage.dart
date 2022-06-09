@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
@@ -41,7 +43,7 @@ class _HomePageState extends State<HomePage> {
   String _buildNo = "b";
 
   @override
-  void initState() {
+ void initState() {
     super.initState();
 
     past3 = checkDailyNotificationsVisibility();
@@ -49,8 +51,6 @@ class _HomePageState extends State<HomePage> {
     // save parent ID and FCM token to Firestore for push notifications
     // get FCM token
     FirebaseMessaging.instance.getToken().then((value) {
-      print('get token');
-      print(value);
       String? token = value;
       // Save the initial token to the database
       saveFCMTokenToDatabase(token!);
@@ -59,8 +59,19 @@ class _HomePageState extends State<HomePage> {
     // Any time the token refreshes, store this in the database too
     FirebaseMessaging.instance.onTokenRefresh.listen(saveFCMTokenToDatabase);
 
-    // todo request permission for ios?
-    // NotificationsHandler.requestpermission(context);
+    // IOS configuration of cloud messaging
+    FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: true, badge: true, sound: true
+    );
+    FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
 
     // When user clicks background notification and opens app
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
@@ -69,8 +80,6 @@ class _HomePageState extends State<HomePage> {
 
     // push notification when app running in foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.notification!.body!}');
 
       showDialog(
           context: context,
@@ -88,17 +97,10 @@ class _HomePageState extends State<HomePage> {
             );
           });
     });
-
-    getPackageInfo().then((packageInfo) => setPackageInfo(packageInfo));
   }
 
-  void setPackageInfo(PackageInfo packageInfo) {
-    _versionNo = packageInfo.version;
-    _buildNo = packageInfo.buildNumber;
-  }
-
-  Future<PackageInfo> getPackageInfo() async {
-    return await PackageInfo.fromPlatform();
+  Future<PackageInfo> _getPackageInfo() {
+    return PackageInfo.fromPlatform();
   }
 
   Future<void> saveFCMTokenToDatabase(String token) async {
@@ -118,7 +120,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   bool checkDailyNotificationsVisibility() {
-    print('check notifications');
     var childrenSnapshot = FireStoreCrud()
         .getChildren(parentID: FirebaseAuth.instance.currentUser!.uid);
 
@@ -134,7 +135,6 @@ class _HomePageState extends State<HomePage> {
 
         // if it has been over 3 months since hospital discharge show option to turn off daily reminders
         if (daysBetween(dischargeDate, today) >= 84) {
-          print('past 3 months');
           past3 = true;
           break;
         }
@@ -233,7 +233,6 @@ class _HomePageState extends State<HomePage> {
 
                                   // if it has been over 3 months since hospital discharge show option to turn off daily reminders
                                   if (days >= 84) {
-                                    print('past 3 months');
                                     past3 = true;
                                     break;
                                   }
@@ -351,12 +350,33 @@ class _HomePageState extends State<HomePage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            "v" + _versionNo + "-" + _buildNo,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall!
-                                .copyWith(fontSize: 12.sp),
+                          Center(
+                            child: FutureBuilder<PackageInfo>(
+                              future: _getPackageInfo(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<PackageInfo> snapshot) {
+                                if (snapshot.hasError) {
+                                  return const Text('ERROR');
+                                } else if (!snapshot.hasData) {
+                                  return const Text('Loading...');
+                                }
+
+                                final data = snapshot.data!;
+
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'v${data.version}-${data.buildNumber}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .copyWith(fontSize: 12.sp),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
                           )
                         ],
                       ),
@@ -462,6 +482,8 @@ class _HomePageState extends State<HomePage> {
                                     authenticationCubit.updateUserInfo(
                                         _usercontroller.text, context);
                                     setState(() {});
+                                    Navigator.pushNamed(context, homepage);
+                                    sleep(Duration(seconds: 2));
                                   }
                                 },
                               );
@@ -566,6 +588,8 @@ class _HomePageState extends State<HomePage> {
                                     authenticationCubit.updateUserInfo(
                                         _usercontroller.text, context);
                                     setState(() {});
+                                    Navigator.pushNamed(context, homepage);
+                                    sleep(Duration(seconds: 2));
                                   }
                                 },
                               );

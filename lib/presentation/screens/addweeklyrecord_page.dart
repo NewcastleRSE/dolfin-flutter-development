@@ -1,5 +1,6 @@
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/data/models/record_model.dart';
+import 'package:dolfin_flutter/data/models/weeklyrecord_model.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,12 +11,11 @@ import 'package:dolfin_flutter/presentation/widgets/mytextfield.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AddRecordPage extends StatefulWidget {
+class AddWeeklyRecordPage extends StatefulWidget {
   final ChildModel? child;
-  final RecordModel? record;
+  final WeeklyRecordModel? record;
   final DateTime? date;
-
-  const AddRecordPage({
+  const AddWeeklyRecordPage({
     this.child,
     this.record,
     this.date,
@@ -23,18 +23,19 @@ class AddRecordPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<AddRecordPage> createState() => _AddRecordPageState();
+  State<AddWeeklyRecordPage> createState() => _AddWeeklyRecordPageState();
 }
 
-class _AddRecordPageState extends State<AddRecordPage> {
+class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
   get isEditMode => widget.record != null;
 
   late String _childStudyID;
 
   late TextEditingController _reasoncontroller;
 
-  late SupplementOptions? _supplement;
+  late int? _numSupplements;
   late ReasonOptions? _reason;
+  late bool? _problem;
 
   late DateTime recordDate;
   late bool _moreInfoVisible;
@@ -47,18 +48,22 @@ class _AddRecordPageState extends State<AddRecordPage> {
   void initState() {
     super.initState();
 
-    _supplement =
-        isEditMode ? widget.record!.supplement : SupplementOptions.fullDose;
+    _numSupplements = isEditMode ? widget.record!.numSupplements : 0;
 
     _reason = isEditMode ? widget.record!.reason : ReasonOptions.forgot;
 
     _reasoncontroller = TextEditingController(
         text: isEditMode ? widget.record!.otherReason : '');
 
-    recordDate = isEditMode ? widget.record!.date : widget.date!;
+    recordDate = isEditMode ? widget.record!.date : DateTime.now();
 
-    _moreInfoVisible =
-        (isEditMode && widget.record!.supplement == SupplementOptions.noDose)
+    _moreInfoVisible = (isEditMode &&
+            widget.record!.numSupplements == SupplementOptions.noDose)
+        ? true
+        : false;
+
+    _ranOutVisible =
+        (isEditMode && widget.record!.reason == ReasonOptions.ranOut)
             ? true
             : false;
 
@@ -67,12 +72,9 @@ class _AddRecordPageState extends State<AddRecordPage> {
             ? true
             : false;
 
-    _ranOutVisible =
-        (isEditMode && widget.record!.reason == ReasonOptions.ranOut)
-            ? true
-            : false;
-
     _childStudyID = isEditMode ? widget.record!.studyID : widget.child!.studyID;
+
+    _problem = isEditMode ? widget.record!.problem : false;
   }
 
   @override
@@ -110,7 +112,17 @@ class _AddRecordPageState extends State<AddRecordPage> {
             height: 3.h,
           ),
           Text(
-            'Thank you for taking part in the DOLFIN trial. It is important you give the DOLFIN supplement to your child every day, unless they are unable to take it because they are too unwell. Please use this form to let us know whether or not your baby has had their supplement today.',
+            'Thank you for taking part in the DOLFIN trial. It is important you give the DOLFIN supplement to your child every day, unless they are unable to take it because they are too unwell.',
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
+          Text(
+            'Please use this form to let us know how much supplement your baby has had in the last seven days.',
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium!
@@ -130,7 +142,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             height: 3.h,
           ),
           Text(
-            'Date',
+            "Baby's Date of Birth",
             style: Theme.of(context)
                 .textTheme
                 .headline1!
@@ -140,7 +152,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             height: 1.h,
           ),
           MyTextfield(
-            hint: DateFormat('dd/MM/yyyy').format(recordDate),
+            hint: widget.child!.dob,
             icon: Icons.calendar_today,
             readonly: true,
             showicon: false,
@@ -161,7 +173,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             height: 1.h,
           ),
           Text(
-            'Have you given your baby their DOLFIN supplement today?',
+            'How many days did your baby have their DOLFIN supplement in the last seven days?',
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium!
@@ -173,40 +185,97 @@ class _AddRecordPageState extends State<AddRecordPage> {
           Column(
             children: <Widget>[
               ListTile(
-                title: const Text('Yes, all of it'),
-                leading: Radio<SupplementOptions>(
-                  value: SupplementOptions.fullDose,
-                  groupValue: _supplement,
-                  onChanged: (SupplementOptions? value) {
+                title: const Text('0 Days'),
+                leading: Radio<int>(
+                  value: 0,
+                  groupValue: _numSupplements,
+                  onChanged: (int? value) {
                     setState(() {
-                      _supplement = value;
-                      _moreInfoVisible = false;
+                      _numSupplements = value;
                     });
                   },
                 ),
               ),
               ListTile(
-                title: const Text('Yes, some of it'),
-                leading: Radio<SupplementOptions>(
-                  value: SupplementOptions.partialDose,
-                  groupValue: _supplement,
-                  onChanged: (SupplementOptions? value) {
+                title: const Text('1 Day'),
+                leading: Radio<int>(
+                  value: 1,
+                  groupValue: _numSupplements,
+                  onChanged: (int? value) {
                     setState(() {
-                      _supplement = value;
-                      _moreInfoVisible = true;
+                      _numSupplements = value;
                     });
                   },
                 ),
               ),
               ListTile(
-                title: const Text('No'),
-                leading: Radio<SupplementOptions>(
-                  value: SupplementOptions.noDose,
-                  groupValue: _supplement,
-                  onChanged: (SupplementOptions? value) {
+                title: const Text('2 Days'),
+                leading: Radio<int>(
+                  value: 2,
+                  groupValue: _numSupplements,
+                  onChanged: (int? value) {
                     setState(() {
-                      _supplement = value;
-                      _moreInfoVisible = true;
+                      _numSupplements = value;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('3 Days'),
+                leading: Radio<int>(
+                  value: 3,
+                  groupValue: _numSupplements,
+                  onChanged: (int? value) {
+                    setState(() {
+                      _numSupplements = value;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('4 Days'),
+                leading: Radio<int>(
+                  value: 4,
+                  groupValue: _numSupplements,
+                  onChanged: (int? value) {
+                    setState(() {
+                      _numSupplements = value;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('5 Days'),
+                leading: Radio<int>(
+                  value: 5,
+                  groupValue: _numSupplements,
+                  onChanged: (int? value) {
+                    setState(() {
+                      _numSupplements = value;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('6 Days'),
+                leading: Radio<int>(
+                  value: 6,
+                  groupValue: _numSupplements,
+                  onChanged: (int? value) {
+                    setState(() {
+                      _numSupplements = value;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('7 Days'),
+                leading: Radio<int>(
+                  value: 7,
+                  groupValue: _numSupplements,
+                  onChanged: (int? value) {
+                    setState(() {
+                      _numSupplements = value;
                     });
                   },
                 ),
@@ -214,7 +283,50 @@ class _AddRecordPageState extends State<AddRecordPage> {
             ],
           ),
           SizedBox(
-            height: 2.h,
+            height: 3.h,
+          ),
+          Text(
+            'Were there any problems giving the DOLFIN supplement according to the instructions?',
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 1.h,
+          ),
+          Column(
+            children: <Widget>[
+              ListTile(
+                title: const Text('Yes'),
+                leading: Radio<bool>(
+                  value: true,
+                  groupValue: _problem,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _problem = value;
+                      _moreInfoVisible = true;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('No'),
+                leading: Radio<bool>(
+                  value: false,
+                  groupValue: _problem,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _problem = value;
+                      _moreInfoVisible = false;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 3.h,
           ),
           Visibility(
             visible: _moreInfoVisible,
@@ -347,8 +459,18 @@ class _AddRecordPageState extends State<AddRecordPage> {
                     textEditingController: _reasoncontroller,
                   ),
                 ),
+                SizedBox(
+                  height: 5.h,
+                ),
               ],
             ),
+          ),
+          Text(
+            "Remember: please let your local clinical team know if your baby has an unplanned admission to hospital, as these need to be recorded as part of the DOLFIN trial.",
+            style: Theme.of(context)
+                .textTheme
+                .headline1!
+                .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
             height: 3.h,
@@ -389,17 +511,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             height: 3.h,
           ),
           Text(
-            "Remember: please let your local clinical team know if your baby has an unplanned admission to hospital, as these need to be recorded as part of the DOLFIN trial.",
-            style: Theme.of(context)
-                .textTheme
-                .headline1!
-                .copyWith(fontSize: 14.sp),
-          ),
-          SizedBox(
-            height: 3.h,
-          ),
-          Text(
-            "Thank you for completing this daily supplement check.",
+            "Thank you for completing this weekly supplement check. The information you have given will XXXX. Don’t forget to complete the form again on the same day next week; we will send you a reminder to do this.",
             style: Theme.of(context)
                 .textTheme
                 .headline1!
@@ -416,7 +528,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                 width: 45.w,
                 title: isEditMode ? "Update Record" : 'Add Record',
                 func: () {
-                  _addRecord();
+                  _addWeeklyRecord();
                 },
               )
             ],
@@ -429,25 +541,26 @@ class _AddRecordPageState extends State<AddRecordPage> {
     );
   }
 
-  _addRecord() {
+  _addWeeklyRecord() {
     if (_formKey.currentState!.validate()) {
-      RecordModel record = RecordModel(
+      WeeklyRecordModel record = WeeklyRecordModel(
         date: recordDate,
-        supplement: _supplement,
+        numSupplements: _numSupplements,
         reason: _reason,
         otherReason: _reasoncontroller.text,
         child: isEditMode ? widget.record!.child : widget.child!.id,
         studyID: isEditMode ? widget.record!.studyID : widget.child!.studyID,
+        problem: _problem,
         id: '',
       );
       isEditMode
           ? FireStoreCrud().updateRecord(
               docid: widget.record!.id,
-              supplement: _supplement.toString(),
+              supplement: _numSupplements.toString(),
               reason: _reason.toString(),
               otherReason: _reasoncontroller.text,
             )
-          : FireStoreCrud().addRecord(record: record);
+          : FireStoreCrud().addWeeklyRecord(record: record);
 
       Navigator.pop(context);
     }
@@ -467,7 +580,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
           ),
         ),
         Text(
-          isEditMode ? 'Edit Record' : 'Daily Supplement Check',
+          isEditMode ? 'Edit Record' : 'Weekly Supplement Check',
           style:
               Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14.sp),
         ),

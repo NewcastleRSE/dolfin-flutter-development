@@ -1,6 +1,8 @@
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/data/models/record_model.dart';
 import 'package:dolfin_flutter/presentation/screens/addrecord_page.dart';
+import 'package:dolfin_flutter/presentation/screens/addweeklyrecord_page.dart';
+import 'package:dolfin_flutter/presentation/screens/addweight_page.dart';
 import 'package:dolfin_flutter/presentation/screens/childinfo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dolfin_flutter/presentation/screens/addchild_page.dart';
@@ -49,6 +51,22 @@ class AppRoute {
           final child = settings.arguments as ChildModel?;
           return MaterialPageRoute(
               builder: (_) => AddChildPage(
+                    child: child,
+                  ));
+        }
+      case addweightpage:
+        {
+          final child = settings.arguments as ChildModel?;
+          return MaterialPageRoute(
+              builder: (_) => AddWeightPage(
+                    child: child,
+                  ));
+        }
+      case addweeklyrecordpage:
+        {
+          final child = settings.arguments as ChildModel?;
+          return MaterialPageRoute(
+              builder: (_) => AddWeeklyRecordPage(
                     child: child,
                   ));
         }

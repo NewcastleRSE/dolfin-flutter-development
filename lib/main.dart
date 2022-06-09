@@ -18,6 +18,7 @@ import 'package:dolfin_flutter/presentation/widgets/myindicator.dart';
 import 'package:dolfin_flutter/shared/constants/consts_variables.dart';
 import 'package:dolfin_flutter/shared/route.dart';
 import 'package:dolfin_flutter/shared/styles/themes.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'bloc/auth/authentication_cubit.dart';
 
@@ -25,15 +26,17 @@ import 'package:flutter/widgets.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 Future<void> main() async {
+
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  // Firebase Cloud Messaging
+
   // push notification when in background
   FirebaseMessaging.onBackgroundMessage(_firebasePushHandler);
-  // todo probably navigate to a new form submission?
+
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
     print('Message clicked!');
   });

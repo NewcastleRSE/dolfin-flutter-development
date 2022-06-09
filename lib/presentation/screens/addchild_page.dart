@@ -17,7 +17,7 @@ import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../shared/services/notification_service.dart';
 import '../widgets/mysnackbar.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AddChildPage extends StatefulWidget {
   final ChildModel? child;
@@ -53,12 +53,14 @@ class _AddChildPageState extends State<AddChildPage> {
     _trialIDcontroller =
         TextEditingController(text: isEditMode ? widget.child!.studyID : '');
     dateOfBirth =
-    isEditMode ? DateTime.parse(widget.child!.dob) : DateTime.now();
-    dischargeDate =
-    isEditMode ? DateTime.parse(widget.child!.dischargeDate) : DateTime.now();
+        isEditMode ? DateTime.parse(widget.child!.dob) : DateTime.now();
+    dischargeDate = isEditMode
+        ? DateTime.parse(widget.child!.dischargeDate)
+        : DateTime.now();
     dueDate =
-    isEditMode ? DateTime.parse(widget.child!.dueDate) : DateTime.now();
+        isEditMode ? DateTime.parse(widget.child!.dueDate) : DateTime.now();
     recruitedAfterDischarge = false;
+
   }
 
   @override
@@ -98,8 +100,7 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
           Text(
             'Trial ID',
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -124,8 +125,7 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
           Text(
             'Name',
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -145,12 +145,11 @@ class _AddChildPageState extends State<AddChildPage> {
             textEditingController: _namecontroller,
           ),
           SizedBox(
-            height: 2.h,
+            height: 3.h,
           ),
           Text(
             'Due date',
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -170,12 +169,11 @@ class _AddChildPageState extends State<AddChildPage> {
             textEditingController: TextEditingController(),
           ),
           SizedBox(
-            height: 1.h,
+            height: 3.h,
           ),
           Text(
             'Date of birth',
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -195,12 +193,11 @@ class _AddChildPageState extends State<AddChildPage> {
             textEditingController: TextEditingController(),
           ),
           SizedBox(
-            height: 1.h,
+            height: 3.h,
           ),
           Text(
             'Discharge date',
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
@@ -220,42 +217,46 @@ class _AddChildPageState extends State<AddChildPage> {
             textEditingController: TextEditingController(),
           ),
           SizedBox(
-            height: 2.h,
+            height: 3.h,
           ),
           Text(
             'Were you recruited to the study before hospital discharge?',
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
                 .headline1!
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
-            height: 1.h,
+            height: 2.h,
           ),
-          ToggleSwitch(
-            minWidth: 90.0,
-            cornerRadius: 20.0,
-            activeBgColors: [[AppColours.light_blue], [AppColours.light_blue]],
-            activeFgColor: Colors.white,
-            inactiveBgColor: Colors.grey,
-            inactiveFgColor: Colors.white,
-            initialLabelIndex: 0,
-            totalSwitches: 2,
-            labels: ['Yes', 'No'],
-            radiusStyle: true,
-            onToggle: (index) {
-              // index 0 = recruited before discharge
-              // index 1 = recruited after discharge
-              if (index == 1) {
-                recruitedAfterDischarge = true;
-              } else {
-                recruitedAfterDischarge = false;
-              }
-            },
+          Center(
+            child: ToggleSwitch(
+              minWidth: 90.0,
+              cornerRadius: 20.0,
+              activeBgColors: [
+                [AppColours.light_blue],
+                [AppColours.light_blue]
+              ],
+              activeFgColor: Colors.white,
+              inactiveBgColor: Colors.grey,
+              inactiveFgColor: Colors.white,
+              initialLabelIndex: 0,
+              totalSwitches: 2,
+              labels: ['Yes', 'No'],
+              radiusStyle: true,
+              onToggle: (index) {
+                // index 0 = recruited before discharge
+                // index 1 = recruited after discharge
+                if (index == 1) {
+                  recruitedAfterDischarge = true;
+                } else {
+                  recruitedAfterDischarge = false;
+                }
+              },
+            ),
           ),
           SizedBox(
-            height: 2.h,
+            height: 5.h,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -269,7 +270,10 @@ class _AddChildPageState extends State<AddChildPage> {
                 },
               )
             ],
-          )
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
         ],
       ),
     );
@@ -278,13 +282,12 @@ class _AddChildPageState extends State<AddChildPage> {
   _addChild() {
     // is form complete and is child registered with Oxford?
     if (_formKey.currentState!.validate()) {
-
       checkChild(_trialIDcontroller.text).then((childExists) {
         // child is study participant
         if (childExists) {
-            print('child is a study participant so save to DB');
+          print('child is a study participant so save to DB');
 
-            ChildModel child = ChildModel(
+          ChildModel child = ChildModel(
               name: _namecontroller.text,
               dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
               dischargeDate: DateFormat('yyyy-MM-dd').format(dischargeDate),
@@ -292,26 +295,25 @@ class _AddChildPageState extends State<AddChildPage> {
               studyID: _trialIDcontroller.text,
               parentID: FirebaseAuth.instance.currentUser!.uid,
               id: '',
-              recruitedAfterDischarge: recruitedAfterDischarge
-            );
+              recruitedAfterDischarge: recruitedAfterDischarge);
 
-            isEditMode
-                ? FireStoreCrud().updateChild(
-              docid: widget.child!.id,
-              name: _namecontroller.text,
-              dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-            )
-                : FireStoreCrud().addChild(child: child);
+          isEditMode
+              ? FireStoreCrud().updateChild(
+                  docid: widget.child!.id,
+                  name: _namecontroller.text,
+                  dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
+                )
+              : FireStoreCrud().addChild(child: child);
 
-            Navigator.pop(context);
+          Navigator.pop(context);
         } else {
-        print('child does not exist in study');
-        MySnackBar.error(
-            message: 'Incorrect child ID',
-            color: Colors.red,
-            context: context);
+          print('child does not exist in study');
+          MySnackBar.error(
+              message: "Problem with child's trial ID, please check the ID is correct and"
+                  " try again",
+              color: Colors.red,
+              context: context);
         }
-
       }); // child exists with Oxford
     } // validate
   }
@@ -341,6 +343,7 @@ class _AddChildPageState extends State<AddChildPage> {
       selecteddate != null ? dueDate = selecteddate : null;
     });
   }
+
   _showdatepickerdd() async {
     var selecteddate = await showDatePicker(
       context: context,
@@ -369,33 +372,60 @@ class _AddChildPageState extends State<AddChildPage> {
         ),
         Text(
           isEditMode ? 'Edit Child' : 'Add a Child',
-          style: Theme
-              .of(context)
-              .textTheme
-              .headline1,
+          style: Theme.of(context).textTheme.headline1,
         ),
         const SizedBox()
       ],
     );
   }
 
-  // http request to check child's ID/token is valid
-  //todo replace with correct URL from Oxford
+  // http request to check child's ID is valid
   Future<bool> checkChild(childCheck) async {
-    final response = await http.get(
-        Uri.parse('https://jsonplaceholder.typicode.com/users/' + childCheck));
-    // todo any other checks to be done on response?
+    try {
+      // acquire jwt from NPEU
+      await dotenv.load();
+      var baseUrl = dotenv.get('NPEU_URL');
+      var authUrl = 'https://' + baseUrl + '/identityauthority/connect/token';
 
-      if (response.statusCode == 200) {
-        Map<String, dynamic> child= jsonDecode(response.body);
-        if (child.containsKey('id')) {
-          print('returned from http');
-          print(child);
-          // success
-          return true;
+      var body = {
+        'client_id': dotenv.get('CLIENT_ID'),
+        'client_secret': dotenv.get('CLIENT_SECRET'),
+        'scope': dotenv.get('SCOPE'),
+        'grant_type': dotenv.get('GRANT_TYPE')
+      };
+
+      var authResponse = await http.post(
+          Uri.parse(authUrl),
+          body:body);
+      if (authResponse.statusCode != 200) {
+        return false;
+      } else {
+        var jwt = jsonDecode(authResponse.body)['access_token'];
+
+        // check if child and parent are valid
+        var parentEmail = FirebaseAuth.instance.currentUser!.email;
+        var queryParameters = {'Email': parentEmail};
+        var childCheckUrl = Uri.https(baseUrl,
+            '/dolfindata/api/participant/confirm/$childCheck', queryParameters);
+
+
+        // returns true or false to indicate if child is part of study and matches
+        // parent email
+        final response = await http.get(childCheckUrl,
+            headers: {'Authorization': 'Bearer $jwt'});
+        if (response.statusCode == 200) {
+          bool b = response.body.toLowerCase() == 'true';
+          return b;
+        } else {
+          return false;
         }
+      }
+    } catch (err) {
+      print(err);
+          return false;
     }
-      return false;
+
+
 
   }
 }

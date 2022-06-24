@@ -35,11 +35,21 @@ To get the app to work correctly with Firebase:
 
 Once Flutter, Android Studio and VS Code are installed and configured, you can run the app on the Android device emulator. The Android Emulator should appear in the list of avaiable devices in VS Code and, once selected, can be run with "Run -> Start Debugging" (or F5).
 
+### Regenerating the Icons
+The base icon image is specified in `pubspec.yaml` and the relevent dependencies should be installed automatically.
+To regenerate the icons (for Android and iOS), edit the master image file and then use the following commands:
+
+```
+flutter pub get  
+flutter pub run flutter_launcher_icons:main
+```
+
 ## Roadmap
 
-- [ ] Initial Development  
-- [ ] Minimum viable product  
-- [ ] Feature-Complete
+- [x] Initial Development  
+- [x] Minimum viable product  
+- [x] Feature-Complete
+- [ ] Testing
 
 ## Acknowledgements
 This work was funded by a grant from the UK Research Councils, EPSRC grant ref. EP/L012345/1, “Example project title, please update”.

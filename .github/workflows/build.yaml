@@ -2,7 +2,7 @@ on:
   push:
     branches:
       - main
-      - build-deploy
+      # - build-deploy
 
 name: Build and Release Apps
 jobs:

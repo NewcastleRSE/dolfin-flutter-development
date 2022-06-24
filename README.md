@@ -33,7 +33,42 @@ To get the app to work correctly with Firebase:
 
 ### Debugging the App (Android)
 
-Once Flutter, Android Studio and VS Code are installed and configured, you can run the app on the Android device emulator. The Android Emulator should appear in the list of avaiable devices in VS Code and, once selected, can be run with "Run -> Start Debugging" (or F5).
+Once Flutter, Android Studio and VS Code are installed and configured, you can run the app on the Android device emulator. The Android Emulator should appear in the list of available devices in VS Code and, once selected, can be run with "Run -> Start Debugging" (or F5).
+
+### Debugging the App (iOS)
+
+### Installation
+
+#### Android
+
+#### iOS
+
+```
+fastlane match development
+fastlane match appstore
+pod install
+bundle install
+flutter build ipa
+bundle exec fastlane beta
+```
+
+### Running Tests
+
+How to run tests on your local system.
+
+## Deployment
+
+### Local
+
+Deploying to a production style setup but on the local system. Examples of this would include `venv`, `anaconda`, `Docker` or `minikube`. 
+
+### Production
+
+Deploying to the production system. Examples of this would include cloud, HPC or virtual machine. 
+
+## Usage
+
+Any links to production environment, video demos and screenshots.
 
 ### Regenerating the Icons
 The base icon image is specified in `pubspec.yaml` and the relevent dependencies should be installed automatically.

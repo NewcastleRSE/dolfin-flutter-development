@@ -75,6 +75,8 @@ class _SignUpPageState extends State<SignUpPage> {
           }
 
           if (state is AuthenticationSuccessState) {
+            print('auth state');
+            print('context');
             Navigator.pushReplacementNamed(context, homepage);
           }
         },
@@ -236,6 +238,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _signupewithemailandpass(context, AuthenticationCubit cubit) {
+
     // is form complete and email registered with Oxford?
     if (_formKey.currentState!.validate()) {
       checkEmail( _emailcontroller.text).then((exists) {

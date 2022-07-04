@@ -95,7 +95,7 @@ class MyApp extends StatelessWidget {
             theme: MyTheme.lightTheme,
             darkTheme: MyTheme.darkTheme,
             onGenerateRoute: approute.generateRoute,
-            home: StreamBuilder<User?>(
+            home: StreamBuilder(
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {

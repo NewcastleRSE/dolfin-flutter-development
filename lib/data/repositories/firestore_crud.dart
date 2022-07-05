@@ -38,7 +38,7 @@ class FireStoreCrud {
     // // strip time from date
     // today = today.split(' ')[0];
 
-    await FirebaseFirestore.instance.collection('admissions').add(
+    await _firestore.collection('admissions').add(
         {'child_id': child_id, 'study_id': study_id, 'date_submitted': now});
   }
 
@@ -55,7 +55,7 @@ class FireStoreCrud {
   Future<List<String>> getDischargeDates({required String parentID}) async {
     List<String> dates = [];
 
-    final querySnapshot = await FirebaseFirestore.instance
+    final querySnapshot = await _firestore
         .collection('children')
         .where('parent_id', isEqualTo: parentID)
         .get();

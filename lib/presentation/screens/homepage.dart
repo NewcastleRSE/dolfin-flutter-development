@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
   String _buildNo = "b";
 
   @override
- void initState() {
+  void initState() {
     super.initState();
 
     past3 = checkDailyNotificationsVisibility();
@@ -61,8 +61,7 @@ class _HomePageState extends State<HomePage> {
 
     // IOS configuration of cloud messaging
     FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-      alert: true, badge: true, sound: true
-    );
+        alert: true, badge: true, sound: true);
     FirebaseMessaging.instance.requestPermission(
       alert: true,
       announcement: false,
@@ -80,7 +79,6 @@ class _HomePageState extends State<HomePage> {
 
     // push notification when app running in foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -475,7 +473,7 @@ class _HomePageState extends State<HomePage> {
                                 func: () {
                                   if (_usercontroller.text == '') {
                                     MySnackBar.error(
-                                        message: 'Name shoud not be empty!!',
+                                        message: 'Name should not be empty!!',
                                         color: Colors.red,
                                         context: context);
                                   } else {

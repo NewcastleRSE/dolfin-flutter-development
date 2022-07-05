@@ -109,8 +109,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           height: 1.5.h,
                         ),
                         Text(
-                          'Create a new account. Please make sure you use the email'
-                              ' you originally signed up to the trial with.',
+                            dotenv.env['NPEU_URL'] ?? 'NPEU_URL not found',
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1

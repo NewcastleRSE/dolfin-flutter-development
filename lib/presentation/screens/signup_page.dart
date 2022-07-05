@@ -264,6 +264,11 @@ class _SignUpPageState extends State<SignUpPage> {
     try {
       // acquire jwt from NPEU
       await dotenv.load();
+
+      MySnackBar.error( message: dotenv.get('NPEU_URL'),
+          color: Colors.blue,
+          context: context);
+
       var baseUrl = dotenv.get('NPEU_URL');
       var authUrl = 'https://' + baseUrl + '/identityauthority/connect/token';
 
@@ -277,6 +282,10 @@ class _SignUpPageState extends State<SignUpPage> {
       var authResponse = await http.post(
           Uri.parse(authUrl),
           body:body);
+      print(authResponse);
+      MySnackBar.error( message: authResponse.toString(),
+          color: Colors.blue,
+          context: context);
       if (authResponse.statusCode != 200) {
         MySnackBar.error(
             message: authResponse.statusCode.toString(),

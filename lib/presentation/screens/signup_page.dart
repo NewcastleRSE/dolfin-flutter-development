@@ -108,8 +108,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         SizedBox(
                           height: 1.5.h,
                         ),
+
+                        Text(dotenv.get('NPEU_URL', fallback: 'default')),
                         Text(
-                            dotenv.env['NPEU_URL'] ?? 'NPEU_URL not found',
+                          'Create a new account. Please make sure you use the email'
+                              ' you originally signed up to the trial with.',
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
@@ -262,7 +265,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Future<num> checkEmail(email) async {
     try {
       // acquire jwt from NPEU
-      await dotenv.load();
+      // await dotenv.load();
 
       MySnackBar.error( message: dotenv.get('NPEU_URL'),
           color: Colors.blue,

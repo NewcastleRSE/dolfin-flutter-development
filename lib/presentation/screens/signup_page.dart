@@ -70,13 +70,12 @@ class _SignUpPageState extends State<SignUpPage> {
             // Showing the error message if the user has entered invalid credentials
             MySnackBar.error(
                 message: state.error.toString(),
-                color: Colors.red,
+                color: Colors.amber,
                 context: context);
+            throw StateError(state.error.toString());
           }
 
           if (state is AuthenticationSuccessState) {
-            print('auth state');
-            print('context');
             Navigator.pushReplacementNamed(context, homepage);
           }
         },
@@ -281,7 +280,7 @@ class _SignUpPageState extends State<SignUpPage> {
       if (authResponse.statusCode != 200) {
         MySnackBar.error(
             message: authResponse.statusCode.toString(),
-            color: Colors.red,
+            color: Colors.blue,
             context: context);
         return 3;
       } else {
@@ -316,7 +315,7 @@ class _SignUpPageState extends State<SignUpPage> {
       print(err);
       MySnackBar.error(
           message: err.toString(),
-          color: Colors.red,
+          color: Colors.blue,
           context: context);
       return 3;
     }

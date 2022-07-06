@@ -265,7 +265,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Future<num> checkEmail(email) async {
     try {
       // acquire jwt from NPEU
-      // await dotenv.load();
+      await dotenv.load();
 
       MySnackBar.error( message: dotenv.get('NPEU_URL'),
           color: Colors.blue,

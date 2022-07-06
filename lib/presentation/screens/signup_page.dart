@@ -112,7 +112,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         Text(
                           'Create a new account. Please make sure you use the email'
-                              ' you originally signed up to the trial with.',
+                          ' you originally signed up to the trial with.',
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
@@ -129,7 +129,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           icon: Icons.person,
                           keyboardtype: TextInputType.name,
                           validator: (value) {
-                            return value!.length < 3 ? 'Unvalid Name' : null;
+                            return value!.length < 3 ? 'Invalid Name' : null;
                           },
                           textEditingController: _namecontroller,
                         ),
@@ -182,24 +182,6 @@ class _SignUpPageState extends State<SignUpPage> {
                             label: Text('Sign up'),
                           ),
                         ),
-                                               // MyButton(
-                        //   // onPressed: submittingInProgress ? () => null : false,
-                        //   color: AppColours.light_blue,
-                        //   width: 80.w,
-                        //   title: 'Sign Up',
-                        //   func: () {
-                        //     if (connectivitycubit.state
-                        //         is ConnectivityOnlineState) {
-                        //       _signupewithemailandpass(context, authcubit);
-                        //     } else {
-                        //       MySnackBar.error(
-                        //           message:
-                        //               'Please Check Your Internet Connection',
-                        //           color: Colors.red,
-                        //           context: context);
-                        //     }
-                        //   },
-                        // ),
                         SizedBox(
                           height: 1.5.h,
                         ),
@@ -257,7 +239,6 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _signupewithemailandpass(context, AuthenticationCubit cubit) {
-
     // is form complete and email registered with Oxford?
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -265,27 +246,27 @@ class _SignUpPageState extends State<SignUpPage> {
       });
 
       checkEmail( _emailcontroller.text).then((exists) {
-
-       if (exists == 1) {
-          cubit.register(
-              fullname: _namecontroller.text,
-              email: _emailcontroller.text,
-              password: _passwordcontroller.text);
-        } else if(exists == 2) {
-         setState(() {
-           isSubmitting = false;
-         });
-          print('parent does not exist in study');
-          MySnackBar.error(
-              message: "Problem with email, please check you have entered the email you"
-                  " used when you signed up for the study",
-              color: Colors.red,
-              context: context);
-        }
-      });
-    }
+        if (exists == 1) {
+              cubit.register(
+                  fullname: _namecontroller.text,
+                  email: _emailcontroller.text,
+                  password: _passwordcontroller.text);
+            } else if (exists == 2) {
+              setState(() {
+                isSubmitting = false;
+              });
+              print('parent does not exist in study');
+              MySnackBar.error(
+                  message:
+                  "Problem with email, please check you have entered the email you"
+                      " used when you signed up for the study",
+                  color: Colors.red,
+                  context: context);
+            }
+          });
+      }
   }
-
+      }
   // http request to check child's ID is valid
   Future<num> checkEmail(email) async {
     try {
@@ -301,9 +282,7 @@ class _SignUpPageState extends State<SignUpPage> {
         'grant_type': dotenv.get('GRANT_TYPE')
       };
 
-      var authResponse = await http.post(
-          Uri.parse(authUrl),
-          body:body);
+      var authResponse = await http.post(Uri.parse(authUrl), body: body);
       print(authResponse);
       if (authResponse.statusCode != 200) {
         MySnackBar.error(
@@ -316,17 +295,16 @@ class _SignUpPageState extends State<SignUpPage> {
 
         // check if email is valid
         var queryParameters = {'Email': email};
-        var url = Uri.https(baseUrl,
-            '/dolfindata/api/participant/confirm', queryParameters);
-
+        var url = Uri.https(
+            baseUrl, '/dolfindata/api/participant/confirm', queryParameters);
 
         // returns true or false to indicate if email is valid
-        final response = await http.get(url,
-            headers: {'Authorization': 'Bearer $jwt'});
+        final response =
+            await http.get(url, headers: {'Authorization': 'Bearer $jwt'});
 
         if (response.statusCode == 200) {
           bool b = response.body.toLowerCase() == 'true';
-          if(b == true) {
+          if (b == true) {
             return 1;
           } else {
             return 2;
@@ -342,13 +320,8 @@ class _SignUpPageState extends State<SignUpPage> {
     } catch (err) {
       print(err);
       MySnackBar.error(
-          message: err.toString(),
-          color: Colors.red,
-          context: context);
+          message: err.toString(), color: Colors.red, context: context);
       return 3;
     }
-
-
-
   }
 }

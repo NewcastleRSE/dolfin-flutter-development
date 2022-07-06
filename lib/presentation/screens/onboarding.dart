@@ -49,7 +49,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 children: [
                   Container(
                       width: 100.w,
-                      height: 95.h,
+                      height: 93.h,
                       color: AppColours.dark_blue,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -98,7 +98,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       )),
                   SizedBox(
                     width: 100.w,
-                    height: 90.h,
+                    height: 88.h,
                     child: CustomPaint(
                       painter: const MycustomPainter(color: AppColours.white),
                       child: SizedBox(

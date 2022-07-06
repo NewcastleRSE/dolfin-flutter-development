@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
   String _buildNo = "b";
 
   @override
- void initState() {
+  void initState() {
     super.initState();
 
     past3 = checkDailyNotificationsVisibility();
@@ -61,8 +61,7 @@ class _HomePageState extends State<HomePage> {
 
     // IOS configuration of cloud messaging
     FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-      alert: true, badge: true, sound: true
-    );
+        alert: true, badge: true, sound: true);
     FirebaseMessaging.instance.requestPermission(
       alert: true,
       announcement: false,
@@ -80,7 +79,6 @@ class _HomePageState extends State<HomePage> {
 
     // push notification when app running in foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -222,30 +220,37 @@ class _HomePageState extends State<HomePage> {
                               DateTime now = DateTime.now();
                               DateTime today =
                                   DateTime(now.year, now.month, now.day);
-                              FireStoreCrud()
-                                  .getDischargeDates(
-                                      parentID: FirebaseAuth
-                                          .instance.currentUser!.uid)
-                                  .then((dates) {
-                                for (final date in dates) {
-                                  DateTime dischargeDate = DateTime.parse(date);
-                                  int days = daysBetween(dischargeDate, today);
+                              if (FirebaseAuth.instance.currentUser != null) {
+                                FireStoreCrud()
+                                    .getDischargeDates(
+                                        parentID: FirebaseAuth
+                                            .instance.currentUser!.uid)
+                                    .then((dates) {
+                                  for (final date in dates) {
+                                    DateTime dischargeDate =
+                                        DateTime.parse(date);
+                                    int days =
+                                        daysBetween(dischargeDate, today);
 
-                                  // if it has been over 3 months since hospital discharge show option to turn off daily reminders
-                                  if (days >= 84) {
-                                    past3 = true;
-                                    break;
+                                    // if it has been over 3 months since hospital discharge show option to turn off daily reminders
+                                    if (days >= 84) {
+                                      past3 = true;
+                                      break;
+                                    }
                                   }
-                                }
-                                // display correct settings menu according to how much time past discharge date
-                                if (past3) {
-                                  _showBottomSheetWithNotifications(
-                                      context, authenticationCubit);
-                                } else {
-                                  _showBottomSheetWithoutNotifications(
-                                      context, authenticationCubit);
-                                }
-                              });
+                                  // display correct settings menu according to how much time past discharge date
+                                  if (past3) {
+                                    _showBottomSheetWithNotifications(
+                                        context, authenticationCubit);
+                                  } else {
+                                    _showBottomSheetWithoutNotifications(
+                                        context, authenticationCubit);
+                                  }
+                                });
+                              } else {
+                                _showBottomSheetWithoutNotifications(
+                                    context, authenticationCubit);
+                              }
                             },
                             child: Icon(
                               Icons.settings,
@@ -475,7 +480,7 @@ class _HomePageState extends State<HomePage> {
                                 func: () {
                                   if (_usercontroller.text == '') {
                                     MySnackBar.error(
-                                        message: 'Name shoud not be empty!!',
+                                        message: 'Name should not be empty!!',
                                         color: Colors.red,
                                         context: context);
                                   } else {

@@ -237,7 +237,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                           bool showButton = true;
                           String dueDate = "";
 
-                          var dateString = data.data["lastWeekSubmittedEnds"];
+                          var dateString = data.data["lastWeekSubmitted"];
                           if (dateString != "0000-00-00") {
                             var parsedDate = DateTime.parse(dateString);
                             var now = DateTime.now();

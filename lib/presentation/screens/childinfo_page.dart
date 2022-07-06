@@ -231,31 +231,39 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
 
                           final data = snapshot.data!;
 
-                          bool weekly = data.data["showWeeklyForms"];
-                          //weekly = true;
-
-                          bool showButton = true;
+                          bool weekly = false;
                           String dueDate = "";
+                          String displayText = "";
+                          bool showButton = false;
 
-                          var dateString = data.data["lastWeekSubmitted"];
-                          if (dateString != "0000-00-00") {
-                            var parsedDate = DateTime.parse(dateString);
-                            var now = DateTime.now();
-                            var difference = now.difference(parsedDate).inDays;
-                            if (difference < 7) {
-                              showButton = false;
+                          if (data.data != null) {
+                            weekly = data.data!["showWeeklyForms"];
+                            //weekly = true;
 
-                              var nextDate = parsedDate.add(Duration(days: 7));
-                              dueDate =
-                                  DateFormat("yyyy-MM-dd").format(nextDate);
+                            showButton = true;
+
+                            var dateString = data.data["lastWeekSubmitted"];
+                            if (dateString != "0000-00-00") {
+                              var parsedDate = DateTime.parse(dateString);
+                              var now = DateTime.now();
+                              var difference =
+                                  now.difference(parsedDate).inDays;
+                              if (difference < 7) {
+                                showButton = false;
+
+                                var nextDate =
+                                    parsedDate.add(Duration(days: 7));
+                                dueDate =
+                                    DateFormat("yyyy-MM-dd").format(nextDate);
+                              }
                             }
-                          }
 
-                          String displayText = showButton
-                              ? "Your next weekly supplement check is due. Please click the button below to submit your child's dosage info for the last 7 days."
-                              : "You have already submitted your weekly supplement data for " +
-                                  widget.child!.name +
-                                  " this week.";
+                            displayText = showButton
+                                ? "Your next weekly supplement check is due. Please click the button below to submit your child's dosage info for the last 7 days."
+                                : "You have already submitted your weekly supplement data for " +
+                                    widget.child!.name +
+                                    " this week.";
+                          }
 
                           if (weekly) {
                             return Column(children: [

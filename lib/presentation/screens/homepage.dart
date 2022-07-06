@@ -220,30 +220,37 @@ class _HomePageState extends State<HomePage> {
                               DateTime now = DateTime.now();
                               DateTime today =
                                   DateTime(now.year, now.month, now.day);
-                              FireStoreCrud()
-                                  .getDischargeDates(
-                                      parentID: FirebaseAuth
-                                          .instance.currentUser!.uid)
-                                  .then((dates) {
-                                for (final date in dates) {
-                                  DateTime dischargeDate = DateTime.parse(date);
-                                  int days = daysBetween(dischargeDate, today);
+                              if (FirebaseAuth.instance.currentUser != null) {
+                                FireStoreCrud()
+                                    .getDischargeDates(
+                                        parentID: FirebaseAuth
+                                            .instance.currentUser!.uid)
+                                    .then((dates) {
+                                  for (final date in dates) {
+                                    DateTime dischargeDate =
+                                        DateTime.parse(date);
+                                    int days =
+                                        daysBetween(dischargeDate, today);
 
-                                  // if it has been over 3 months since hospital discharge show option to turn off daily reminders
-                                  if (days >= 84) {
-                                    past3 = true;
-                                    break;
+                                    // if it has been over 3 months since hospital discharge show option to turn off daily reminders
+                                    if (days >= 84) {
+                                      past3 = true;
+                                      break;
+                                    }
                                   }
-                                }
-                                // display correct settings menu according to how much time past discharge date
-                                if (past3) {
-                                  _showBottomSheetWithNotifications(
-                                      context, authenticationCubit);
-                                } else {
-                                  _showBottomSheetWithoutNotifications(
-                                      context, authenticationCubit);
-                                }
-                              });
+                                  // display correct settings menu according to how much time past discharge date
+                                  if (past3) {
+                                    _showBottomSheetWithNotifications(
+                                        context, authenticationCubit);
+                                  } else {
+                                    _showBottomSheetWithoutNotifications(
+                                        context, authenticationCubit);
+                                  }
+                                });
+                              } else {
+                                _showBottomSheetWithoutNotifications(
+                                    context, authenticationCubit);
+                              }
                             },
                             child: Icon(
                               Icons.settings,

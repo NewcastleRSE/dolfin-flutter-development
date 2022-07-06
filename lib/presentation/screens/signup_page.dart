@@ -125,7 +125,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           height: 6.h,
                         ),
                         MyTextfield(
-                          hint: 'Full Name',
+                          hint: 'Your Name',
                           icon: Icons.person,
                           keyboardtype: TextInputType.name,
                           validator: (value) {
@@ -140,6 +140,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           hint: 'Email Address',
                           icon: Icons.email,
                           keyboardtype: TextInputType.emailAddress,
+                          textCapitalization: TextCapitalization.none,
                           validator: (value) {
                             return !Validators.isValidEmail(value!)
                                 ? 'Enter a valid email'
@@ -155,6 +156,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           icon: Icons.password,
                           obscure: true,
                           keyboardtype: TextInputType.text,
+                          textCapitalization: TextCapitalization.none,
                           validator: (value) {
                             return value!.length < 6
                                 ? "Enter min. 6 characters"

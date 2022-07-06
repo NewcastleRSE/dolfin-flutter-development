@@ -114,6 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                           hint: 'Email Address',
                           icon: Icons.email,
                           keyboardtype: TextInputType.emailAddress,
+                          textCapitalization: TextCapitalization.none,
                           validator: (value) {
                             return !Validators.isValidEmail(value!)
                                 ? 'Enter a valid email'
@@ -128,6 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                           hint: 'Password',
                           icon: Icons.password,
                           keyboardtype: TextInputType.text,
+                          textCapitalization: TextCapitalization.none,
                           obscure: true,
                           validator: (value) {
                             return value!.length < 6

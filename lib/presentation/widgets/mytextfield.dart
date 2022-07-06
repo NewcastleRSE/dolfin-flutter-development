@@ -11,7 +11,8 @@ class MyTextfield extends StatelessWidget {
   final bool obscure;
   final bool readonly;
   final bool showicon;
-  final int? maxlenght;
+  final int? maxlength;
+  final TextCapitalization textCapitalization;
   final Function()? ontap;
   const MyTextfield(
       {Key? key,
@@ -24,15 +25,16 @@ class MyTextfield extends StatelessWidget {
       this.showicon = true,
       this.ontap,
       this.keyboardtype = TextInputType.text,
-      this.maxlenght = null})
+      this.textCapitalization = TextCapitalization.sentences,
+      this.maxlength = null})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      textCapitalization: TextCapitalization.sentences,
+      textCapitalization: textCapitalization,
       maxLines: 1,
-      maxLength: maxlenght,
+      maxLength: maxlength,
       readOnly: readonly,
       obscureText: obscure,
       keyboardType: keyboardtype,

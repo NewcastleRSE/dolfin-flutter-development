@@ -72,7 +72,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 message: state.error.toString(),
                 color: Colors.amber,
                 context: context);
-            throw StateError(state.error.toString());
           }
 
           if (state is AuthenticationSuccessState) {
@@ -108,8 +107,6 @@ class _SignUpPageState extends State<SignUpPage> {
                         SizedBox(
                           height: 1.5.h,
                         ),
-
-                        Text(dotenv.get('NPEU_URL', fallback: 'default')),
                         Text(
                           'Create a new account. Please make sure you use the email'
                               ' you originally signed up to the trial with.',
@@ -266,11 +263,6 @@ class _SignUpPageState extends State<SignUpPage> {
     try {
       // acquire jwt from NPEU
       await dotenv.load();
-
-      MySnackBar.error( message: dotenv.get('NPEU_URL'),
-          color: Colors.blue,
-          context: context);
-
       var baseUrl = dotenv.get('NPEU_URL');
       var authUrl = 'https://' + baseUrl + '/identityauthority/connect/token';
 
@@ -285,13 +277,10 @@ class _SignUpPageState extends State<SignUpPage> {
           Uri.parse(authUrl),
           body:body);
       print(authResponse);
-      MySnackBar.error( message: authResponse.toString(),
-          color: Colors.blue,
-          context: context);
       if (authResponse.statusCode != 200) {
         MySnackBar.error(
             message: authResponse.statusCode.toString(),
-            color: Colors.blue,
+            color: Colors.red,
             context: context);
         return 3;
       } else {
@@ -326,7 +315,7 @@ class _SignUpPageState extends State<SignUpPage> {
       print(err);
       MySnackBar.error(
           message: err.toString(),
-          color: Colors.blue,
+          color: Colors.red,
           context: context);
       return 3;
     }

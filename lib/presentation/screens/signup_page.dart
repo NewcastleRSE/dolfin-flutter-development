@@ -1,5 +1,7 @@
 import 'dart:convert';
-
+import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
+import 'package:dolfin_flutter/shared/styles/colours.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +31,7 @@ class _SignUpPageState extends State<SignUpPage> {
   late TextEditingController _namecontroller;
   late TextEditingController _emailcontroller;
   late TextEditingController _passwordcontroller;
+  bool isSubmitting = false;
 
   @override
   void initState() {
@@ -162,23 +165,41 @@ class _SignUpPageState extends State<SignUpPage> {
                         SizedBox(
                           height: 4.h,
                         ),
-                        MyButton(
-                          color: AppColours.light_blue,
+                        Container(
                           width: 80.w,
-                          title: 'Sign Up',
-                          func: () {
-                            if (connectivitycubit.state
-                                is ConnectivityOnlineState) {
-                              _signupewithemailandpass(context, authcubit);
-                            } else {
-                              MySnackBar.error(
-                                  message:
-                                      'Please Check Your Internet Connection',
-                                  color: Colors.red,
-                                  context: context);
-                            }
-                          },
+                          height: 15.w,
+                          padding: EdgeInsets.symmetric(vertical: 0.1.h),
+                         child: ElevatedButton.icon(
+                            icon: isSubmitting ? CircularProgressIndicator() : Icon(Icons.add),
+                            onPressed: () { _signupewithemailandpass(context, authcubit); },
+                            style: ElevatedButton.styleFrom(
+                              primary: AppColours.light_blue, // background
+                              onPrimary: AppColours.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(200),
+                              ),
+                            ),
+                            label: Text('Sign up'),
+                          ),
                         ),
+                                               // MyButton(
+                        //   // onPressed: submittingInProgress ? () => null : false,
+                        //   color: AppColours.light_blue,
+                        //   width: 80.w,
+                        //   title: 'Sign Up',
+                        //   func: () {
+                        //     if (connectivitycubit.state
+                        //         is ConnectivityOnlineState) {
+                        //       _signupewithemailandpass(context, authcubit);
+                        //     } else {
+                        //       MySnackBar.error(
+                        //           message:
+                        //               'Please Check Your Internet Connection',
+                        //           color: Colors.red,
+                        //           context: context);
+                        //     }
+                        //   },
+                        // ),
                         SizedBox(
                           height: 1.5.h,
                         ),
@@ -239,6 +260,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
     // is form complete and email registered with Oxford?
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        isSubmitting = true;
+      });
+
       checkEmail( _emailcontroller.text).then((exists) {
 
        if (exists == 1) {
@@ -247,6 +272,9 @@ class _SignUpPageState extends State<SignUpPage> {
               email: _emailcontroller.text,
               password: _passwordcontroller.text);
         } else if(exists == 2) {
+         setState(() {
+           isSubmitting = false;
+         });
           print('parent does not exist in study');
           MySnackBar.error(
               message: "Problem with email, please check you have entered the email you"

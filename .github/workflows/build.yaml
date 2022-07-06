@@ -36,11 +36,11 @@ jobs:
           echo "$GOOGLE_SERVICES" >> android/app/google-services.json
           echo "$PLAY_STORE_CREDENTIALS" >> keys/android/play-store-credentials.json
           echo "$KEY_PROPERTIES" >> android/key.properties
-          echo "$NPEU_URL" >> .env
-          echo "$CLIENT_ID" >> .env
-          echo "$SCOPE" >> .env
-          echo "$GRANT_TYPE" >> .env
-          echo "$CLIENT_SECRET" >> .env
+          echo "NPEU_URL=$NPEU_URL" >> .env
+          echo "CLIENT_ID=$CLIENT_ID" >> .env
+          echo "SCOPE=$SCOPE" >> .env
+          echo "GRANT_TYPE=$GRANT_TYPE" >> .env
+          echo "CLIENT_SECRET=$CLIENT_SECRET" >> .env
         shell: bash
         env:
           GOOGLE_SERVICES: ${{secrets.GOOGLE_SERVICES}}

@@ -265,8 +265,8 @@ class _SignUpPageState extends State<SignUpPage> {
             }
           });
       }
-  }
       }
+
   // http request to check child's ID is valid
   Future<num> checkEmail(email) async {
     try {
@@ -324,4 +324,4 @@ class _SignUpPageState extends State<SignUpPage> {
       return 3;
     }
   }
-}
+

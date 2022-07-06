@@ -27,7 +27,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 Future<void> main() async {
 
-
+  await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
@@ -95,7 +95,7 @@ class MyApp extends StatelessWidget {
             theme: MyTheme.lightTheme,
             darkTheme: MyTheme.darkTheme,
             onGenerateRoute: approute.generateRoute,
-            home: StreamBuilder<User?>(
+            home: StreamBuilder(
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {

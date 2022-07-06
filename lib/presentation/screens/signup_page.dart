@@ -70,7 +70,7 @@ class _SignUpPageState extends State<SignUpPage> {
             // Showing the error message if the user has entered invalid credentials
             MySnackBar.error(
                 message: state.error.toString(),
-                color: Colors.red,
+                color: Colors.amber,
                 context: context);
           }
 
@@ -239,12 +239,12 @@ class _SignUpPageState extends State<SignUpPage> {
     // is form complete and email registered with Oxford?
     if (_formKey.currentState!.validate()) {
       checkEmail(_emailcontroller.text).then((exists) {
-        if (exists) {
+        if (exists == 1) {
           cubit.register(
               fullname: _namecontroller.text,
               email: _emailcontroller.text,
               password: _passwordcontroller.text);
-        } else {
+        } else if (exists == 2) {
           print('parent does not exist in study');
           MySnackBar.error(
               message:
@@ -258,7 +258,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   // http request to check child's ID is valid
-  Future<bool> checkEmail(email) async {
+  Future<num> checkEmail(email) async {
     try {
       // acquire jwt from NPEU
       await dotenv.load();
@@ -273,8 +273,13 @@ class _SignUpPageState extends State<SignUpPage> {
       };
 
       var authResponse = await http.post(Uri.parse(authUrl), body: body);
+      print(authResponse);
       if (authResponse.statusCode != 200) {
-        return false;
+        MySnackBar.error(
+            message: authResponse.statusCode.toString(),
+            color: Colors.red,
+            context: context);
+        return 3;
       } else {
         var jwt = jsonDecode(authResponse.body)['access_token'];
 
@@ -289,14 +294,24 @@ class _SignUpPageState extends State<SignUpPage> {
 
         if (response.statusCode == 200) {
           bool b = response.body.toLowerCase() == 'true';
-          return b;
+          if (b == true) {
+            return 1;
+          } else {
+            return 2;
+          }
         } else {
-          return false;
+          MySnackBar.error(
+              message: authResponse.statusCode.toString(),
+              color: Colors.red,
+              context: context);
+          return 3;
         }
       }
     } catch (err) {
       print(err);
-      return false;
+      MySnackBar.error(
+          message: err.toString(), color: Colors.red, context: context);
+      return 3;
     }
   }
 }

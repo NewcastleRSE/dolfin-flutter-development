@@ -629,7 +629,7 @@ class _notificationsSelectorState extends State<notificationsSelector> {
                 FirebaseFirestore.instance
                     .collection('parents')
                     .doc(FirebaseAuth.instance.currentUser?.uid)
-                    .set({'dailyNotifications': value}, SetOptions(merge: true));
+                    .set({'dailyNotifications': true}, SetOptions(merge: true));
               });
             },
           ),
@@ -646,7 +646,7 @@ class _notificationsSelectorState extends State<notificationsSelector> {
                 FirebaseFirestore.instance
                     .collection('parents')
                     .doc(FirebaseAuth.instance.currentUser?.uid)
-                    .set({'dailyNotifications': value}, SetOptions(merge: false));
+                    .set({'dailyNotifications': false}, SetOptions(merge: true));
                 _notifications = NotificationsOptions.weekly;
                 saveDailyNotificationsPref(false);
 

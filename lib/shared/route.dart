@@ -13,6 +13,8 @@ import 'package:dolfin_flutter/presentation/screens/signup_page.dart';
 import 'package:dolfin_flutter/presentation/screens/welcome_page.dart';
 import 'package:dolfin_flutter/shared/constants/strings.dart';
 
+import '../presentation/screens/resetPassword_page.dart';
+
 class AppRoute {
   Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -33,6 +35,10 @@ class AppRoute {
       case signuppage:
         {
           return MaterialPageRoute(builder: (_) => const SignUpPage());
+        }
+      case resetpasswordpage:
+        {
+          return MaterialPageRoute(builder: (_) => const ResetPasswordPage());
         }
       case homepage:
         {

@@ -88,155 +88,145 @@ class _SignUpPageState extends State<SignUpPage> {
           if (state is! AuthenticationSuccessState) {
             return SafeArea(
                 child: SingleChildScrollView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  child: Padding(
-                    padding:
+              physics: const NeverScrollableScrollPhysics(),
+              child: Padding(
+                padding:
                     const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
-                    child: Form(
-                      key: _formKey,
-                      child: BounceInDown(
-                        duration: const Duration(milliseconds: 1500),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Sign Up',
-                              style:
-                              Theme
-                                  .of(context)
-                                  .textTheme
-                                  .headline1
-                                  ?.copyWith(
-                                fontSize: 20.sp,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 1.5.h,
-                            ),
-                            Text(
-                              'Create a new account. Please make sure you use the email'
-                                  ' you originally signed up to the trial with.',
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .subtitle1
-                                  ?.copyWith(
+                child: Form(
+                  key: _formKey,
+                  child: BounceInDown(
+                    duration: const Duration(milliseconds: 1500),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Sign Up',
+                          style:
+                              Theme.of(context).textTheme.headline1?.copyWith(
+                                    fontSize: 20.sp,
+                                    letterSpacing: 2,
+                                  ),
+                        ),
+                        SizedBox(
+                          height: 1.5.h,
+                        ),
+                        Text(
+                          'Create a new account. Please make sure you use the email'
+                          ' you originally signed up to the trial with.',
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(
                                   fontSize: 12.sp,
                                   letterSpacing: 2,
                                   fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: 6.h,
-                            ),
-                            MyTextfield(
-                              hint: 'Full Name',
-                              icon: Icons.person,
-                              keyboardtype: TextInputType.name,
-                              validator: (value) {
-                                return value!.length < 3
-                                    ? 'Invalid Name'
-                                    : null;
-                              },
-                              textEditingController: _namecontroller,
-                            ),
-                            SizedBox(
-                              height: 3.h,
-                            ),
-                            MyTextfield(
-                              hint: 'Email Address',
-                              icon: Icons.email,
-                              keyboardtype: TextInputType.emailAddress,
-                              validator: (value) {
-                                return !Validators.isValidEmail(value!)
-                                    ? 'Enter a valid email'
-                                    : null;
-                              },
-                              textEditingController: _emailcontroller,
-                            ),
-                            SizedBox(
-                              height: 3.h,
-                            ),
-                            MyTextfield(
-                              hint: 'Password',
-                              icon: Icons.password,
-                              obscure: true,
-                              keyboardtype: TextInputType.text,
-                              validator: (value) {
-                                return value!.length < 6
-                                    ? "Enter min. 6 characters"
-                                    : null;
-                              },
-                              textEditingController: _passwordcontroller,
-                            ),
-                            SizedBox(
-                              height: 4.h,
-                            ),
-                            Container(
-                              width: 80.w,
-                              height: 15.w,
-                              padding: EdgeInsets.symmetric(vertical: 0.1.h),
-                              child: ElevatedButton.icon(
-                                icon: isSubmitting
-                                    ? CircularProgressIndicator()
-                                    : Icon(Icons.add),
-                                onPressed: () {
-                                  _signupewithemailandpass(context, authcubit);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  primary: AppColours.light_blue, // background
-                                  onPrimary: AppColours.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: new BorderRadius.circular(
-                                        200),
-                                  ),
-                                ),
-                                label: Text('Sign up'),
+                        ),
+                        SizedBox(
+                          height: 6.h,
+                        ),
+                        MyTextfield(
+                          hint: 'Full Name',
+                          icon: Icons.person,
+                          keyboardtype: TextInputType.name,
+                          validator: (value) {
+                            return value!.length < 3 ? 'Invalid Name' : null;
+                          },
+                          textEditingController: _namecontroller,
+                        ),
+                        SizedBox(
+                          height: 3.h,
+                        ),
+                        MyTextfield(
+                          hint: 'Email Address',
+                          icon: Icons.email,
+                          keyboardtype: TextInputType.emailAddress,
+                          validator: (value) {
+                            return !Validators.isValidEmail(value!)
+                                ? 'Enter a valid email'
+                                : null;
+                          },
+                          textEditingController: _emailcontroller,
+                        ),
+                        SizedBox(
+                          height: 3.h,
+                        ),
+                        MyTextfield(
+                          hint: 'Password',
+                          icon: Icons.password,
+                          obscure: true,
+                          keyboardtype: TextInputType.text,
+                          validator: (value) {
+                            return value!.length < 6
+                                ? "Enter min. 6 characters"
+                                : null;
+                          },
+                          textEditingController: _passwordcontroller,
+                        ),
+                        SizedBox(
+                          height: 4.h,
+                        ),
+                        Container(
+                          width: 80.w,
+                          height: 15.w,
+                          padding: EdgeInsets.symmetric(vertical: 0.1.h),
+                          child: ElevatedButton.icon(
+                            icon: isSubmitting
+                                ? CircularProgressIndicator()
+                                : Icon(Icons.add),
+                            onPressed: () {
+                              _signupewithemailandpass(context, authcubit);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: AppColours.light_blue, // background
+                              onPrimary: AppColours.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(200),
                               ),
                             ),
-                            SizedBox(
-                              height: 1.5.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Already have an Account ?',
-                                  style: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .subtitle1
-                                      ?.copyWith(
+                            label: Text('Sign up'),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 1.5.h,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Already have an Account ?',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1
+                                  ?.copyWith(
                                       fontSize: 8.sp,
                                       fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(context, loginpage);
-                                  },
-                                  child: Text(
-                                    'Login',
-                                    style: Theme
-                                        .of(context)
-                                        .textTheme
-                                        .headline1
-                                        ?.copyWith(
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                Navigator.pushNamed(context, loginpage);
+                              },
+                              child: Text(
+                                'Login',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline1
+                                    ?.copyWith(
                                       fontSize: 9.sp,
                                       color: AppColours.dark_blue,
                                     ),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ],
                         ),
-                      ),
+                      ],
                     ),
                   ),
-                ));
+                ),
+              ),
+            ));
           }
           return Container();
         },
@@ -272,35 +262,35 @@ class _SignUpPageState extends State<SignUpPage> {
           print('parent does not exist in study');
           MySnackBar.error(
               message:
-              "Problem with email, please check you have entered the email you"
+                  "Problem with email, please check you have entered the email you"
                   " used when you signed up for the study",
               color: Colors.red,
               context: context);
         }
       });
 
-      checkEmail( _emailcontroller.text).then((exists) {
+      checkEmail(_emailcontroller.text).then((exists) {
         if (exists == 1) {
-              cubit.register(
-                  fullname: _namecontroller.text,
-                  email: _emailcontroller.text,
-                  password: _passwordcontroller.text);
-            } else if (exists == 2) {
-              setState(() {
-                isSubmitting = false;
-              });
-              print('parent does not exist in study');
-              MySnackBar.error(
-                  message:
-                  "Problem with email, please check you have entered the email you"
-                      " used when you signed up for the study",
-                  color: Colors.red,
-                  context: context);
-            }
+          cubit.register(
+              fullname: _namecontroller.text,
+              email: _emailcontroller.text,
+              password: _passwordcontroller.text);
+        } else if (exists == 2) {
+          setState(() {
+            isSubmitting = false;
           });
-      }
+          print('parent does not exist in study');
+          MySnackBar.error(
+              message:
+                  "Problem with email, please check you have entered the email you"
+                  " used when you signed up for the study",
+              color: Colors.red,
+              context: context);
+        }
+      });
+    }
   }
-      }
+
   // http request to check child's ID is valid
   Future<num> checkEmail(email) async {
     try {
@@ -334,7 +324,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
         // returns true or false to indicate if email is valid
         final response =
-        await http.get(url, headers: {'Authorization': 'Bearer $jwt'});
+            await http.get(url, headers: {'Authorization': 'Bearer $jwt'});
 
         if (response.statusCode == 200) {
           bool b = response.body.toLowerCase() == 'true';
@@ -359,4 +349,3 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 }
-

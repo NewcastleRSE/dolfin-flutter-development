@@ -1,6 +1,7 @@
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/data/models/record_model.dart';
 import 'package:dolfin_flutter/data/models/weeklyrecord_model.dart';
+import 'package:dolfin_flutter/shared/constants/strings.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -562,7 +563,7 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
             )
           : FireStoreCrud().addWeeklyRecord(record: record);
 
-      Navigator.pop(context);
+      Navigator.popAndPushNamed(context, homepage);
     }
   }
 

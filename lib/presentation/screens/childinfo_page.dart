@@ -230,7 +230,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                           }
 
                           final data = snapshot.data!;
-
+print(data);
                           bool weekly = data.data["showWeeklyForms"];
                           //weekly = true;
 

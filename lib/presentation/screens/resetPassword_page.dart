@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
@@ -12,6 +13,8 @@ import 'package:dolfin_flutter/shared/constants/assets_path.dart';
 import 'package:dolfin_flutter/shared/constants/strings.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
 import 'package:dolfin_flutter/shared/validators.dart';
+
+import '../../data/repositories/firebase_auth.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({Key? key}) : super(key: key);
@@ -84,7 +87,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Please provide your email to reset your password',
+                              'Please provide your email and you will be sent a link to reset your password.',
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle1
@@ -122,7 +125,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                 } else {
                                   MySnackBar.error(
                                       message:
-                                      'Please Check Your Internet Conection',
+                                      'Please Check Your Internet Connection',
                                       color: Colors.red,
                                       context: context);
                                 }
@@ -153,10 +156,31 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   }
 
 
-  void resetPassword(context, AuthenticationCubit cubit) {
+  Future<void> resetPassword(context, AuthenticationCubit cubit) async {
     if (_formKey.currentState!.validate()) {
-      cubit.resetPassword(
-          email: _emailcontroller.text);
+      print('try to reset');
+      try {
+        await FirebaseAuth.instance.sendPasswordResetEmail(
+            email: _emailcontroller.text);
+        MySnackBar.error(
+            message: 'Look out for a reset password email in your inbox.',
+            color: Colors.green,
+            context: context);
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          MySnackBar.error(
+              message: 'Please check you have entered the correct email address.',
+              color: Colors.red,
+              context: context);
+        }
+      }  catch (e) {
+        print (e);
+        MySnackBar.error(
+            message: e.toString(),
+            color: Colors.red,
+            context: context);
+
+      }
     }
   }
 

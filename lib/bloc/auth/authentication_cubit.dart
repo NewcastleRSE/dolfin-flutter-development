@@ -29,12 +29,14 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   resetPassword({required String email}) {
     print('reset password');
     print(email);
-    emit(AuthenticationLoadingState());
+    // emit(AuthenticationLoadingState());
     firebaseauthrepo.sendPasswordResetEmail(email: email).then((value) {
-      emit(AuthenticationSuccessState());
+      print('complete');
+      // emit(AuthenticationSuccessState());
     }).catchError((e) {
-      emit(AuthenticationErrortate(e.toString()));
-      emit(UnAuthenticationState());
+      print(e);
+      // emit(AuthenticationErrortate(e.toString()));
+      // emit(UnAuthenticationState());
     });
   }
 

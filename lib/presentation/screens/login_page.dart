@@ -206,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                                 Navigator.pushNamed(context, resetpasswordpage);
                               },
                               child: Text(
-                                'Reset password here',
+                                'Forgot password?',
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline1

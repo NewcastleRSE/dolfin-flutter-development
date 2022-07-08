@@ -244,41 +244,6 @@ class _HomePageState extends State<HomePage> {
                           InkWell(
                             onTap: () {
                               _showBottomSheet(context, authenticationCubit);
-                              // bool past3 = false;
-                              // DateTime now = DateTime.now();
-                              // DateTime today =
-                              //     DateTime(now.year, now.month, now.day);
-                              // if (FirebaseAuth.instance.currentUser != null) {
-                              //   FireStoreCrud()
-                              //       .getDischargeDates(
-                              //           parentID: FirebaseAuth
-                              //               .instance.currentUser!.uid)
-                              //       .then((dates) {
-                              //     for (final date in dates) {
-                              //       DateTime dischargeDate =
-                              //           DateTime.parse(date);
-                              //       int days =
-                              //           daysBetween(dischargeDate, today);
-                              //
-                              //       // if it has been over 3 months since hospital discharge show option to turn off daily reminders
-                              //       if (days >= 84) {
-                              //         past3 = true;
-                              //         break;
-                              //       }
-                              //     }
-                              //     // display correct settings menu according to how much time past discharge date
-                              //     if (past3) {
-                              //       _showBottomSheetWithNotifications(
-                              //           context, authenticationCubit);
-                              //     } else {
-                              //       _showBottomSheetWithoutNotifications(
-                              //           context, authenticationCubit);
-                              //     }
-                              //   });
-                              // } else {
-                              //   _showBottomSheetWithoutNotifications(
-                              //       context, authenticationCubit);
-                              // }
                             },
                             child: Icon(
                               Icons.settings,
@@ -423,15 +388,6 @@ class _HomePageState extends State<HomePage> {
   Future<dynamic> _showBottomSheet(
       BuildContext context, AuthenticationCubit authenticationCubit) async {
     var user = FirebaseAuth.instance.currentUser!.isAnonymous;
-    String? notifications = 'true';
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool('dailyNotifications') != null) {
-      if (prefs.getBool('dailyNotifications') == true) {
-        notifications = 'daily';
-      } else {
-        notifications = 'weekly';
-      }
-    }
 
     return showModalBottomSheet(
       context: context,
@@ -563,14 +519,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<bool> firstLogin() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool('dailyNotifications') == null) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+
 }
 
 enum NotificationsOptions { daily, weekly }
@@ -594,28 +543,20 @@ class _notificationsSelectorState extends State<notificationsSelector> {
 
   // check shared prefs to see if user has previously checked or unchecked this
   getDailyNotificationPref() async {
-    // final SharedPreferences prefs = await SharedPreferences.getInstance();
-    // bool? value = prefs.getBool('dailyNotifications');
     // adjust notification preferences in Firestore
     var collection = FirebaseFirestore.instance.collection('parents');
     var docSnapshot = await collection.doc(FirebaseAuth.instance.currentUser?.uid).get();
     // note thinks this field is a String evn though saved and updated as bool in Firestore
-    var notifications = 'true';
-    if (docSnapshot.exists) {
-      Map<String, dynamic>? data = docSnapshot.data();
-      if (data?['dailyNotifications'] == null) {
-        // save to Firestore initial daily preference
-        saveDailyNotificationsPref(true);
-      } else {
-        notifications = data?['dailyNotifications'];
-      }
+    bool notifications = true;
+    if (docSnapshot.exists && docSnapshot.get('dailyNotifications')) {
+      notifications = docSnapshot.get('dailyNotifications');
     } else {
       // save to Firestore initial daily preference
       saveDailyNotificationsPref(true);
     }
     setState(() {
       // set to true if not value already set
-      if (notifications == 'true') {
+      if (notifications == true) {
         _notifications = NotificationsOptions.daily;
       } else  {
         _notifications = NotificationsOptions.weekly;

@@ -230,14 +230,14 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                           }
 
                           final data = snapshot.data!;
-
+print(data);
                           bool weekly = data.data["showWeeklyForms"];
                           //weekly = true;
 
                           bool showButton = true;
                           String dueDate = "";
 
-                          var dateString = data.data["lastWeekSubmittedEnds"];
+                          var dateString = data.data["lastWeekSubmitted"];
                           if (dateString != "0000-00-00") {
                             var parsedDate = DateTime.parse(dateString);
                             var now = DateTime.now();

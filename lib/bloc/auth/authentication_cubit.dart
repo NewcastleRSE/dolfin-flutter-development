@@ -26,6 +26,20 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     });
   }
 
+  resetPassword({required String email}) {
+    print('reset password');
+    print(email);
+    // emit(AuthenticationLoadingState());
+    firebaseauthrepo.sendPasswordResetEmail(email: email).then((value) {
+      print('complete');
+      // emit(AuthenticationSuccessState());
+    }).catchError((e) {
+      print(e);
+      // emit(AuthenticationErrortate(e.toString()));
+      // emit(UnAuthenticationState());
+    });
+  }
+
   googleSignIn() {
     emit(AuthenticationLoadingState());
     firebaseauthrepo.googleSignIn().then((value) {

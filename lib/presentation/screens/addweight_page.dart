@@ -117,7 +117,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return "Please Enter Your Child's Weight";
-              } else if (int.parse(value) > 15) {
+              } else if (double.parse(value) > 15.0) {
                 return "Please check you have entered the correct weight in kg";
               }
               return null;

@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
   String _buildNo = "b";
 
   @override
- void initState() {
+  void initState() {
     super.initState();
 
     past3 = checkDailyNotificationsVisibility();
@@ -56,13 +56,17 @@ class _HomePageState extends State<HomePage> {
       saveFCMTokenToDatabase(token!);
     });
 
+  //   // if daily notifications has not yet been set, set to true
+  // if (firstLogin() == true) {
+  //   updateDailyNotifications(true);
+  // }
+
     // Any time the token refreshes, store this in the database too
     FirebaseMessaging.instance.onTokenRefresh.listen(saveFCMTokenToDatabase);
 
     // IOS configuration of cloud messaging
     FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-      alert: true, badge: true, sound: true
-    );
+        alert: true, badge: true, sound: true);
     FirebaseMessaging.instance.requestPermission(
       alert: true,
       announcement: false,
@@ -80,7 +84,6 @@ class _HomePageState extends State<HomePage> {
 
     // push notification when app running in foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -118,6 +121,28 @@ class _HomePageState extends State<HomePage> {
           print(onError);
         });
   }
+
+  Future<bool> updateDailyNotifications(bool dailyNotifications) async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+
+    await FirebaseFirestore.instance
+        .collection('parents')
+        .doc(userId)
+        .set({
+      'dailyNotifications': dailyNotifications
+    }, SetOptions(merge: true))
+        .then((result) { return true;})
+        .catchError((onError) {
+      print('error saving fcm token');
+      print(onError);
+      return false;
+    });
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('dailyNotifications', dailyNotifications);
+
+    return true;
+  }
+
 
   bool checkDailyNotificationsVisibility() {
     var childrenSnapshot = FireStoreCrud()
@@ -218,34 +243,42 @@ class _HomePageState extends State<HomePage> {
                           ),
                           InkWell(
                             onTap: () {
-                              bool past3 = false;
-                              DateTime now = DateTime.now();
-                              DateTime today =
-                                  DateTime(now.year, now.month, now.day);
-                              FireStoreCrud()
-                                  .getDischargeDates(
-                                      parentID: FirebaseAuth
-                                          .instance.currentUser!.uid)
-                                  .then((dates) {
-                                for (final date in dates) {
-                                  DateTime dischargeDate = DateTime.parse(date);
-                                  int days = daysBetween(dischargeDate, today);
-
-                                  // if it has been over 3 months since hospital discharge show option to turn off daily reminders
-                                  if (days >= 84) {
-                                    past3 = true;
-                                    break;
-                                  }
-                                }
-                                // display correct settings menu according to how much time past discharge date
-                                if (past3) {
-                                  _showBottomSheetWithNotifications(
-                                      context, authenticationCubit);
-                                } else {
-                                  _showBottomSheetWithoutNotifications(
-                                      context, authenticationCubit);
-                                }
-                              });
+                              _showBottomSheet(context, authenticationCubit);
+                              // bool past3 = false;
+                              // DateTime now = DateTime.now();
+                              // DateTime today =
+                              //     DateTime(now.year, now.month, now.day);
+                              // if (FirebaseAuth.instance.currentUser != null) {
+                              //   FireStoreCrud()
+                              //       .getDischargeDates(
+                              //           parentID: FirebaseAuth
+                              //               .instance.currentUser!.uid)
+                              //       .then((dates) {
+                              //     for (final date in dates) {
+                              //       DateTime dischargeDate =
+                              //           DateTime.parse(date);
+                              //       int days =
+                              //           daysBetween(dischargeDate, today);
+                              //
+                              //       // if it has been over 3 months since hospital discharge show option to turn off daily reminders
+                              //       if (days >= 84) {
+                              //         past3 = true;
+                              //         break;
+                              //       }
+                              //     }
+                              //     // display correct settings menu according to how much time past discharge date
+                              //     if (past3) {
+                              //       _showBottomSheetWithNotifications(
+                              //           context, authenticationCubit);
+                              //     } else {
+                              //       _showBottomSheetWithoutNotifications(
+                              //           context, authenticationCubit);
+                              //     }
+                              //   });
+                              // } else {
+                              //   _showBottomSheetWithoutNotifications(
+                              //       context, authenticationCubit);
+                              // }
                             },
                             child: Icon(
                               Icons.settings,
@@ -387,9 +420,19 @@ class _HomePageState extends State<HomePage> {
             )));
   }
 
-  Future<dynamic> _showBottomSheetWithNotifications(
-      BuildContext context, AuthenticationCubit authenticationCubit) {
+  Future<dynamic> _showBottomSheet(
+      BuildContext context, AuthenticationCubit authenticationCubit) async {
     var user = FirebaseAuth.instance.currentUser!.isAnonymous;
+    String? notifications = 'true';
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('dailyNotifications') != null) {
+      if (prefs.getBool('dailyNotifications') == true) {
+        notifications = 'daily';
+      } else {
+        notifications = 'weekly';
+      }
+    }
+
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -440,129 +483,8 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       height: 3.h,
                     ),
-                    Text(
-                      '3 months after hospital discharge you will be asked to complete a weekly rather than daily form. You will'
-                      'still receive daily reminders to give the supplement unless you opt out of them here.',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline2!
-                          .copyWith(fontSize: 12.sp),
-                    ),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      // if (1 > 2) ...[
-                      Text(
-                        'Daily Reminders Enabled: ',
-                        style: TextStyle(fontSize: 12.0),
-                      ),
-                      dailyNotificationsCheck()
-                      // ]
-                    ]),
-                    SizedBox(
-                      height: 3.h,
-                    ),
-                    (user)
-                        ? Container()
-                        : BlocBuilder<AuthenticationCubit, AuthenticationState>(
-                            builder: (context, state) {
-                              if (state is UpdateProfileLoadingState) {
-                                return const MyCircularIndicator();
-                              }
-
-                              return MyButton(
-                                color: Colors.green,
-                                width: 80.w,
-                                title: "Update Profile",
-                                func: () {
-                                  if (_usercontroller.text == '') {
-                                    MySnackBar.error(
-                                        message: 'Name shoud not be empty!!',
-                                        color: Colors.red,
-                                        context: context);
-                                  } else {
-                                    authenticationCubit.updateUserInfo(
-                                        _usercontroller.text, context);
-                                    setState(() {});
-                                    Navigator.pushNamed(context, homepage);
-                                    sleep(Duration(seconds: 2));
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                    SizedBox(
-                      height: 1.h,
-                    ),
-                    MyButton(
-                      color: Colors.red,
-                      width: 80.w,
-                      title: "Log Out",
-                      func: () {
-                        authenticationCubit.signout();
-                      },
-                    ),
-                  ],
-                ),
-              );
-            }),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<dynamic> _showBottomSheetWithoutNotifications(
-      BuildContext context, AuthenticationCubit authenticationCubit) {
-    var user = FirebaseAuth.instance.currentUser!.isAnonymous;
-    return showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(25.0),
-        ),
-      ),
-      builder: (context) {
-        return SingleChildScrollView(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: StatefulBuilder(
-            builder: ((context, setModalState) {
-              return Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Settings',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline1!
-                          .copyWith(fontSize: 14.sp),
-                    ),
-                    SizedBox(
-                      height: 3.h,
-                    ),
-                    Text(
-                      'User Display Name',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline2!
-                          .copyWith(fontSize: 12.sp),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    (user)
-                        ? Container()
-                        : MyTextfield(
-                            hint: '',
-                            icon: Icons.person,
-                            validator: (value) {},
-                            textEditingController: _usercontroller),
-                    SizedBox(
-                      height: 3.h,
-                    ),
+                    Text('I want to receive reminders: '),
+                  notificationsSelector(),
                     SizedBox(
                       height: 3.h,
                     ),
@@ -616,6 +538,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+
   Widget _nodatawidget() {
     return Center(
       child: Column(
@@ -639,18 +562,29 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  Future<bool> firstLogin() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('dailyNotifications') == null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
 
-class dailyNotificationsCheck extends StatefulWidget {
-  const dailyNotificationsCheck({Key? key}) : super(key: key);
+enum NotificationsOptions { daily, weekly }
+
+class notificationsSelector extends StatefulWidget {
+  notificationsSelector({Key? key}) : super(key: key);
 
   @override
-  State<dailyNotificationsCheck> createState() =>
-      _dailyNotificationsCheckState();
+  _notificationsSelectorState createState() => _notificationsSelectorState();
 }
 
-class _dailyNotificationsCheckState extends State<dailyNotificationsCheck> {
-  bool? isChecked = true;
+class _notificationsSelectorState extends State<notificationsSelector> {
+
+  NotificationsOptions _notifications = NotificationsOptions.daily;
 
   @override
   void initState() {
@@ -660,39 +594,133 @@ class _dailyNotificationsCheckState extends State<dailyNotificationsCheck> {
 
   // check shared prefs to see if user has previously checked or unchecked this
   getDailyNotificationPref() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? value = prefs.getBool('dailyNotifications');
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // bool? value = prefs.getBool('dailyNotifications');
+    // adjust notification preferences in Firestore
+    var collection = FirebaseFirestore.instance.collection('parents');
+    var docSnapshot = await collection.doc(FirebaseAuth.instance.currentUser?.uid).get();
+    // note thinks this field is a String evn though saved and updated as bool in Firestore
+    var notifications = 'true';
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      if (data?['dailyNotifications'] == null) {
+        // save to Firestore initial daily preference
+        saveDailyNotificationsPref(true);
+      } else {
+        notifications = data?['dailyNotifications'];
+      }
+    } else {
+      // save to Firestore initial daily preference
+      saveDailyNotificationsPref(true);
+    }
     setState(() {
       // set to true if not value already set
-      isChecked = value ?? true;
+      if (notifications == 'true') {
+        _notifications = NotificationsOptions.daily;
+      } else  {
+        _notifications = NotificationsOptions.weekly;
+      }
     });
   }
 
   saveDailyNotificationsPref(value) async {
-    // store value in shared prefs
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('dailyNotifications', value);
+    FirebaseFirestore.instance
+        .collection('parents')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .set({'dailyNotifications': true}, SetOptions(merge: value));
   }
 
-  @override
   Widget build(BuildContext context) {
-    return Checkbox(
-      checkColor: AppColours.dark_blue,
-      activeColor: AppColours.white,
-      value: isChecked,
-      onChanged: (bool? value) {
-        setState(() {
-          isChecked = value;
-          // store value in shared prefs
-          saveDailyNotificationsPref(value);
+    return Column(
+      children: <Widget>[
+        ListTile(
+          title: const Text('daily'),
+          leading: Radio(
+            value: NotificationsOptions.daily,
+            groupValue: _notifications,
+            onChanged: (value) {
+              setState(() {
+                _notifications = NotificationsOptions.daily;
+                // saveDailyNotificationsPref(true);
 
-          // adjust notification preferences in Firestore
-          FirebaseFirestore.instance
-              .collection('parents')
-              .doc(FirebaseAuth.instance.currentUser?.uid)
-              .set({'dailyNotifications': value}, SetOptions(merge: true));
-        });
-      },
+                // adjust notification preferences in Firestore
+                FirebaseFirestore.instance
+                    .collection('parents')
+                    .doc(FirebaseAuth.instance.currentUser?.uid)
+                    .set({'dailyNotifications': true}, SetOptions(merge: true));
+              });
+            },
+          ),
+        ),
+        ListTile(
+          title: const Text('weekly'),
+          leading: Radio(
+            value: NotificationsOptions.weekly,
+            groupValue: _notifications,
+            onChanged: (value) {
+              setState(() {
+                // adjust notification preferences in Firestore
+                FirebaseFirestore.instance
+                    .collection('parents')
+                    .doc(FirebaseAuth.instance.currentUser?.uid)
+                    .set({'dailyNotifications': false}, SetOptions(merge: true));
+                _notifications = NotificationsOptions.weekly;
+                // saveDailyNotificationsPref(false);
+
+
+              });
+            },
+          ),
+        ),
+      ],
     );
   }
 }
+//
+// class _dailyNotificationsCheckState extends State<dailyNotificationsCheck> {
+//   bool? isChecked = true;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     getDailyNotificationPref();
+//   }
+//
+//   // check shared prefs to see if user has previously checked or unchecked this
+//   getDailyNotificationPref() async {
+//     final SharedPreferences prefs = await SharedPreferences.getInstance();
+//     bool? value = prefs.getBool('dailyNotifications');
+//     setState(() {
+//       // set to true if not value already set
+//       isChecked = value ?? true;
+//     });
+//   }
+//
+//   saveDailyNotificationsPref(value) async {
+//     // store value in shared prefs
+//     final SharedPreferences prefs = await SharedPreferences.getInstance();
+//     prefs.setBool('dailyNotifications', value);
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Checkbox(
+//       checkColor: AppColours.dark_blue,
+//       activeColor: AppColours.white,
+//       value: isChecked,
+//       onChanged: (bool? value) {
+//         setState(() {
+//           isChecked = value;
+//           // store value in shared prefs
+//           saveDailyNotificationsPref(value);
+//
+//           // adjust notification preferences in Firestore
+//           FirebaseFirestore.instance
+//               .collection('parents')
+//               .doc(FirebaseAuth.instance.currentUser?.uid)
+//               .set({'dailyNotifications': value}, SetOptions(merge: true));
+//         });
+//       },
+//     );
+//   }
+// }

@@ -1,5 +1,7 @@
 import 'dart:convert';
-
+import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
+import 'package:dolfin_flutter/shared/styles/colours.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +31,7 @@ class _SignUpPageState extends State<SignUpPage> {
   late TextEditingController _namecontroller;
   late TextEditingController _emailcontroller;
   late TextEditingController _passwordcontroller;
+  bool isSubmitting = false;
 
   @override
   void initState() {
@@ -72,7 +75,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 message: state.error.toString(),
                 color: Colors.amber,
                 context: context);
-            throw StateError(state.error.toString());
           }
 
           if (state is AuthenticationSuccessState) {
@@ -108,11 +110,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         SizedBox(
                           height: 1.5.h,
                         ),
-
-                        Text(dotenv.get('NPEU_URL', fallback: 'default')),
                         Text(
                           'Create a new account. Please make sure you use the email'
-                              ' you originally signed up to the trial with.',
+                          ' you originally signed up to the trial with.',
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
@@ -129,7 +129,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           icon: Icons.person,
                           keyboardtype: TextInputType.name,
                           validator: (value) {
-                            return value!.length < 3 ? 'Unvalid Name' : null;
+                            return value!.length < 3 ? 'Invalid Name' : null;
                           },
                           textEditingController: _namecontroller,
                         ),
@@ -165,22 +165,26 @@ class _SignUpPageState extends State<SignUpPage> {
                         SizedBox(
                           height: 4.h,
                         ),
-                        MyButton(
-                          color: AppColours.light_blue,
+                        Container(
                           width: 80.w,
-                          title: 'Sign Up',
-                          func: () {
-                            if (connectivitycubit.state
-                                is ConnectivityOnlineState) {
+                          height: 15.w,
+                          padding: EdgeInsets.symmetric(vertical: 0.1.h),
+                          child: ElevatedButton.icon(
+                            icon: isSubmitting
+                                ? CircularProgressIndicator()
+                                : Icon(Icons.add),
+                            onPressed: () {
                               _signupewithemailandpass(context, authcubit);
-                            } else {
-                              MySnackBar.error(
-                                  message:
-                                      'Please Check Your Internet Connection',
-                                  color: Colors.red,
-                                  context: context);
-                            }
-                          },
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: AppColours.light_blue, // background
+                              onPrimary: AppColours.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(200),
+                              ),
+                            ),
+                            label: Text('Sign up'),
+                          ),
                         ),
                         SizedBox(
                           height: 1.5.h,
@@ -239,20 +243,46 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _signupewithemailandpass(context, AuthenticationCubit cubit) {
-
     // is form complete and email registered with Oxford?
     if (_formKey.currentState!.validate()) {
-      checkEmail( _emailcontroller.text).then((exists) {
+      setState(() {
+        isSubmitting = true;
+      });
 
-       if (exists == 1) {
+      checkEmail(_emailcontroller.text).then((exists) {
+        if (exists == 1) {
           cubit.register(
               fullname: _namecontroller.text,
               email: _emailcontroller.text,
               password: _passwordcontroller.text);
-        } else if(exists == 2) {
+        } else if (exists == 2) {
+          setState(() {
+            isSubmitting = false;
+          });
           print('parent does not exist in study');
           MySnackBar.error(
-              message: "Problem with email, please check you have entered the email you"
+              message:
+                  "Problem with email, please check you have entered the email you"
+                  " used when you signed up for the study",
+              color: Colors.red,
+              context: context);
+        }
+      });
+
+      checkEmail(_emailcontroller.text).then((exists) {
+        if (exists == 1) {
+          cubit.register(
+              fullname: _namecontroller.text,
+              email: _emailcontroller.text,
+              password: _passwordcontroller.text);
+        } else if (exists == 2) {
+          setState(() {
+            isSubmitting = false;
+          });
+          print('parent does not exist in study');
+          MySnackBar.error(
+              message:
+                  "Problem with email, please check you have entered the email you"
                   " used when you signed up for the study",
               color: Colors.red,
               context: context);
@@ -266,11 +296,6 @@ class _SignUpPageState extends State<SignUpPage> {
     try {
       // acquire jwt from NPEU
       await dotenv.load();
-
-      MySnackBar.error( message: dotenv.get('NPEU_URL'),
-          color: Colors.blue,
-          context: context);
-
       var baseUrl = dotenv.get('NPEU_URL');
       var authUrl = 'https://' + baseUrl + '/identityauthority/connect/token';
 
@@ -281,17 +306,12 @@ class _SignUpPageState extends State<SignUpPage> {
         'grant_type': dotenv.get('GRANT_TYPE')
       };
 
-      var authResponse = await http.post(
-          Uri.parse(authUrl),
-          body:body);
+      var authResponse = await http.post(Uri.parse(authUrl), body: body);
       print(authResponse);
-      MySnackBar.error( message: authResponse.toString(),
-          color: Colors.blue,
-          context: context);
       if (authResponse.statusCode != 200) {
         MySnackBar.error(
             message: authResponse.statusCode.toString(),
-            color: Colors.blue,
+            color: Colors.red,
             context: context);
         return 3;
       } else {
@@ -299,17 +319,16 @@ class _SignUpPageState extends State<SignUpPage> {
 
         // check if email is valid
         var queryParameters = {'Email': email};
-        var url = Uri.https(baseUrl,
-            '/dolfindata/api/participant/confirm', queryParameters);
-
+        var url = Uri.https(
+            baseUrl, '/dolfindata/api/participant/confirm', queryParameters);
 
         // returns true or false to indicate if email is valid
-        final response = await http.get(url,
-            headers: {'Authorization': 'Bearer $jwt'});
+        final response =
+            await http.get(url, headers: {'Authorization': 'Bearer $jwt'});
 
         if (response.statusCode == 200) {
           bool b = response.body.toLowerCase() == 'true';
-          if(b == true) {
+          if (b == true) {
             return 1;
           } else {
             return 2;
@@ -325,13 +344,8 @@ class _SignUpPageState extends State<SignUpPage> {
     } catch (err) {
       print(err);
       MySnackBar.error(
-          message: err.toString(),
-          color: Colors.blue,
-          context: context);
+          message: err.toString(), color: Colors.red, context: context);
       return 3;
     }
-
-
-
   }
 }

@@ -25,6 +25,26 @@ class FirebaseAuthRepo implements UserRepository {
   }
 
   @override
+  Future<void> sendPasswordResetEmail({required String email}) async {
+    print('send password');
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(
+          email: email);
+    } on FirebaseAuthException catch (e) {
+      print(e);
+      if (e.code == 'invalid-email') {
+        throw 'Email not recognised.';
+      } else if ( e.code == 'invalid-email' ) {
+        throw 'No user found for that email.';
+      }
+    } catch (e) {
+      throw e.toString();
+    }
+
+  }
+
+
+  @override
   Future<void> register(
       {required String fullname,
       required String email,

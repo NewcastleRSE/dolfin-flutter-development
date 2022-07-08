@@ -13,6 +13,8 @@ import 'package:dolfin_flutter/shared/constants/strings.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
 import 'package:dolfin_flutter/shared/validators.dart';
 
+import '../../shared/constants/strings.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -165,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Don\'t have an Account ?',
+                              'Don\'t have an Account?',
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle1
@@ -189,6 +191,29 @@ class _LoginPageState extends State<LoginPage> {
                                       fontSize: 9.sp,
                                       color: AppColours.dark_blue,
                                     ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 4.h,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Navigator.pushNamed(context, resetpasswordpage);
+                              },
+                              child: Text(
+                                'Forgot password?',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline1
+                                    ?.copyWith(
+                                  fontSize: 9.sp,
+                                  color: AppColours.dark_blue,
+                                ),
                               ),
                             ),
                           ],

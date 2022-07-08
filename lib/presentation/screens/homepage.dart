@@ -56,10 +56,10 @@ class _HomePageState extends State<HomePage> {
       saveFCMTokenToDatabase(token!);
     });
 
-    // if daily notifications has not yet been set, set to true
-  if (firstLogin() == true) {
-    updateDailyNotifications(true);
-  }
+  //   // if daily notifications has not yet been set, set to true
+  // if (firstLogin() == true) {
+  //   updateDailyNotifications(true);
+  // }
 
     // Any time the token refreshes, store this in the database too
     FirebaseMessaging.instance.onTokenRefresh.listen(saveFCMTokenToDatabase);
@@ -483,8 +483,8 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       height: 3.h,
                     ),
+                    Text('I want to receive reminders: '),
                   notificationsSelector(),
-                    Text(notifications!),
                     SizedBox(
                       height: 3.h,
                     ),
@@ -594,11 +594,28 @@ class _notificationsSelectorState extends State<notificationsSelector> {
 
   // check shared prefs to see if user has previously checked or unchecked this
   getDailyNotificationPref() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? value = prefs.getBool('dailyNotifications');
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // bool? value = prefs.getBool('dailyNotifications');
+    // adjust notification preferences in Firestore
+    var collection = FirebaseFirestore.instance.collection('parents');
+    var docSnapshot = await collection.doc(FirebaseAuth.instance.currentUser?.uid).get();
+    // note thinks this field is a String evn though saved and updated as bool in Firestore
+    var notifications = 'true';
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      if (data?['dailyNotifications'] == null) {
+        // save to Firestore initial daily preference
+        saveDailyNotificationsPref(true);
+      } else {
+        notifications = data?['dailyNotifications'];
+      }
+    } else {
+      // save to Firestore initial daily preference
+      saveDailyNotificationsPref(true);
+    }
     setState(() {
       // set to true if not value already set
-      if (value == null || value == true) {
+      if (notifications == 'true') {
         _notifications = NotificationsOptions.daily;
       } else  {
         _notifications = NotificationsOptions.weekly;
@@ -607,23 +624,24 @@ class _notificationsSelectorState extends State<notificationsSelector> {
   }
 
   saveDailyNotificationsPref(value) async {
-    // store value in shared prefs
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('dailyNotifications', value);
+    FirebaseFirestore.instance
+        .collection('parents')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .set({'dailyNotifications': true}, SetOptions(merge: value));
   }
 
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         ListTile(
-          title: const Text('Daily'),
+          title: const Text('daily'),
           leading: Radio(
             value: NotificationsOptions.daily,
             groupValue: _notifications,
             onChanged: (value) {
               setState(() {
                 _notifications = NotificationsOptions.daily;
-                saveDailyNotificationsPref(true);
+                // saveDailyNotificationsPref(true);
 
                 // adjust notification preferences in Firestore
                 FirebaseFirestore.instance
@@ -635,20 +653,19 @@ class _notificationsSelectorState extends State<notificationsSelector> {
           ),
         ),
         ListTile(
-          title: const Text('Weekly'),
+          title: const Text('weekly'),
           leading: Radio(
             value: NotificationsOptions.weekly,
             groupValue: _notifications,
             onChanged: (value) {
               setState(() {
-                print('weekly');
                 // adjust notification preferences in Firestore
                 FirebaseFirestore.instance
                     .collection('parents')
                     .doc(FirebaseAuth.instance.currentUser?.uid)
                     .set({'dailyNotifications': false}, SetOptions(merge: true));
                 _notifications = NotificationsOptions.weekly;
-                saveDailyNotificationsPref(false);
+                // saveDailyNotificationsPref(false);
 
 
               });

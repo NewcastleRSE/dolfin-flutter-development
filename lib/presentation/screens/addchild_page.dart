@@ -60,7 +60,6 @@ class _AddChildPageState extends State<AddChildPage> {
     dueDate =
         isEditMode ? DateTime.parse(widget.child!.dueDate) : DateTime.now();
     recruitedAfterDischarge = false;
-
   }
 
   @override
@@ -263,7 +262,7 @@ class _AddChildPageState extends State<AddChildPage> {
             children: [
               MyButton(
                 color: isEditMode ? AppColours.green : AppColours.dark_blue,
-                width: 40.w,
+                width: isEditMode ? 50.w : 40.w,
                 title: isEditMode ? "Update Details" : 'Add Child',
                 func: () {
                   _addChild();
@@ -302,14 +301,17 @@ class _AddChildPageState extends State<AddChildPage> {
                   docid: widget.child!.id,
                   name: _namecontroller.text,
                   dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-                )
+                  dischargeDate: DateFormat('yyyy-MM-dd').format(dischargeDate),
+                  dueDate: DateFormat('yyyy-MM-dd').format(dueDate),
+                  recruitedAfterDischarge: recruitedAfterDischarge)
               : FireStoreCrud().addChild(child: child);
 
           Navigator.pop(context);
         } else {
           print('child does not exist in study');
           MySnackBar.error(
-              message: "Problem with child's trial ID, please check the ID is correct and"
+              message:
+                  "Problem with child's trial ID, please check the ID is correct and"
                   " try again",
               color: Colors.red,
               context: context);
@@ -394,9 +396,7 @@ class _AddChildPageState extends State<AddChildPage> {
         'grant_type': dotenv.get('GRANT_TYPE')
       };
 
-      var authResponse = await http.post(
-          Uri.parse(authUrl),
-          body:body);
+      var authResponse = await http.post(Uri.parse(authUrl), body: body);
       if (authResponse.statusCode != 200) {
         return false;
       } else {
@@ -408,11 +408,10 @@ class _AddChildPageState extends State<AddChildPage> {
         var childCheckUrl = Uri.https(baseUrl,
             '/dolfindata/api/participant/confirm/$childCheck', queryParameters);
 
-
         // returns true or false to indicate if child is part of study and matches
         // parent email
-        final response = await http.get(childCheckUrl,
-            headers: {'Authorization': 'Bearer $jwt'});
+        final response = await http
+            .get(childCheckUrl, headers: {'Authorization': 'Bearer $jwt'});
         if (response.statusCode == 200) {
           bool b = response.body.toLowerCase() == 'true';
           return b;
@@ -422,10 +421,7 @@ class _AddChildPageState extends State<AddChildPage> {
       }
     } catch (err) {
       print(err);
-          return false;
+      return false;
     }
-
-
-
   }
 }

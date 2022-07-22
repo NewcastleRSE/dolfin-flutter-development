@@ -230,7 +230,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                           }
 
                           final data = snapshot.data!;
-print(data);
+                          print(data);
                           bool weekly = data.data["showWeeklyForms"];
                           //weekly = true;
 
@@ -324,7 +324,10 @@ print(data);
                                         onTap: () {
                                           Navigator.pushNamed(
                                               context, addrecordpage,
-                                              arguments: record);
+                                              arguments: <String, dynamic>{
+                                                "data": record,
+                                                "date": DateTime.now()
+                                              });
                                         },
                                         child: index % 2 == 0
                                             ? BounceInLeft(

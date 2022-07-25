@@ -322,12 +322,19 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                         editable: index <= 2);
                                     return InkWell(
                                         onTap: () {
-                                          Navigator.pushNamed(
-                                              context, addrecordpage,
-                                              arguments: <String, dynamic>{
-                                                "data": record,
-                                                "date": DateTime.now()
-                                              });
+                                          record.id == "0"
+                                              ? Navigator.pushNamed(
+                                                  context, addrecordpage,
+                                                  arguments: <String, dynamic>{
+                                                      "data": widget.child,
+                                                      "date": DateTime.now()
+                                                    })
+                                              : Navigator.pushNamed(
+                                                  context, addrecordpage,
+                                                  arguments: <String, dynamic>{
+                                                      "data": record,
+                                                      "date": DateTime.now()
+                                                    });
                                         },
                                         child: index % 2 == 0
                                             ? BounceInLeft(

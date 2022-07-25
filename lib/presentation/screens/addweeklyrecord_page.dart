@@ -346,7 +346,7 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                 Column(
                   children: <Widget>[
                     ListTile(
-                      title: const Text('I Forgot'),
+                      title: const Text('I forgot'),
                       leading: Radio<ReasonOptions>(
                         value: ReasonOptions.forgot,
                         groupValue: _reason,

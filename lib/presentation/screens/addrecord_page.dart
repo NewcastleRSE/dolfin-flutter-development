@@ -233,7 +233,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                 Column(
                   children: <Widget>[
                     ListTile(
-                      title: const Text('I Forgot'),
+                      title: const Text('I forgot'),
                       leading: Radio<ReasonOptions>(
                         value: ReasonOptions.forgot,
                         groupValue: _reason,
@@ -331,7 +331,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                     style: Theme.of(context)
                         .textTheme
                         .headline1!
-                        .copyWith(fontSize: 14.sp),
+                        .copyWith(fontSize: 14.sp, color: AppColours.red),
                   ),
                 ),
                 Visibility(

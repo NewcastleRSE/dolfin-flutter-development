@@ -110,7 +110,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
             height: 2.h,
           ),
           MyTextfield(
-            hint: "Enter your child's weight in (in kg)",
+            hint: "Enter your child's weight (in kg)",
             keyboardtype: TextInputType.numberWithOptions(decimal: true),
             icon: Icons.title,
             showicon: false,
@@ -118,7 +118,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
               if (value == null || value.isEmpty) {
                 return "Please Enter Your Child's Weight";
               } else if (double.parse(value) > 15.0) {
-                return "Please check you have entered the correct weight in kg";
+                return "Please confirm the weight is in kilograms";
               }
               return null;
             },

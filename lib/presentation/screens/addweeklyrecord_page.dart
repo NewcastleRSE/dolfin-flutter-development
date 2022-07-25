@@ -444,7 +444,7 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                     style: Theme.of(context)
                         .textTheme
                         .headline1!
-                        .copyWith(fontSize: 14.sp),
+                        .copyWith(fontSize: 14.sp, color: AppColours.red),
                   ),
                 ),
                 Visibility(

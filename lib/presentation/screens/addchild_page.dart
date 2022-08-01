@@ -166,6 +166,7 @@ class _AddChildPageState extends State<AddChildPage> {
               _showdatepickerdued();
             },
             textEditingController: TextEditingController(),
+            keyboardtype: TextInputType.none,
           ),
           SizedBox(
             height: 3.h,
@@ -190,6 +191,7 @@ class _AddChildPageState extends State<AddChildPage> {
               _showdatepickerdob();
             },
             textEditingController: TextEditingController(),
+            keyboardtype: TextInputType.none,
           ),
           SizedBox(
             height: 3.h,
@@ -214,6 +216,7 @@ class _AddChildPageState extends State<AddChildPage> {
               _showdatepickerdd();
             },
             textEditingController: TextEditingController(),
+            keyboardtype: TextInputType.none,
           ),
           SizedBox(
             height: 3.h,

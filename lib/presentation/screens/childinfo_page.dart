@@ -230,7 +230,6 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                           }
 
                           final data = snapshot.data!;
-                          print(data);
                           bool weekly = data.data["showWeeklyForms"];
                           //weekly = true;
 
@@ -322,12 +321,19 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                         editable: index <= 2);
                                     return InkWell(
                                         onTap: () {
-                                          Navigator.pushNamed(
-                                              context, addrecordpage,
-                                              arguments: <String, dynamic>{
-                                                "data": record,
-                                                "date": DateTime.now()
-                                              });
+                                          record.id == "0"
+                                              ? Navigator.pushNamed(
+                                                  context, addrecordpage,
+                                                  arguments: <String, dynamic>{
+                                                      "data": widget.child,
+                                                      "date": DateTime.now()
+                                                    })
+                                              : Navigator.pushNamed(
+                                                  context, addrecordpage,
+                                                  arguments: <String, dynamic>{
+                                                      "data": record,
+                                                      "date": DateTime.now()
+                                                    });
                                         },
                                         child: index % 2 == 0
                                             ? BounceInLeft(
@@ -435,7 +441,21 @@ class HospitalAdmissionWidget extends StatelessWidget {
                 var study_id = child!.studyID;
                 var child_id = child!.id;
                 FireStoreCrud().addChildHospitalAdmission(child_id, study_id);
-                Navigator.pop(context);
+                showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                          content: const Text(
+                              "Thank you for letting us know. A member of your local clinical team will be in touch to ask you about this."),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              child: const Text('OK'),
+                            )
+                          ],
+                        ));
               },
               child: const Text('Yes'),
             ),

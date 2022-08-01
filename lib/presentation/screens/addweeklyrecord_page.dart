@@ -153,12 +153,14 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
             height: 1.h,
           ),
           MyTextfield(
-            hint: widget.child!.dob,
+            hint: DateFormat('dd/MM/yyyy')
+                .format(DateTime.parse(widget.child!.dob)),
             icon: Icons.calendar_today,
             readonly: true,
             showicon: false,
             validator: (value) {},
             textEditingController: TextEditingController(),
+            keyboardtype: TextInputType.none,
           ),
           SizedBox(
             height: 3.h,
@@ -346,7 +348,7 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                 Column(
                   children: <Widget>[
                     ListTile(
-                      title: const Text('I Forgot'),
+                      title: const Text('I forgot'),
                       leading: Radio<ReasonOptions>(
                         value: ReasonOptions.forgot,
                         groupValue: _reason,
@@ -444,7 +446,7 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                     style: Theme.of(context)
                         .textTheme
                         .headline1!
-                        .copyWith(fontSize: 14.sp),
+                        .copyWith(fontSize: 14.sp, color: AppColours.red),
                   ),
                 ),
                 Visibility(
@@ -563,7 +565,21 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
             )
           : FireStoreCrud().addWeeklyRecord(record: record);
 
-      Navigator.popAndPushNamed(context, homepage);
+      showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                content: const Text(
+                    "Thank you. Your baby's weight information has been submitted successfully."),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.popAndPushNamed(context, homepage);
+                    },
+                    child: const Text('OK'),
+                  )
+                ],
+              ));
     }
   }
 

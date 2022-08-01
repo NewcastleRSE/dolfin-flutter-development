@@ -2,6 +2,7 @@ import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/data/models/weight_model.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 import 'package:dolfin_flutter/data/repositories/firestore_crud.dart';
@@ -110,7 +111,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
             height: 2.h,
           ),
           MyTextfield(
-            hint: "Enter your child's weight in (in kg)",
+            hint: "Enter your child's weight (in kg)",
             keyboardtype: TextInputType.numberWithOptions(decimal: true),
             icon: Icons.title,
             showicon: false,
@@ -118,7 +119,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
               if (value == null || value.isEmpty) {
                 return "Please Enter Your Child's Weight";
               } else if (double.parse(value) > 15.0) {
-                return "Please check you have entered the correct weight in kg";
+                return "Please confirm the weight is in kilograms";
               }
               return null;
             },
@@ -157,6 +158,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
               _showdatepicker();
             },
             textEditingController: TextEditingController(),
+            keyboardtype: TextInputType.none,
           ),
           SizedBox(
             height: 4.h,
@@ -312,7 +314,21 @@ class _AddWeightPageState extends State<AddWeightPage> {
       );
       FireStoreCrud().addWeight(record: record);
 
-      Navigator.pop(context);
+      showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                content: const Text(
+                    "Thank you for letting us know. A member of your local clinical team will be in touch to ask you about this."),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    child: const Text('OK'),
+                  )
+                ],
+              ));
     }
   }
 

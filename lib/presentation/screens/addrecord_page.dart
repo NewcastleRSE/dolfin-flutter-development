@@ -146,6 +146,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             showicon: false,
             validator: (value) {},
             textEditingController: TextEditingController(),
+            keyboardtype: TextInputType.none,
           ),
           SizedBox(
             height: 3.h,
@@ -233,7 +234,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                 Column(
                   children: <Widget>[
                     ListTile(
-                      title: const Text('I Forgot'),
+                      title: const Text('I forgot'),
                       leading: Radio<ReasonOptions>(
                         value: ReasonOptions.forgot,
                         groupValue: _reason,
@@ -331,7 +332,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                     style: Theme.of(context)
                         .textTheme
                         .headline1!
-                        .copyWith(fontSize: 14.sp),
+                        .copyWith(fontSize: 14.sp, color: AppColours.red),
                   ),
                 ),
                 Visibility(
@@ -431,6 +432,10 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
   _addRecord() {
     if (_formKey.currentState!.validate()) {
+      String thankYouText = isEditMode
+          ? "Thank you for updating your baby's supplement data."
+          : "Thank you for submitting your baby's supplement data.";
+
       RecordModel record = RecordModel(
         date: recordDate,
         supplement: _supplement,
@@ -449,7 +454,20 @@ class _AddRecordPageState extends State<AddRecordPage> {
             )
           : FireStoreCrud().addRecord(record: record);
 
-      Navigator.pop(context);
+      showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                content: Text(thankYouText),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    child: const Text('OK'),
+                  )
+                ],
+              ));
     }
   }
 

@@ -159,6 +159,7 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
             showicon: false,
             validator: (value) {},
             textEditingController: TextEditingController(),
+            keyboardtype: TextInputType.none,
           ),
           SizedBox(
             height: 3.h,

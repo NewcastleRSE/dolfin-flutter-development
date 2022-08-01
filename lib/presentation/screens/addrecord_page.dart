@@ -146,6 +146,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             showicon: false,
             validator: (value) {},
             textEditingController: TextEditingController(),
+            keyboardtype: TextInputType.none,
           ),
           SizedBox(
             height: 3.h,

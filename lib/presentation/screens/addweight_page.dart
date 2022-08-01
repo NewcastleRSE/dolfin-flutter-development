@@ -2,6 +2,7 @@ import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/data/models/weight_model.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 import 'package:dolfin_flutter/data/repositories/firestore_crud.dart';
@@ -157,6 +158,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
               _showdatepicker();
             },
             textEditingController: TextEditingController(),
+            keyboardtype: TextInputType.none,
           ),
           SizedBox(
             height: 4.h,

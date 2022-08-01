@@ -431,6 +431,10 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
   _addRecord() {
     if (_formKey.currentState!.validate()) {
+      String thankYouText = isEditMode
+          ? "Thank you for updating your baby's supplement data."
+          : "Thank you for submitting your baby's supplement data.";
+
       RecordModel record = RecordModel(
         date: recordDate,
         supplement: _supplement,
@@ -449,7 +453,20 @@ class _AddRecordPageState extends State<AddRecordPage> {
             )
           : FireStoreCrud().addRecord(record: record);
 
-      Navigator.pop(context);
+      showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                content: Text(thankYouText),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    child: const Text('OK'),
+                  )
+                ],
+              ));
     }
   }
 

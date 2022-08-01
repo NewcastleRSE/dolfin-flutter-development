@@ -230,7 +230,6 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                           }
 
                           final data = snapshot.data!;
-                          print(data);
                           bool weekly = data.data["showWeeklyForms"];
                           //weekly = true;
 
@@ -442,7 +441,21 @@ class HospitalAdmissionWidget extends StatelessWidget {
                 var study_id = child!.studyID;
                 var child_id = child!.id;
                 FireStoreCrud().addChildHospitalAdmission(child_id, study_id);
-                Navigator.pop(context);
+                showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                          content: const Text(
+                              "Thank you for letting us know. A member of your local clinical team will be in touch to ask you about this."),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              child: const Text('OK'),
+                            )
+                          ],
+                        ));
               },
               child: const Text('Yes'),
             ),

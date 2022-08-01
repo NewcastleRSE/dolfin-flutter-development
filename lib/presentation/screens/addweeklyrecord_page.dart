@@ -563,7 +563,21 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
             )
           : FireStoreCrud().addWeeklyRecord(record: record);
 
-      Navigator.popAndPushNamed(context, homepage);
+      showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                content: const Text(
+                    "Thank you. Your baby's weight information has been submitted successfully."),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.popAndPushNamed(context, homepage);
+                    },
+                    child: const Text('OK'),
+                  )
+                ],
+              ));
     }
   }
 

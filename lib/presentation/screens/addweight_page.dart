@@ -312,7 +312,21 @@ class _AddWeightPageState extends State<AddWeightPage> {
       );
       FireStoreCrud().addWeight(record: record);
 
-      Navigator.pop(context);
+      showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                content: const Text(
+                    "Thank you for letting us know. A member of your local clinical team will be in touch to ask you about this."),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    child: const Text('OK'),
+                  )
+                ],
+              ));
     }
   }
 

@@ -153,7 +153,8 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
             height: 1.h,
           ),
           MyTextfield(
-            hint: widget.child!.dob,
+            hint: DateFormat('dd/MM/yyyy')
+                .format(DateTime.parse(widget.child!.dob)),
             icon: Icons.calendar_today,
             readonly: true,
             showicon: false,

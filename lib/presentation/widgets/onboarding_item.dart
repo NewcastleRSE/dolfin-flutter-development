@@ -24,9 +24,6 @@ class OnBoardingItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            height: 4.h,
-          ),
-          SizedBox(
             height: 40.h,
             child: Image.asset(
               image,

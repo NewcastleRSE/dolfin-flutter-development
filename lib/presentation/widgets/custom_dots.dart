@@ -17,6 +17,7 @@ class CustomDots extends StatelessWidget {
           _buildDot(0),
           _buildDot(1),
           _buildDot(2),
+          _buildDot(3),
         ],
       ),
     );

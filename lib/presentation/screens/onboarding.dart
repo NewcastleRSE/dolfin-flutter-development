@@ -44,12 +44,19 @@ class _OnboardingPageState extends State<OnboardingPage> {
           return SafeArea(
               child: Column(
             children: [
+              SizedBox(
+                height: 1.h,
+              ),
+              _buildAppBar(context),
+              SizedBox(
+                height: 1.h,
+              ),
               Stack(
                 alignment: Alignment.topCenter,
                 children: [
                   Container(
                       width: 100.w,
-                      height: 93.h,
+                      height: 86.h,
                       color: AppColours.dark_blue,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -82,15 +89,50 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                           .headline1
                                           ?.copyWith(
                                             fontSize: 13.sp,
-                                            color: Colors.white38,
+                                            color: cubit.curruntindext != 0
+                                                ? AppColours.white
+                                                : AppColours.dark_blue,
                                           ),
                                     ),
                                   ),
                                 ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
                                 CustomDots(myindex: cubit.curruntindext),
                                 SizedBox(
                                   width: 10.w,
-                                )
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    _pageController.animateToPage(
+                                        onboardinglist.length - 1,
+                                        duration:
+                                            const Duration(milliseconds: 500),
+                                        curve: Curves.easeOut);
+                                    cubit.curruntindext <
+                                            onboardinglist.length - 1
+                                        ? cubit.skipindex()
+                                        : null;
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20),
+                                    child: Text(
+                                      'Skip',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline1
+                                          ?.copyWith(
+                                            fontSize: 13.sp,
+                                            color: cubit.curruntindext !=
+                                                    onboardinglist.length - 1
+                                                ? AppColours.white
+                                                : AppColours.dark_blue,
+                                          ),
+                                    ),
+                                  ),
+                                ),
                               ],
                             )
                           ],
@@ -98,12 +140,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       )),
                   SizedBox(
                     width: 100.w,
-                    height: 88.h,
+                    height: 81.h,
                     child: CustomPaint(
                       painter: const MycustomPainter(color: AppColours.white),
                       child: SizedBox(
                         width: 80.w,
-                        height: 50.h,
+                        height: 43.h,
                         child: PageView.builder(
                           itemCount: onboardinglist.length,
                           physics: const NeverScrollableScrollPhysics(),
@@ -120,32 +162,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       ),
                     ),
                   ),
-                  cubit.curruntindext != onboardinglist.length - 1
-                      ? Align(
-                          alignment: Alignment.topRight,
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: MyButton(
-                                color: AppColours.light_blue,
-                                width: 19.w,
-                                title: 'Skip',
-                                func: () {
-                                  _pageController.animateToPage(
-                                      onboardinglist.length - 1,
-                                      duration:
-                                          const Duration(milliseconds: 500),
-                                      curve: Curves.easeOut);
-                                  cubit.curruntindext <
-                                          onboardinglist.length - 1
-                                      ? cubit.skipindex()
-                                      : null;
-                                }),
-                          ))
-                      : Container(),
                   Positioned(
                     bottom: 10.h,
                     child: CircularButton(
-                        color: AppColours.light_blue.withOpacity(0.6),
+                        color: AppColours.light_blue,
                         width: 30.w,
                         icon: Icons.arrow_right_alt_sharp,
                         condition:
@@ -169,6 +189,28 @@ class _OnboardingPageState extends State<OnboardingPage> {
           ));
         },
       ),
+    );
+  }
+
+  Row _buildAppBar(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.chevron_left,
+            size: 30.sp,
+          ),
+        ),
+        Text(
+          '',
+          style: Theme.of(context).textTheme.headline1,
+        ),
+        const SizedBox()
+      ],
     );
   }
 

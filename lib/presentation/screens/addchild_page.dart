@@ -376,8 +376,9 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
         ),
         Text(
-          isEditMode ? 'Edit Child' : 'Add a Child',
-          style: Theme.of(context).textTheme.headline1,
+          isEditMode ? 'Edit Child Details' : 'Add a Child',
+          style:
+              Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14.sp),
         ),
         const SizedBox()
       ],

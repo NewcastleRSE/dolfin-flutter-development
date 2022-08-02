@@ -5,20 +5,26 @@ import 'package:dolfin_flutter/shared/styles/colours.dart';
 
 List<OnBoardingModel> onboardinglist = const [
   OnBoardingModel(
-    img: MyAssets.onboradingone,
+    img: MyAssets.onboardingone,
     title: 'Get Reminders',
     description:
-        'Daily reminders to give your child supplements and submit their data.',
+        "We'll remind you when it's time to submit your child's supplement data.",
   ),
   OnBoardingModel(
-    img: MyAssets.onboradingtwo,
+    img: MyAssets.onboardingtwo,
     title: 'Submit Your Data',
-    description: 'Upload all of your trial data directly from the app.',
+    description: 'Upload all of your trial data securely from the app.',
   ),
   OnBoardingModel(
-    img: MyAssets.onboradingthree,
-    title: 'Track Your Data',
-    description: "View your child's weight and dosage history.",
+    img: MyAssets.onboardingthree,
+    title: 'Dosage History',
+    description: "View your child's dosage history.",
+  ),
+  OnBoardingModel(
+    img: MyAssets.onboardingfour,
+    title: 'Other Features',
+    description:
+        "Use the app to track your child's weight and any unplanned hospital admissions.",
   ),
 ];
 

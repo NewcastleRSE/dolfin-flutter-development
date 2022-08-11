@@ -75,8 +75,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                             const Duration(milliseconds: 500),
                                         curve: Curves.easeIn);
 
-                                    cubit.curruntindext > 0
-                                        ? cubit.removefromindex()
+                                    cubit.currentindex > 0
+                                        ? cubit.decrementIndex()
                                         : null;
                                   },
                                   child: Padding(
@@ -89,7 +89,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                           .headline1
                                           ?.copyWith(
                                             fontSize: 13.sp,
-                                            color: cubit.curruntindext != 0
+                                            color: cubit.currentindex != 0
                                                 ? AppColours.white
                                                 : AppColours.dark_blue,
                                           ),
@@ -99,7 +99,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                 SizedBox(
                                   width: 10.w,
                                 ),
-                                CustomDots(myindex: cubit.curruntindext),
+                                CustomDots(myindex: cubit.currentindex),
                                 SizedBox(
                                   width: 10.w,
                                 ),
@@ -110,9 +110,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                         duration:
                                             const Duration(milliseconds: 500),
                                         curve: Curves.easeOut);
-                                    cubit.curruntindext <
+                                    cubit.currentindex <
                                             onboardinglist.length - 1
-                                        ? cubit.skipindex()
+                                        ? cubit.skipIndex()
                                         : null;
                                   },
                                   child: Padding(
@@ -125,7 +125,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                           .headline1
                                           ?.copyWith(
                                             fontSize: 13.sp,
-                                            color: cubit.curruntindext !=
+                                            color: cubit.currentindex !=
                                                     onboardinglist.length - 1
                                                 ? AppColours.white
                                                 : AppColours.dark_blue,
@@ -169,13 +169,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         width: 30.w,
                         icon: Icons.arrow_right_alt_sharp,
                         condition:
-                            cubit.curruntindext != onboardinglist.length - 1,
+                            cubit.currentindex != onboardinglist.length - 1,
                         func: () {
                           _pageController.nextPage(
                               duration: const Duration(milliseconds: 500),
                               curve: Curves.easeInOut);
-                          if (cubit.curruntindext < onboardinglist.length - 1) {
-                            cubit.changeindex();
+                          if (cubit.currentindex < onboardinglist.length - 1) {
+                            cubit.incrementIndex();
                           } else {
                             cubit
                                 .getpref('seen')
@@ -218,7 +218,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     OnboardingCubit cubit = BlocProvider.of(context);
     if (seen != null && seen) {
       Navigator.pop(context);
-      cubit.curruntindext = 0;
+      cubit.currentindex = 0;
     } else {
       Navigator.pushReplacementNamed(context, welcomepage);
       cubit.savepref('seen');

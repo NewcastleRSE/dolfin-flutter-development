@@ -99,7 +99,7 @@ class _AddChildPageState extends State<AddChildPage> {
             height: 3.h,
           ),
           Text(
-            'Trial ID',
+            'Study Number',
             style: Theme.of(context)
                 .textTheme
                 .headline1!
@@ -110,12 +110,12 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
           MyTextfield(
             readonly: isEditMode ? true : false,
-            hint: "Trial ID",
+            hint: "Study Number",
             icon: Icons.title,
             showicon: false,
             validator: (value) {
               return value!.isEmpty
-                  ? "Please Enter Your Child's Trial ID"
+                  ? "Please Enter Your Child's Study Number."
                   : null;
             },
             textEditingController: _trialIDcontroller,
@@ -346,7 +346,7 @@ class _AddChildPageState extends State<AddChildPage> {
           print('child does not exist in study');
           MySnackBar.error(
               message:
-                  "Problem with child's trial ID, please check the ID is correct and"
+                  "Problem with child's Study Number, please check the ID is correct and"
                   " try again",
               color: Colors.red,
               context: context);

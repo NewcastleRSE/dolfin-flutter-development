@@ -462,8 +462,23 @@ class _HomePageState extends State<HomePage> {
                                     authenticationCubit.updateUserInfo(
                                         _usercontroller.text, context);
                                     setState(() {});
-                                    Navigator.pushNamed(context, homepage);
-                                    sleep(Duration(seconds: 2));
+                                    showDialog<String>(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(
+                                              content: const Text(
+                                                  "Thank you, your details have been updated."),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pushNamed(
+                                                        context, homepage);
+                                                  },
+                                                  child: const Text('OK'),
+                                                )
+                                              ],
+                                            ));
                                   }
                                 },
                               );

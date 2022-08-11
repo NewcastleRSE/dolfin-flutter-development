@@ -176,13 +176,16 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            _childName,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline1!
-                                .copyWith(fontSize: 17.sp),
-                          ),
+                          SizedBox(
+                              width: 150.0,
+                              child: Text(
+                                _childName,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline1!
+                                    .copyWith(fontSize: 17.sp),
+                              )),
                           const Spacer(),
                           ElevatedButton(
                             onPressed: () {

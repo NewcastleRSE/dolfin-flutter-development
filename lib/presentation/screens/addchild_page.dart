@@ -301,6 +301,38 @@ class _AddChildPageState extends State<AddChildPage> {
               recruitedAfterDischarge: recruitedAfterDischarge);
 
           isEditMode
+              ? showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                        content: const Text(
+                            "Thank you. Your child's details have been updated successfully."),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              ChildModel updatedChild = ChildModel(
+                                  name: _namecontroller.text,
+                                  dob: DateFormat('yyyy-MM-dd')
+                                      .format(dateOfBirth),
+                                  dischargeDate: DateFormat('yyyy-MM-dd')
+                                      .format(dischargeDate),
+                                  dueDate:
+                                      DateFormat('yyyy-MM-dd').format(dueDate),
+                                  studyID: _trialIDcontroller.text,
+                                  parentID:
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                  id: widget.child!.id,
+                                  recruitedAfterDischarge:
+                                      recruitedAfterDischarge);
+                              Navigator.pushNamed(context, childinfopage,
+                                  arguments: updatedChild);
+                            },
+                            child: const Text('OK'),
+                          )
+                        ],
+                      ))
+              : Navigator.pop(context);
+
+          isEditMode
               ? FireStoreCrud().updateChild(
                   docid: widget.child!.id,
                   name: _namecontroller.text,
@@ -309,8 +341,6 @@ class _AddChildPageState extends State<AddChildPage> {
                   dueDate: DateFormat('yyyy-MM-dd').format(dueDate),
                   recruitedAfterDischarge: recruitedAfterDischarge)
               : FireStoreCrud().addChild(child: child);
-
-          Navigator.pop(context);
         } else {
           print('child does not exist in study');
           MySnackBar.error(

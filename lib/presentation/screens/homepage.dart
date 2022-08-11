@@ -56,10 +56,10 @@ class _HomePageState extends State<HomePage> {
       saveFCMTokenToDatabase(token!);
     });
 
-  //   // if daily notifications has not yet been set, set to true
-  // if (firstLogin() == true) {
-  //   updateDailyNotifications(true);
-  // }
+    //   // if daily notifications has not yet been set, set to true
+    // if (firstLogin() == true) {
+    //   updateDailyNotifications(true);
+    // }
 
     // Any time the token refreshes, store this in the database too
     FirebaseMessaging.instance.onTokenRefresh.listen(saveFCMTokenToDatabase);
@@ -125,14 +125,11 @@ class _HomePageState extends State<HomePage> {
   Future<bool> updateDailyNotifications(bool dailyNotifications) async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
 
-    await FirebaseFirestore.instance
-        .collection('parents')
-        .doc(userId)
-        .set({
-      'dailyNotifications': dailyNotifications
-    }, SetOptions(merge: true))
-        .then((result) { return true;})
-        .catchError((onError) {
+    await FirebaseFirestore.instance.collection('parents').doc(userId).set(
+        {'dailyNotifications': dailyNotifications},
+        SetOptions(merge: true)).then((result) {
+      return true;
+    }).catchError((onError) {
       print('error saving fcm token');
       print(onError);
       return false;
@@ -142,7 +139,6 @@ class _HomePageState extends State<HomePage> {
 
     return true;
   }
-
 
   bool checkDailyNotificationsVisibility() {
     var childrenSnapshot = FireStoreCrud()
@@ -276,7 +272,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            DateFormat('MMMM, dd').format(currentdate),
+                            DateFormat('dd MMMM').format(currentdate),
                             style: Theme.of(context)
                                 .textTheme
                                 .headline1!
@@ -440,7 +436,7 @@ class _HomePageState extends State<HomePage> {
                       height: 3.h,
                     ),
                     Text('I want to receive reminders: '),
-                  notificationsSelector(),
+                    notificationsSelector(),
                     SizedBox(
                       height: 3.h,
                     ),
@@ -494,7 +490,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
   Widget _nodatawidget() {
     return Center(
       child: Column(
@@ -518,8 +513,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-
 }
 
 enum NotificationsOptions { daily, weekly }
@@ -532,7 +525,6 @@ class notificationsSelector extends StatefulWidget {
 }
 
 class _notificationsSelectorState extends State<notificationsSelector> {
-
   NotificationsOptions _notifications = NotificationsOptions.daily;
 
   @override
@@ -545,7 +537,8 @@ class _notificationsSelectorState extends State<notificationsSelector> {
   getDailyNotificationPref() async {
     // adjust notification preferences in Firestore
     var collection = FirebaseFirestore.instance.collection('parents');
-    var docSnapshot = await collection.doc(FirebaseAuth.instance.currentUser?.uid).get();
+    var docSnapshot =
+        await collection.doc(FirebaseAuth.instance.currentUser?.uid).get();
     // note thinks this field is a String evn though saved and updated as bool in Firestore
     bool notifications = true;
     if (docSnapshot.exists && docSnapshot.get('dailyNotifications')) {
@@ -558,7 +551,7 @@ class _notificationsSelectorState extends State<notificationsSelector> {
       // set to true if not value already set
       if (notifications == true) {
         _notifications = NotificationsOptions.daily;
-      } else  {
+      } else {
         _notifications = NotificationsOptions.weekly;
       }
     });
@@ -604,11 +597,10 @@ class _notificationsSelectorState extends State<notificationsSelector> {
                 FirebaseFirestore.instance
                     .collection('parents')
                     .doc(FirebaseAuth.instance.currentUser?.uid)
-                    .set({'dailyNotifications': false}, SetOptions(merge: true));
+                    .set(
+                        {'dailyNotifications': false}, SetOptions(merge: true));
                 _notifications = NotificationsOptions.weekly;
                 // saveDailyNotificationsPref(false);
-
-
               });
             },
           ),

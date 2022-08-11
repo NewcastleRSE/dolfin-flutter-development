@@ -246,7 +246,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
 
                               var nextDate = parsedDate.add(Duration(days: 7));
                               dueDate =
-                                  DateFormat("yyyy-MM-dd").format(nextDate);
+                                  DateFormat("dd-MM-yyyy").format(nextDate);
                             }
                           }
 

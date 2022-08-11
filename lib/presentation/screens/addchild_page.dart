@@ -291,9 +291,9 @@ class _AddChildPageState extends State<AddChildPage> {
 
           ChildModel child = ChildModel(
               name: _namecontroller.text,
-              dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-              dischargeDate: DateFormat('yyyy-MM-dd').format(dischargeDate),
-              dueDate: DateFormat('yyyy-MM-dd').format(dueDate),
+              dob: DateFormat('dd-MM-yyyy').format(dateOfBirth),
+              dischargeDate: DateFormat('dd-MM-yyyy').format(dischargeDate),
+              dueDate: DateFormat('dd-MM-yyyy').format(dueDate),
               studyID: _trialIDcontroller.text,
               parentID: FirebaseAuth.instance.currentUser!.uid,
               id: '',
@@ -303,9 +303,9 @@ class _AddChildPageState extends State<AddChildPage> {
               ? FireStoreCrud().updateChild(
                   docid: widget.child!.id,
                   name: _namecontroller.text,
-                  dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-                  dischargeDate: DateFormat('yyyy-MM-dd').format(dischargeDate),
-                  dueDate: DateFormat('yyyy-MM-dd').format(dueDate),
+                  dob: DateFormat('dd-MM-yyyy').format(dateOfBirth),
+                  dischargeDate: DateFormat('dd-MM-yyyy').format(dischargeDate),
+                  dueDate: DateFormat('dd-MM-yyyy').format(dueDate),
                   recruitedAfterDischarge: recruitedAfterDischarge)
               : FireStoreCrud().addChild(child: child);
 

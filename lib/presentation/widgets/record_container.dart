@@ -72,7 +72,7 @@ class RecordContainer extends StatelessWidget {
           Row(children: [
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
-                DateFormat('yyyy-MM-dd').format(record.date),
+                DateFormat('dd-MM-yyyy').format(record.date),
                 textAlign: TextAlign.left,
                 style: Theme.of(context).textTheme.headline1!.copyWith(
                       color: Colors.white,

@@ -461,7 +461,7 @@ class HospitalAdmissionWidget extends StatelessWidget {
             ),
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: const Text('No'),
             ),
           ],
         ),

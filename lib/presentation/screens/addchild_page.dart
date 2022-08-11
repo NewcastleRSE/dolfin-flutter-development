@@ -303,6 +303,7 @@ class _AddChildPageState extends State<AddChildPage> {
           isEditMode
               ? showDialog<String>(
                   context: context,
+                  barrierDismissible: false,
                   builder: (BuildContext context) => AlertDialog(
                         content: const Text(
                             "Thank you. Your child's details have been updated successfully."),

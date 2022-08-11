@@ -446,6 +446,7 @@ class HospitalAdmissionWidget extends StatelessWidget {
                 FireStoreCrud().addChildHospitalAdmission(child_id, study_id);
                 showDialog<String>(
                     context: context,
+                    barrierDismissible: false,
                     builder: (BuildContext context) => AlertDialog(
                           content: const Text(
                               "Thank you for letting us know. A member of your local clinical team will be in touch to ask you about this."),

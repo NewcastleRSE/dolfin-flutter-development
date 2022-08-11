@@ -457,6 +457,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
       showDialog<String>(
           context: context,
+          barrierDismissible: false,
           builder: (BuildContext context) => AlertDialog(
                 content: Text(thankYouText),
                 actions: <Widget>[

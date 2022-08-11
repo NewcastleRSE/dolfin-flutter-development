@@ -326,7 +326,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                                   context, addrecordpage,
                                                   arguments: <String, dynamic>{
                                                       "data": widget.child,
-                                                      "date": DateTime.now()
+                                                      "date": record.date
                                                     })
                                               : Navigator.pushNamed(
                                                   context, addrecordpage,

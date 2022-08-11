@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
+import 'package:dolfin_flutter/shared/constants/strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -291,9 +292,9 @@ class _AddChildPageState extends State<AddChildPage> {
 
           ChildModel child = ChildModel(
               name: _namecontroller.text,
-              dob: DateFormat('dd-MM-yyyy').format(dateOfBirth),
-              dischargeDate: DateFormat('dd-MM-yyyy').format(dischargeDate),
-              dueDate: DateFormat('dd-MM-yyyy').format(dueDate),
+              dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
+              dischargeDate: DateFormat('yyyy-MM-dd').format(dischargeDate),
+              dueDate: DateFormat('yyyy-MM-dd').format(dueDate),
               studyID: _trialIDcontroller.text,
               parentID: FirebaseAuth.instance.currentUser!.uid,
               id: '',
@@ -303,9 +304,9 @@ class _AddChildPageState extends State<AddChildPage> {
               ? FireStoreCrud().updateChild(
                   docid: widget.child!.id,
                   name: _namecontroller.text,
-                  dob: DateFormat('dd-MM-yyyy').format(dateOfBirth),
-                  dischargeDate: DateFormat('dd-MM-yyyy').format(dischargeDate),
-                  dueDate: DateFormat('dd-MM-yyyy').format(dueDate),
+                  dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
+                  dischargeDate: DateFormat('yyyy-MM-dd').format(dischargeDate),
+                  dueDate: DateFormat('yyyy-MM-dd').format(dueDate),
                   recruitedAfterDischarge: recruitedAfterDischarge)
               : FireStoreCrud().addChild(child: child);
 

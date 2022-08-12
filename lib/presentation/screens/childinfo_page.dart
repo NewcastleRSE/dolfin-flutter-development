@@ -176,13 +176,16 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            _childName,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline1!
-                                .copyWith(fontSize: 17.sp),
-                          ),
+                          SizedBox(
+                              width: 150.0,
+                              child: Text(
+                                _childName,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline1!
+                                    .copyWith(fontSize: 17.sp),
+                              )),
                           const Spacer(),
                           ElevatedButton(
                             onPressed: () {
@@ -246,7 +249,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
 
                               var nextDate = parsedDate.add(Duration(days: 7));
                               dueDate =
-                                  DateFormat("yyyy-MM-dd").format(nextDate);
+                                  DateFormat("dd-MM-yyyy").format(nextDate);
                             }
                           }
 
@@ -326,7 +329,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                                   context, addrecordpage,
                                                   arguments: <String, dynamic>{
                                                       "data": widget.child,
-                                                      "date": DateTime.now()
+                                                      "date": record.date
                                                     })
                                               : Navigator.pushNamed(
                                                   context, addrecordpage,
@@ -443,6 +446,7 @@ class HospitalAdmissionWidget extends StatelessWidget {
                 FireStoreCrud().addChildHospitalAdmission(child_id, study_id);
                 showDialog<String>(
                     context: context,
+                    barrierDismissible: false,
                     builder: (BuildContext context) => AlertDialog(
                           content: const Text(
                               "Thank you for letting us know. A member of your local clinical team will be in touch to ask you about this."),
@@ -461,7 +465,7 @@ class HospitalAdmissionWidget extends StatelessWidget {
             ),
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: const Text('No'),
             ),
           ],
         ),

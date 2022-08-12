@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
+import 'package:dolfin_flutter/shared/constants/strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -98,7 +99,7 @@ class _AddChildPageState extends State<AddChildPage> {
             height: 3.h,
           ),
           Text(
-            'Trial ID',
+            'Study Number',
             style: Theme.of(context)
                 .textTheme
                 .headline1!
@@ -109,12 +110,12 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
           MyTextfield(
             readonly: isEditMode ? true : false,
-            hint: "Trial ID",
+            hint: "Study Number",
             icon: Icons.title,
             showicon: false,
             validator: (value) {
               return value!.isEmpty
-                  ? "Please Enter Your Child's Trial ID"
+                  ? "Please Enter Your Child's Study Number."
                   : null;
             },
             textEditingController: _trialIDcontroller,
@@ -300,6 +301,39 @@ class _AddChildPageState extends State<AddChildPage> {
               recruitedAfterDischarge: recruitedAfterDischarge);
 
           isEditMode
+              ? showDialog<String>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) => AlertDialog(
+                        content: const Text(
+                            "Thank you. Your child's details have been updated successfully."),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              ChildModel updatedChild = ChildModel(
+                                  name: _namecontroller.text,
+                                  dob: DateFormat('yyyy-MM-dd')
+                                      .format(dateOfBirth),
+                                  dischargeDate: DateFormat('yyyy-MM-dd')
+                                      .format(dischargeDate),
+                                  dueDate:
+                                      DateFormat('yyyy-MM-dd').format(dueDate),
+                                  studyID: _trialIDcontroller.text,
+                                  parentID:
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                  id: widget.child!.id,
+                                  recruitedAfterDischarge:
+                                      recruitedAfterDischarge);
+                              Navigator.pushNamed(context, childinfopage,
+                                  arguments: updatedChild);
+                            },
+                            child: const Text('OK'),
+                          )
+                        ],
+                      ))
+              : Navigator.pop(context);
+
+          isEditMode
               ? FireStoreCrud().updateChild(
                   docid: widget.child!.id,
                   name: _namecontroller.text,
@@ -308,13 +342,11 @@ class _AddChildPageState extends State<AddChildPage> {
                   dueDate: DateFormat('yyyy-MM-dd').format(dueDate),
                   recruitedAfterDischarge: recruitedAfterDischarge)
               : FireStoreCrud().addChild(child: child);
-
-          Navigator.pop(context);
         } else {
           print('child does not exist in study');
           MySnackBar.error(
               message:
-                  "Problem with child's trial ID, please check the ID is correct and"
+                  "Problem with child's Study Number, please check the ID is correct and"
                   " try again",
               color: Colors.red,
               context: context);

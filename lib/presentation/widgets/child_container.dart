@@ -31,13 +31,18 @@ class ChildContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            name,
-            style: Theme.of(context).textTheme.headline1!.copyWith(
-                  color: Colors.white,
-                  fontSize: 15.sp,
-                ),
-          ),
+          SizedBox(
+            width: 300.0,
+            child: Text(
+              name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.headline1!.copyWith(
+                    color: Colors.white,
+                    fontSize: 15.sp,
+                  ),
+            ),
+          )
         ],
       ),
     );

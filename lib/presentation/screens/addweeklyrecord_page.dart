@@ -567,6 +567,7 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
 
       showDialog<String>(
           context: context,
+          barrierDismissible: false,
           builder: (BuildContext context) => AlertDialog(
                 content: const Text(
                     "Thank you. Your baby's weight information has been submitted successfully."),

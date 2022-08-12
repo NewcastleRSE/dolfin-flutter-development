@@ -316,9 +316,10 @@ class _AddWeightPageState extends State<AddWeightPage> {
 
       showDialog<String>(
           context: context,
+          barrierDismissible: false,
           builder: (BuildContext context) => AlertDialog(
                 content: const Text(
-                    "Thank you for letting us know. A member of your local clinical team will be in touch to ask you about this."),
+                    "Thank you. Your child's weight has been successfully recorded."),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {

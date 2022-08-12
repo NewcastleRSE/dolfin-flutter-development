@@ -57,10 +57,11 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
     recordDate = isEditMode ? widget.record!.date : widget.date!;
 
-    _moreInfoVisible =
-        (isEditMode && widget.record!.supplement == SupplementOptions.noDose)
-            ? true
-            : false;
+    _moreInfoVisible = (isEditMode &&
+            (widget.record!.supplement == SupplementOptions.noDose ||
+                widget.record!.supplement == SupplementOptions.partialDose))
+        ? true
+        : false;
 
     _otherReasonVisible =
         (isEditMode && widget.record!.reason == ReasonOptions.other)
@@ -456,6 +457,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
       showDialog<String>(
           context: context,
+          barrierDismissible: false,
           builder: (BuildContext context) => AlertDialog(
                 content: Text(thankYouText),
                 actions: <Widget>[

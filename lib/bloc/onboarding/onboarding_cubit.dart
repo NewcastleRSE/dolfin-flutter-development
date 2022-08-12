@@ -10,7 +10,7 @@ part 'onboarding_state.dart';
 class OnboardingCubit extends Cubit<OnboardingState> {
   OnboardingCubit() : super(OnboardingInitial());
 
-  int curruntindext = 0;
+  int currentindex = 0;
 
   Future<void> savepref(String key) async {
     final prefs = await SharedPreferences.getInstance();
@@ -23,19 +23,19 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     return pref;
   }
 
-  void skipindex() {
-    curruntindext = onboardinglist.length - 1;
+  void skipIndex() {
+    currentindex = onboardinglist.length - 1;
 
     emit(SkipIndexState());
   }
 
-  void changeindex() {
-    curruntindext++;
+  void incrementIndex() {
+    currentindex++;
     emit(ChangeCurrentIndexState());
   }
 
-  void removefromindex() {
-    curruntindext--;
+  void decrementIndex() {
+    currentindex--;
     emit(RemoveFromCurrentIndexState());
   }
 }

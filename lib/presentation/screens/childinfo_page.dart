@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -339,20 +340,25 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                       return InkWell(
                                           onTap: () {
                                             record.id == "0"
-                                                ? Navigator.pushNamed(
+                                                ? // New Record
+                                                Navigator.pushNamed(
                                                     context, addrecordpage,
                                                     arguments: <String,
                                                         dynamic>{
                                                         "data": widget.child,
                                                         "date": record.date
                                                       })
-                                                : Navigator.pushNamed(
-                                                    context, addrecordpage,
-                                                    arguments: <String,
-                                                        dynamic>{
-                                                        "data": record,
-                                                        "date": DateTime.now()
-                                                      });
+                                                : //Edit Record
+                                                index <= 1
+                                                    ? Navigator.pushNamed(
+                                                        context, addrecordpage,
+                                                        arguments: <String,
+                                                            dynamic>{
+                                                            "data": record,
+                                                            "date":
+                                                                DateTime.now()
+                                                          })
+                                                    : null;
                                           },
                                           child: index % 2 == 0
                                               ? BounceInLeft(

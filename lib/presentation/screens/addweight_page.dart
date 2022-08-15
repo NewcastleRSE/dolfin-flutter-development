@@ -337,7 +337,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
     var selecteddate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 7)),
+      firstDate: DateTime.parse(widget.child!.dob),
       lastDate: DateTime.now(),
       currentDate: DateTime.now(),
     );

@@ -321,7 +321,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                     Widget _taskcontainer = RecordContainer(
                                         record: record,
                                         child: widget.child,
-                                        editable: index <= 2);
+                                        editable: index <= 1);
                                     return InkWell(
                                         onTap: () {
                                           record.id == "0"

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -313,42 +314,64 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                 List<RecordModel>? records = formatRecordData(
                                     snapshot.data, lastWeek, today);
 
-                                return ListView.builder(
-                                  physics: const BouncingScrollPhysics(),
-                                  itemCount: records!.length,
-                                  itemBuilder: (context, index) {
-                                    var record = records[index];
-                                    Widget _taskcontainer = RecordContainer(
-                                        record: record,
-                                        child: widget.child,
-                                        editable: index <= 2);
-                                    return InkWell(
-                                        onTap: () {
-                                          record.id == "0"
-                                              ? Navigator.pushNamed(
-                                                  context, addrecordpage,
-                                                  arguments: <String, dynamic>{
-                                                      "data": widget.child,
-                                                      "date": record.date
-                                                    })
-                                              : Navigator.pushNamed(
-                                                  context, addrecordpage,
-                                                  arguments: <String, dynamic>{
-                                                      "data": record,
-                                                      "date": DateTime.now()
-                                                    });
-                                        },
-                                        child: index % 2 == 0
-                                            ? BounceInLeft(
-                                                duration: const Duration(
-                                                    milliseconds: 1000),
-                                                child: _taskcontainer)
-                                            : BounceInRight(
-                                                duration: const Duration(
-                                                    milliseconds: 1000),
-                                                child: _taskcontainer));
-                                  },
-                                );
+                                return SingleChildScrollView(
+                                    child: Column(children: [
+                                  Text(
+                                    "Below are your child's supplement records for the last seven days. Tap on a record with a blue button to add/edit that record.",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(fontSize: 14.sp),
+                                  ),
+                                  SizedBox(
+                                    height: 3.h,
+                                  ),
+                                  ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    physics: const BouncingScrollPhysics(),
+                                    itemCount: records!.length,
+                                    itemBuilder: (context, index) {
+                                      var record = records[index];
+                                      Widget _taskcontainer = RecordContainer(
+                                          record: record,
+                                          child: widget.child,
+                                          editable: index <= 1);
+                                      return InkWell(
+                                          onTap: () {
+                                            record.id == "0"
+                                                ? // New Record
+                                                Navigator.pushNamed(
+                                                    context, addrecordpage,
+                                                    arguments: <String,
+                                                        dynamic>{
+                                                        "data": widget.child,
+                                                        "date": record.date
+                                                      })
+                                                : //Edit Record
+                                                index <= 1
+                                                    ? Navigator.pushNamed(
+                                                        context, addrecordpage,
+                                                        arguments: <String,
+                                                            dynamic>{
+                                                            "data": record,
+                                                            "date":
+                                                                DateTime.now()
+                                                          })
+                                                    : null;
+                                          },
+                                          child: index % 2 == 0
+                                              ? BounceInLeft(
+                                                  duration: const Duration(
+                                                      milliseconds: 1000),
+                                                  child: _taskcontainer)
+                                              : BounceInRight(
+                                                  duration: const Duration(
+                                                      milliseconds: 1000),
+                                                  child: _taskcontainer));
+                                    },
+                                  )
+                                ]));
                               },
                             ));
                           }

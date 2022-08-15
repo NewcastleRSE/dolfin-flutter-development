@@ -99,6 +99,16 @@ class _AddChildPageState extends State<AddChildPage> {
             height: 3.h,
           ),
           Text(
+            "Thank you for taking part in the DOLFIN trial. Please enter your child's details below. You will need to know their study number, which should have been provided when you registered.",
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
+          Text(
             'Study Number',
             style: Theme.of(context)
                 .textTheme
@@ -164,7 +174,7 @@ class _AddChildPageState extends State<AddChildPage> {
             showicon: false,
             validator: (value) {},
             ontap: () {
-              _showdatepickerdued();
+              !isEditMode ? _showdatepickerdued() : null;
             },
             textEditingController: TextEditingController(),
             keyboardtype: TextInputType.none,
@@ -189,7 +199,7 @@ class _AddChildPageState extends State<AddChildPage> {
             showicon: false,
             validator: (value) {},
             ontap: () {
-              _showdatepickerdob();
+              !isEditMode ? _showdatepickerdob() : null;
             },
             textEditingController: TextEditingController(),
             keyboardtype: TextInputType.none,
@@ -214,50 +224,12 @@ class _AddChildPageState extends State<AddChildPage> {
             showicon: false,
             validator: (value) {},
             ontap: () {
-              _showdatepickerdd();
+              !isEditMode ? _showdatepickerdd() : null;
             },
             textEditingController: TextEditingController(),
             keyboardtype: TextInputType.none,
           ),
-          SizedBox(
-            height: 3.h,
-          ),
-          Text(
-            'Were you recruited to the study before hospital discharge?',
-            style: Theme.of(context)
-                .textTheme
-                .headline1!
-                .copyWith(fontSize: 14.sp),
-          ),
-          SizedBox(
-            height: 2.h,
-          ),
-          Center(
-            child: ToggleSwitch(
-              minWidth: 90.0,
-              cornerRadius: 20.0,
-              activeBgColors: [
-                [AppColours.light_blue],
-                [AppColours.light_blue]
-              ],
-              activeFgColor: Colors.white,
-              inactiveBgColor: Colors.grey,
-              inactiveFgColor: Colors.white,
-              initialLabelIndex: 0,
-              totalSwitches: 2,
-              labels: ['Yes', 'No'],
-              radiusStyle: true,
-              onToggle: (index) {
-                // index 0 = recruited before discharge
-                // index 1 = recruited after discharge
-                if (index == 1) {
-                  recruitedAfterDischarge = true;
-                } else {
-                  recruitedAfterDischarge = false;
-                }
-              },
-            ),
-          ),
+          _showRecruitmentOption(),
           SizedBox(
             height: 5.h,
           ),
@@ -359,7 +331,7 @@ class _AddChildPageState extends State<AddChildPage> {
     var selecteddate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2022),
+      firstDate: DateTime(2021),
       lastDate: DateTime.now(),
       currentDate: DateTime.now(),
     );
@@ -372,7 +344,7 @@ class _AddChildPageState extends State<AddChildPage> {
     var selecteddate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2022),
+      firstDate: DateTime(2021),
       lastDate: DateTime.now(),
       currentDate: DateTime.now(),
     );
@@ -385,13 +357,59 @@ class _AddChildPageState extends State<AddChildPage> {
     var selecteddate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2022),
+      firstDate: DateTime(2021),
       lastDate: DateTime.now(),
       currentDate: DateTime.now(),
     );
     setState(() {
       selecteddate != null ? dischargeDate = selecteddate : null;
     });
+  }
+
+  Widget _showRecruitmentOption() {
+    if (!isEditMode) {
+      return Column(children: [
+        SizedBox(
+          height: 3.h,
+        ),
+        Text(
+          'Were you recruited to the study before hospital discharge?',
+          style:
+              Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14.sp),
+        ),
+        SizedBox(
+          height: 2.h,
+        ),
+        Center(
+          child: ToggleSwitch(
+            minWidth: 90.0,
+            cornerRadius: 20.0,
+            activeBgColors: [
+              [AppColours.light_blue],
+              [AppColours.light_blue]
+            ],
+            activeFgColor: Colors.white,
+            inactiveBgColor: Colors.grey,
+            inactiveFgColor: Colors.white,
+            initialLabelIndex: 0,
+            totalSwitches: 2,
+            labels: ['Yes', 'No'],
+            radiusStyle: true,
+            onToggle: (index) {
+              // index 0 = recruited before discharge
+              // index 1 = recruited after discharge
+              if (index == 1) {
+                recruitedAfterDischarge = true;
+              } else {
+                recruitedAfterDischarge = false;
+              }
+            },
+          ),
+        ),
+      ]);
+    } else {
+      return Container();
+    }
   }
 
   Row _buildAppBar(BuildContext context) {

@@ -250,14 +250,14 @@ class _AddWeightPageState extends State<AddWeightPage> {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: 'The DOLFIN supplement dosing chart can be seen at ',
+                  text: 'The DOLFIN supplement dosing chart can be found ',
                   style: Theme.of(context)
                       .textTheme
                       .headline1!
                       .copyWith(fontSize: 14.sp),
                 ),
                 TextSpan(
-                  text: '[URL]',
+                  text: '[here]',
                   style: Theme.of(context)
                       .textTheme
                       .headline1!
@@ -265,7 +265,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       launch(
-                          'https://docs.flutter.io/flutter/services/UrlLauncher-class.html');
+                          'https://www.npeu.ox.ac.uk/dolfin/parents/resources');
                     },
                 ),
                 TextSpan(
@@ -337,7 +337,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
     var selecteddate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 7)),
+      firstDate: DateTime.parse(widget.child!.dob),
       lastDate: DateTime.now(),
       currentDate: DateTime.now(),
     );

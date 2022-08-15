@@ -419,10 +419,10 @@ class _HomePageState extends State<HomePage> {
                           .copyWith(fontSize: 14.sp),
                     ),
                     SizedBox(
-                      height: 3.h,
+                      height: 5.h,
                     ),
                     Text(
-                      'User Display Name',
+                      'User display name:',
                       style: Theme.of(context)
                           .textTheme
                           .headline2!
@@ -439,12 +439,21 @@ class _HomePageState extends State<HomePage> {
                             validator: (value) {},
                             textEditingController: _usercontroller),
                     SizedBox(
-                      height: 3.h,
+                      height: 5.h,
                     ),
-                    Text('I want to receive reminders: '),
+                    Text(
+                      'I want to receive reminders:',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline2!
+                          .copyWith(fontSize: 12.sp),
+                    ),
+                    SizedBox(
+                      height: 2.h,
+                    ),
                     notificationsSelector(),
                     SizedBox(
-                      height: 3.h,
+                      height: 4.h,
                     ),
                     (user)
                         ? Container()
@@ -589,7 +598,7 @@ class _notificationsSelectorState extends State<notificationsSelector> {
     return Column(
       children: <Widget>[
         ListTile(
-          title: const Text('daily'),
+          title: const Text('Daily'),
           leading: Radio(
             value: NotificationsOptions.daily,
             groupValue: _notifications,
@@ -608,7 +617,7 @@ class _notificationsSelectorState extends State<notificationsSelector> {
           ),
         ),
         ListTile(
-          title: const Text('weekly'),
+          title: const Text('Weekly'),
           leading: Radio(
             value: NotificationsOptions.weekly,
             groupValue: _notifications,

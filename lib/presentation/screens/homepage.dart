@@ -310,34 +310,40 @@ class _HomePageState extends State<HomePage> {
                           }
 
                           return snapshot.data!.isNotEmpty
-                              ? ListView.builder(
-                                  physics: const BouncingScrollPhysics(),
-                                  itemCount: snapshot.data!.length,
-                                  itemBuilder: (context, index) {
-                                    var child = snapshot.data![index];
-                                    Widget _childcontainer = ChildContainer(
-                                      id: child.id,
-                                      studyID: child.studyID,
-                                      name: child.name,
-                                      dob: child.dob,
-                                    );
-                                    return InkWell(
-                                        onTap: () {
-                                          Navigator.pushNamed(
-                                              context, childinfopage,
-                                              arguments: child);
-                                        },
-                                        child: index % 2 == 0
-                                            ? BounceInLeft(
-                                                duration: const Duration(
-                                                    milliseconds: 1000),
-                                                child: _childcontainer)
-                                            : BounceInRight(
-                                                duration: const Duration(
-                                                    milliseconds: 1000),
-                                                child: _childcontainer));
-                                  },
-                                )
+                              ? Column(children: [
+                                  _showInstructionText(
+                                      context, snapshot.data!.isNotEmpty),
+                                  ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    physics: const BouncingScrollPhysics(),
+                                    itemCount: snapshot.data!.length,
+                                    itemBuilder: (context, index) {
+                                      var child = snapshot.data![index];
+                                      Widget _childcontainer = ChildContainer(
+                                        id: child.id,
+                                        studyID: child.studyID,
+                                        name: child.name,
+                                        dob: child.dob,
+                                      );
+                                      return InkWell(
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                                context, childinfopage,
+                                                arguments: child);
+                                          },
+                                          child: index % 2 == 0
+                                              ? BounceInLeft(
+                                                  duration: const Duration(
+                                                      milliseconds: 1000),
+                                                  child: _childcontainer)
+                                              : BounceInRight(
+                                                  duration: const Duration(
+                                                      milliseconds: 1000),
+                                                  child: _childcontainer));
+                                    },
+                                  )
+                                ])
                               : _nodatawidget();
                         },
                       )),
@@ -517,7 +523,7 @@ class _HomePageState extends State<HomePage> {
           ),
           SizedBox(height: 3.h),
           Text(
-            'You have not added any children, add a child to continue',
+            'You have not added any children to the app yet, please add a child to continue',
             textAlign: TextAlign.center,
             style: Theme.of(context)
                 .textTheme
@@ -624,6 +630,24 @@ class _notificationsSelectorState extends State<notificationsSelector> {
     );
   }
 }
+
+Widget _showInstructionText(BuildContext context, bool isNotEmpty) {
+  if (isNotEmpty) {
+    return Column(children: [
+      Text(
+        "Tap on your child's name below to submit data or view their records.",
+        style:
+            Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 14.sp),
+      ),
+      SizedBox(
+        height: 3.h,
+      ),
+    ]);
+  } else {
+    return Container();
+  }
+}
+
 //
 // class _dailyNotificationsCheckState extends State<dailyNotificationsCheck> {
 //   bool? isChecked = true;

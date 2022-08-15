@@ -359,14 +359,14 @@ class _AddRecordPageState extends State<AddRecordPage> {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: 'The DOLFIN supplement dosing chart can be seen at ',
+                  text: 'The DOLFIN supplement dosing chart can be found ',
                   style: Theme.of(context)
                       .textTheme
                       .headline1!
                       .copyWith(fontSize: 14.sp),
                 ),
                 TextSpan(
-                  text: '[URL]',
+                  text: '[here]',
                   style: Theme.of(context)
                       .textTheme
                       .headline1!
@@ -374,7 +374,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       launch(
-                          'https://docs.flutter.io/flutter/services/UrlLauncher-class.html');
+                          'https://www.npeu.ox.ac.uk/dolfin/parents/resources');
                     },
                 ),
                 TextSpan(

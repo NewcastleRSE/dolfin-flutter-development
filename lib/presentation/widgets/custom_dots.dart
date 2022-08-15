@@ -9,7 +9,7 @@ class CustomDots extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 16.w,
+      width: 19.w,
       height: 10.h,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

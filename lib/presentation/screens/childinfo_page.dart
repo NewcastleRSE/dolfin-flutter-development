@@ -317,7 +317,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                 return SingleChildScrollView(
                                     child: Column(children: [
                                   Text(
-                                    "Below are your child's supplement records for the last seven days. Tap on a record with a + or pen icon to add or edit that record.",
+                                    "Below are your child's supplement records for the last seven days. Tap on a record with a blue button to add/edit that record.",
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyMedium!

@@ -80,6 +80,16 @@ class FireStoreCrud {
             .toList());
   }
 
+  Stream<List<WeightModel>> getWeights({required String childID}) {
+    return _firestore
+        .collection('weights')
+        .where('child_id', isEqualTo: childID)
+        .snapshots(includeMetadataChanges: true)
+        .map((snapshot) => snapshot.docs
+            .map((doc) => WeightModel.fromjson(doc.data(), doc.id))
+            .toList());
+  }
+
   Stream<List<RecordModel>> getRecordsRange(
       {required String childID,
       required DateTime start,

@@ -26,7 +26,7 @@ class WeightModel {
         studyID: json['study_id'],
         date: timestamp.toDate(),
         weight: json['weight'],
-        numScoops: json[['num_scoops']]);
+        numScoops: json['num_scoops']);
   }
 
   Map<String, dynamic> tojson() {

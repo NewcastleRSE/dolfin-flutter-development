@@ -330,6 +330,7 @@ class _AddChildPageState extends State<AddChildPage> {
   _showdatepickerdob() async {
     var selecteddate = await showDatePicker(
       context: context,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
       initialDate: DateTime.now(),
       firstDate: DateTime(2021),
       lastDate: DateTime.now(),
@@ -343,6 +344,7 @@ class _AddChildPageState extends State<AddChildPage> {
   _showdatepickerdued() async {
     var selecteddate = await showDatePicker(
       context: context,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
       initialDate: DateTime.now(),
       firstDate: DateTime(2021),
       lastDate: DateTime.now(),
@@ -356,6 +358,7 @@ class _AddChildPageState extends State<AddChildPage> {
   _showdatepickerdd() async {
     var selecteddate = await showDatePicker(
       context: context,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
       initialDate: DateTime.now(),
       firstDate: DateTime(2021),
       lastDate: DateTime.now(),

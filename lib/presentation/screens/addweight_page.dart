@@ -335,12 +335,12 @@ class _AddWeightPageState extends State<AddWeightPage> {
 
   _showdatepicker() async {
     var selecteddate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.parse(widget.child!.dob),
-      lastDate: DateTime.now(),
-      currentDate: DateTime.now(),
-    );
+        context: context,
+        initialEntryMode: DatePickerEntryMode.calendarOnly,
+        initialDate: DateTime.now(),
+        firstDate: DateTime.parse(widget.child!.dob),
+        lastDate: DateTime.now(),
+        currentDate: DateTime.now());
     setState(() {
       selecteddate != null ? recordDate = selecteddate : null;
     });

@@ -9,3 +9,4 @@ const String childinfopage = '/childinfo_page';
 const String addrecordpage = '/addrecord_page';
 const String addweightpage = '/addweight_page';
 const String addweeklyrecordpage = '/addweeklyrecord_page';
+const String weightrecordspage = '/weightRecords_page';

@@ -12,6 +12,7 @@ import 'package:dolfin_flutter/presentation/screens/onboarding.dart';
 import 'package:dolfin_flutter/presentation/screens/signup_page.dart';
 import 'package:dolfin_flutter/presentation/screens/welcome_page.dart';
 import 'package:dolfin_flutter/shared/constants/strings.dart';
+import 'package:dolfin_flutter/presentation/screens/weightRecords_page.dart';
 
 import '../presentation/screens/resetPassword_page.dart';
 
@@ -93,6 +94,14 @@ class AppRoute {
                       date: arg["date"] as DateTime?,
                     ));
           }
+        }
+      case weightrecordspage:
+        {
+          final child = settings.arguments as ChildModel?;
+          return MaterialPageRoute(
+              builder: (_) => WeightRecordsPage(
+                    child: child,
+                  ));
         }
       default:
         throw 'No Page Found!!';

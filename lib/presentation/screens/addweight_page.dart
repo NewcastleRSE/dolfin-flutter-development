@@ -91,6 +91,41 @@ class _AddWeightPageState extends State<AddWeightPage> {
             height: 3.h,
           ),
           Text(
+            'Date',
+            style: Theme.of(context)
+                .textTheme
+                .headline1!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 1.h,
+          ),
+          Text(
+            'When was this measurement recorded?',
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 2.h,
+          ),
+          MyTextfield(
+            hint: DateFormat('dd/MM/yyyy').format(recordDate),
+            icon: Icons.calendar_today,
+            readonly: true,
+            showicon: false,
+            validator: (value) {},
+            ontap: () {
+              _showdatepicker();
+            },
+            textEditingController: TextEditingController(),
+            keyboardtype: TextInputType.none,
+          ),
+          SizedBox(
+            height: 4.h,
+          ),
+          Text(
             'Weight',
             style: Theme.of(context)
                 .textTheme
@@ -124,41 +159,6 @@ class _AddWeightPageState extends State<AddWeightPage> {
               return null;
             },
             textEditingController: _weightcontroller,
-          ),
-          SizedBox(
-            height: 4.h,
-          ),
-          Text(
-            'Date',
-            style: Theme.of(context)
-                .textTheme
-                .headline1!
-                .copyWith(fontSize: 14.sp),
-          ),
-          SizedBox(
-            height: 1.h,
-          ),
-          Text(
-            'When was this measurement recorded?',
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(fontSize: 14.sp),
-          ),
-          SizedBox(
-            height: 2.h,
-          ),
-          MyTextfield(
-            hint: DateFormat('dd/MM/yyyy').format(recordDate),
-            icon: Icons.calendar_today,
-            readonly: true,
-            showicon: false,
-            validator: (value) {},
-            ontap: () {
-              _showdatepicker();
-            },
-            textEditingController: TextEditingController(),
-            keyboardtype: TextInputType.none,
           ),
           SizedBox(
             height: 4.h,

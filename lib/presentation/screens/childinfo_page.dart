@@ -201,7 +201,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, addweightpage,
+                              Navigator.pushNamed(context, weightrecordspage,
                                   arguments: widget.child);
                             },
                             child: Icon(Icons.add_chart_rounded,

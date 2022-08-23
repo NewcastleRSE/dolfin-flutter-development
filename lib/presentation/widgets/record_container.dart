@@ -10,14 +10,17 @@ import 'package:sizer/sizer.dart';
 class RecordContainer extends StatelessWidget {
   final RecordModel record;
   final ChildModel? child;
-  final bool editable;
+  late bool editable;
 
-  const RecordContainer(
-      {Key? key,
-      required this.child,
-      required this.record,
-      required this.editable})
-      : super(key: key);
+  RecordContainer({Key? key, required this.child, required this.record})
+      : super(key: key) {
+    editable = false;
+
+    var difference = DateTime.now().difference(record.dateSubmitted).inDays;
+    if (difference < 2) {
+      editable = true;
+    }
+  }
 
   String supplementToString(SupplementOptions? options) {
     if (record.id == "0") {

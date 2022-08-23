@@ -202,7 +202,7 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                                     height: 4.h,
                                   ),
                                   Text(
-                                    "Below are your child's weight records. Tap on a record with a blue button to edit that record.",
+                                    "Below are your child's weight records. \n\nTap on a highlighted record to edit that record. (Only records created in the last 24 hours can be edited)",
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyMedium!
@@ -212,15 +212,19 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                                     height: 3.h,
                                   ),
                                   Table(
+                                    border:
+                                        TableBorder.all(color: AppColours.grey),
                                     columnWidths: {
                                       0: FlexColumnWidth(3),
                                       1: FlexColumnWidth(2),
                                       2: FlexColumnWidth(2),
+                                      3: FlexColumnWidth(1)
                                     },
                                     children: [
                                       TableRow(children: [
                                         TableCell(
                                             child: Container(
+                                                color: AppColours.light_blue,
                                                 padding: EdgeInsets.all(10.0),
                                                 child: Text("Date",
                                                     textAlign: TextAlign.center,
@@ -230,10 +234,12 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                                                         .copyWith(
                                                             fontSize: 14.sp,
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .bold)))),
+                                                                FontWeight.bold,
+                                                            color: AppColours
+                                                                .white)))),
                                         TableCell(
                                             child: Container(
+                                                color: AppColours.light_blue,
                                                 padding: EdgeInsets.all(10.0),
                                                 child: Text("Weight",
                                                     textAlign: TextAlign.center,
@@ -243,10 +249,12 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                                                         .copyWith(
                                                             fontSize: 14.sp,
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .bold)))),
+                                                                FontWeight.bold,
+                                                            color: AppColours
+                                                                .white)))),
                                         TableCell(
                                             child: Container(
+                                                color: AppColours.light_blue,
                                                 padding: EdgeInsets.all(10.0),
                                                 child: Text("Scoops",
                                                     textAlign: TextAlign.center,
@@ -256,8 +264,9 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                                                         .copyWith(
                                                             fontSize: 14.sp,
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .bold)))),
+                                                                FontWeight.bold,
+                                                            color: AppColours
+                                                                .white)))),
                                       ]),
                                     ],
                                   ),
@@ -268,55 +277,109 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                                       itemCount: records.length,
                                       itemBuilder: (context, index) {
                                         var record = records[index];
-                                        return Table(columnWidths: {
-                                          0: FlexColumnWidth(3),
-                                          1: FlexColumnWidth(2),
-                                          2: FlexColumnWidth(2),
-                                        }, children: [
-                                          TableRow(children: [
-                                            TableCell(
-                                                child: Container(
-                                                    padding:
-                                                        EdgeInsets.all(10.0),
-                                                    child: Text(
-                                                        formatDate(record.date),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline2!
-                                                            .copyWith(
-                                                                fontSize:
-                                                                    14.sp)))),
-                                            TableCell(
-                                                child: Container(
-                                                    padding:
-                                                        EdgeInsets.all(10.0),
-                                                    child: Text(record.weight,
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline2!
-                                                            .copyWith(
-                                                                fontSize:
-                                                                    14.sp)))),
-                                            TableCell(
-                                                child: Container(
-                                                    padding:
-                                                        EdgeInsets.all(10.0),
-                                                    child: Text(
-                                                        record.numScoops,
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline2!
-                                                            .copyWith(
-                                                                fontSize:
-                                                                    14.sp)))),
-                                          ])
-                                        ]);
+                                        var editable = DateTime.now()
+                                                .difference(
+                                                    record.dateSubmitted)
+                                                .inDays <
+                                            2;
+                                        return InkWell(
+                                            onTap: () {
+                                              editable
+                                                  ? Navigator.pushNamed(
+                                                      context, addweightpage,
+                                                      arguments: {
+                                                          "record": record,
+                                                          "child": widget.child
+                                                        })
+                                                  : null;
+                                            },
+                                            child: Table(
+                                                border: TableBorder.all(
+                                                    color: AppColours.grey),
+                                                columnWidths: {
+                                                  0: FlexColumnWidth(3),
+                                                  1: FlexColumnWidth(2),
+                                                  2: FlexColumnWidth(2),
+                                                  3: FlexColumnWidth(1),
+                                                },
+                                                children: [
+                                                  TableRow(children: [
+                                                    TableCell(
+                                                        child: Container(
+                                                            color: editable
+                                                                ? AppColours
+                                                                    .lighter_blue
+                                                                : AppColours
+                                                                    .white,
+                                                            padding: EdgeInsets.all(
+                                                                10.0),
+                                                            child: Text(
+                                                                formatDate(record
+                                                                    .date),
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .headline2!
+                                                                    .copyWith(
+                                                                        fontSize:
+                                                                            14.sp,
+                                                                        color: editable ? AppColours.grey : AppColours.grey)))),
+                                                    TableCell(
+                                                        child: Container(
+                                                            color: editable
+                                                                ? AppColours
+                                                                    .lighter_blue
+                                                                : AppColours
+                                                                    .white,
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    10.0),
+                                                            child: Text(
+                                                                record.weight,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .headline2!
+                                                                    .copyWith(
+                                                                        fontSize: 14
+                                                                            .sp,
+                                                                        color: editable
+                                                                            ? AppColours.grey
+                                                                            : AppColours.grey)))),
+                                                    TableCell(
+                                                        child: Container(
+                                                            color: editable
+                                                                ? AppColours
+                                                                    .lighter_blue
+                                                                : AppColours
+                                                                    .white,
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    10.0),
+                                                            child: Text(
+                                                                record
+                                                                    .numScoops,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .headline2!
+                                                                    .copyWith(
+                                                                        fontSize: 14
+                                                                            .sp,
+                                                                        color: editable
+                                                                            ? AppColours.grey
+                                                                            : AppColours.grey)))),
+                                                  ])
+                                                ]));
                                       }),
                                   SizedBox(
                                     height: 5.h,

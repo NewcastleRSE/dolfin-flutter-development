@@ -150,6 +150,20 @@ class FireStoreCrud {
     });
   }
 
+  Future<void> updateWeight({
+    required DateTime date,
+    required String numScoops,
+    weight,
+    docid,
+  }) async {
+    var recordcollection = _firestore.collection('weights');
+    await recordcollection.doc(docid).update({
+      'date': date,
+      'num_scoops': numScoops,
+      'weight': weight,
+    });
+  }
+
   Future<void> deleteChild({required String docid}) async {
     var childcollection = _firestore.collection('children');
     await childcollection.doc(docid).delete();

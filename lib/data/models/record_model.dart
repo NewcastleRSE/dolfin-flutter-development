@@ -18,6 +18,7 @@ class RecordModel {
   final String child;
   final String studyID;
   final DateTime date;
+  final DateTime dateSubmitted;
   final SupplementOptions? supplement;
   final ReasonOptions? reason;
   final String otherReason;
@@ -27,18 +28,23 @@ class RecordModel {
     required this.child,
     required this.studyID,
     required this.date,
+    required this.dateSubmitted,
     required this.supplement,
     required this.reason,
     required this.otherReason,
   });
 
   factory RecordModel.fromjson(Map<String, dynamic> json, String id) {
-    final Timestamp timestamp = json['date'];
+    final Timestamp date = json['date'];
+    final Timestamp submitted = json.containsKey('date_submitted')
+        ? json['date_submitted']
+        : json['date'];
     return RecordModel(
         id: id,
         child: json['child_id'],
         studyID: json['study_id'],
-        date: timestamp.toDate(),
+        date: date.toDate(),
+        dateSubmitted: submitted.toDate(),
         supplement: deserialiseSupplement(json['supplement']),
         reason: deserialiseReason(json['reason']),
         otherReason: json['other_reason']);
@@ -49,6 +55,7 @@ class RecordModel {
       'child_id': child,
       'study_id': studyID,
       'date': date,
+      'date_submitted': dateSubmitted,
       'supplement': supplement.toString(),
       'reason': reason.toString(),
       'other_reason': otherReason,

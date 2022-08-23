@@ -201,7 +201,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, addweightpage,
+                              Navigator.pushNamed(context, weightrecordspage,
                                   arguments: widget.child);
                             },
                             child: Icon(Icons.add_chart_rounded,
@@ -334,9 +334,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                     itemBuilder: (context, index) {
                                       var record = records[index];
                                       Widget _taskcontainer = RecordContainer(
-                                          record: record,
-                                          child: widget.child,
-                                          editable: index <= 1);
+                                          record: record, child: widget.child);
                                       return InkWell(
                                           onTap: () {
                                             record.id == "0"
@@ -411,6 +409,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
             child: child,
             studyID: studyID,
             date: currentDate,
+            dateSubmitted: DateTime.now(),
             supplement: SupplementOptions.fullDose,
             reason: ReasonOptions.forgot,
             otherReason: ""));

@@ -439,6 +439,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
       RecordModel record = RecordModel(
         date: recordDate,
+        dateSubmitted: DateTime.now(),
         supplement: _supplement,
         reason: _reason,
         otherReason: _reasoncontroller.text,

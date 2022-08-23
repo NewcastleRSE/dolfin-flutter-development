@@ -514,7 +514,7 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
             height: 3.h,
           ),
           Text(
-            "Thank you for completing this weekly supplement check. The information you have given will XXXX. Don’t forget to complete the form again on the same day next week; we will send you a reminder to do this.",
+            "Thank you for completing this weekly supplement check. Don’t forget to complete the form again on the same day next week; we will send you a reminder to do this.",
             style: Theme.of(context)
                 .textTheme
                 .headline1!
@@ -570,7 +570,7 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
           barrierDismissible: false,
           builder: (BuildContext context) => AlertDialog(
                 content: const Text(
-                    "Thank you. Your baby's weight information has been submitted successfully."),
+                    "Thank you. Your baby's supplement information has been submitted successfully."),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {

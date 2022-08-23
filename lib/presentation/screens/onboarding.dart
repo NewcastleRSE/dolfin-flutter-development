@@ -68,71 +68,73 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    _pageController.previousPage(
-                                        duration:
-                                            const Duration(milliseconds: 500),
-                                        curve: Curves.easeIn);
+                                SizedBox(
+                                  width: 20.w,
+                                  child: InkWell(
+                                    onTap: () {
+                                      _pageController.previousPage(
+                                          duration:
+                                              const Duration(milliseconds: 500),
+                                          curve: Curves.easeIn);
 
-                                    cubit.currentindex > 0
-                                        ? cubit.decrementIndex()
-                                        : null;
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 20),
-                                    child: Text(
-                                      'Back',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline1
-                                          ?.copyWith(
-                                            fontSize: 13.sp,
-                                            color: cubit.currentindex != 0
-                                                ? AppColours.white
-                                                : AppColours.dark_blue,
-                                          ),
+                                      cubit.currentindex > 0
+                                          ? cubit.decrementIndex()
+                                          : null;
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 20),
+                                      child: Text(
+                                        'Back',
+                                        textAlign: TextAlign.left,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline1
+                                            ?.copyWith(
+                                              fontSize: 13.sp,
+                                              color: cubit.currentindex != 0
+                                                  ? AppColours.white
+                                                  : AppColours.dark_blue,
+                                            ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 10.w,
                                 ),
                                 CustomDots(myindex: cubit.currentindex),
                                 SizedBox(
-                                  width: 10.w,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    _pageController.animateToPage(
-                                        onboardinglist.length - 1,
-                                        duration:
-                                            const Duration(milliseconds: 500),
-                                        curve: Curves.easeOut);
-                                    cubit.currentindex <
-                                            onboardinglist.length - 1
-                                        ? cubit.skipIndex()
-                                        : null;
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 20),
-                                    child: Text(
-                                      'Skip',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline1
-                                          ?.copyWith(
-                                            fontSize: 13.sp,
-                                            color: cubit.currentindex !=
-                                                    onboardinglist.length - 1
-                                                ? AppColours.white
-                                                : AppColours.dark_blue,
-                                          ),
+                                  width: 20.w,
+                                  child: InkWell(
+                                    onTap: () {
+                                      _pageController.animateToPage(
+                                          onboardinglist.length - 1,
+                                          duration:
+                                              const Duration(milliseconds: 500),
+                                          curve: Curves.easeOut);
+                                      cubit.currentindex <
+                                              onboardinglist.length - 1
+                                          ? cubit.skipIndex()
+                                          : null;
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 20),
+                                      child: Text(
+                                        'Skip',
+                                        textAlign: TextAlign.right,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline1
+                                            ?.copyWith(
+                                              fontSize: 13.sp,
+                                              color: cubit.currentindex !=
+                                                      onboardinglist.length - 1
+                                                  ? AppColours.white
+                                                  : AppColours.dark_blue,
+                                            ),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                )
                               ],
                             )
                           ],

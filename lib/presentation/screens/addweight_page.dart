@@ -14,9 +14,11 @@ import 'package:url_launcher/url_launcher.dart';
 class AddWeightPage extends StatefulWidget {
   final ChildModel? child;
   final DateTime? date;
+  final WeightModel? record;
 
   const AddWeightPage({
     this.child,
+    this.record,
     this.date,
     Key? key,
   }) : super(key: key);
@@ -26,24 +28,25 @@ class AddWeightPage extends StatefulWidget {
 }
 
 class _AddWeightPageState extends State<AddWeightPage> {
+  get isEditMode => widget.record != null;
   late String _childStudyID;
 
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _weightcontroller;
-  late DateTime recordDate;
+  late DateTime _recordDate;
   late String _dropdownvalue;
 
   @override
   void initState() {
     super.initState();
 
-    _weightcontroller = TextEditingController(text: '');
-    recordDate = DateTime.now();
-
-    _childStudyID = widget.child!.studyID;
-
-    _dropdownvalue = "1";
+    _weightcontroller = isEditMode
+        ? TextEditingController(text: widget.record!.weight)
+        : TextEditingController(text: '');
+    _recordDate = isEditMode ? widget.record!.date : DateTime.now();
+    _childStudyID = isEditMode ? widget.record!.studyID : widget.child!.studyID;
+    _dropdownvalue = isEditMode ? widget.record!.numScoops : "1";
   }
 
   @override
@@ -91,6 +94,41 @@ class _AddWeightPageState extends State<AddWeightPage> {
             height: 3.h,
           ),
           Text(
+            'Date',
+            style: Theme.of(context)
+                .textTheme
+                .headline1!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 1.h,
+          ),
+          Text(
+            'When was this measurement recorded?',
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 2.h,
+          ),
+          MyTextfield(
+            hint: DateFormat('dd/MM/yyyy').format(_recordDate),
+            icon: Icons.calendar_today,
+            readonly: true,
+            showicon: false,
+            validator: (value) {},
+            ontap: () {
+              _showdatepicker();
+            },
+            textEditingController: TextEditingController(),
+            keyboardtype: TextInputType.none,
+          ),
+          SizedBox(
+            height: 4.h,
+          ),
+          Text(
             'Weight',
             style: Theme.of(context)
                 .textTheme
@@ -124,41 +162,6 @@ class _AddWeightPageState extends State<AddWeightPage> {
               return null;
             },
             textEditingController: _weightcontroller,
-          ),
-          SizedBox(
-            height: 4.h,
-          ),
-          Text(
-            'Date',
-            style: Theme.of(context)
-                .textTheme
-                .headline1!
-                .copyWith(fontSize: 14.sp),
-          ),
-          SizedBox(
-            height: 1.h,
-          ),
-          Text(
-            'When was this measurement recorded?',
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(fontSize: 14.sp),
-          ),
-          SizedBox(
-            height: 2.h,
-          ),
-          MyTextfield(
-            hint: DateFormat('dd/MM/yyyy').format(recordDate),
-            icon: Icons.calendar_today,
-            readonly: true,
-            showicon: false,
-            validator: (value) {},
-            ontap: () {
-              _showdatepicker();
-            },
-            textEditingController: TextEditingController(),
-            keyboardtype: TextInputType.none,
           ),
           SizedBox(
             height: 4.h,
@@ -305,14 +308,21 @@ class _AddWeightPageState extends State<AddWeightPage> {
   _addWeight() {
     if (_formKey.currentState!.validate()) {
       WeightModel record = WeightModel(
-        date: recordDate,
+        date: _recordDate,
+        dateSubmitted: DateTime.now(),
         weight: _weightcontroller.text,
         child: widget.child!.id,
         studyID: widget.child!.studyID,
         numScoops: _dropdownvalue,
         id: '',
       );
-      FireStoreCrud().addWeight(record: record);
+      isEditMode
+          ? FireStoreCrud().updateWeight(
+              docid: widget.record!.id,
+              date: record.date,
+              weight: record.weight,
+              numScoops: record.numScoops)
+          : FireStoreCrud().addWeight(record: record);
 
       showDialog<String>(
           context: context,
@@ -335,14 +345,14 @@ class _AddWeightPageState extends State<AddWeightPage> {
 
   _showdatepicker() async {
     var selecteddate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.parse(widget.child!.dob),
-      lastDate: DateTime.now(),
-      currentDate: DateTime.now(),
-    );
+        context: context,
+        initialEntryMode: DatePickerEntryMode.calendarOnly,
+        initialDate: DateTime.now(),
+        firstDate: DateTime.parse(widget.child!.dob),
+        lastDate: DateTime.now(),
+        currentDate: isEditMode ? widget.record!.date : DateTime.now());
     setState(() {
-      selecteddate != null ? recordDate = selecteddate : null;
+      selecteddate != null ? _recordDate = selecteddate : null;
     });
   }
 
@@ -360,7 +370,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
           ),
         ),
         Text(
-          'Baby Weight Check',
+          isEditMode ? 'Edit Weight Record' : 'Baby Weight Check',
           style:
               Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14.sp),
         ),

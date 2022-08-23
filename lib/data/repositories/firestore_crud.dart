@@ -80,6 +80,16 @@ class FireStoreCrud {
             .toList());
   }
 
+  Stream<List<WeightModel>> getWeights({required String childID}) {
+    return _firestore
+        .collection('weights')
+        .where('child_id', isEqualTo: childID)
+        .snapshots(includeMetadataChanges: true)
+        .map((snapshot) => snapshot.docs
+            .map((doc) => WeightModel.fromjson(doc.data(), doc.id))
+            .toList());
+  }
+
   Stream<List<RecordModel>> getRecordsRange(
       {required String childID,
       required DateTime start,
@@ -137,6 +147,20 @@ class FireStoreCrud {
       'supplement': supplement,
       'reason': reason,
       'other_reason': otherReason
+    });
+  }
+
+  Future<void> updateWeight({
+    required DateTime date,
+    required String numScoops,
+    weight,
+    docid,
+  }) async {
+    var recordcollection = _firestore.collection('weights');
+    await recordcollection.doc(docid).update({
+      'date': date,
+      'num_scoops': numScoops,
+      'weight': weight,
     });
   }
 

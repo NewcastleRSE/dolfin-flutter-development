@@ -1,5 +1,6 @@
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/data/models/record_model.dart';
+import 'package:dolfin_flutter/data/models/weight_model.dart';
 import 'package:dolfin_flutter/presentation/screens/addrecord_page.dart';
 import 'package:dolfin_flutter/presentation/screens/addweeklyrecord_page.dart';
 import 'package:dolfin_flutter/presentation/screens/addweight_page.dart';
@@ -12,6 +13,7 @@ import 'package:dolfin_flutter/presentation/screens/onboarding.dart';
 import 'package:dolfin_flutter/presentation/screens/signup_page.dart';
 import 'package:dolfin_flutter/presentation/screens/welcome_page.dart';
 import 'package:dolfin_flutter/shared/constants/strings.dart';
+import 'package:dolfin_flutter/presentation/screens/weightRecords_page.dart';
 
 import '../presentation/screens/resetPassword_page.dart';
 
@@ -62,11 +64,19 @@ class AppRoute {
         }
       case addweightpage:
         {
-          final child = settings.arguments as ChildModel?;
-          return MaterialPageRoute(
-              builder: (_) => AddWeightPage(
-                    child: child,
-                  ));
+          if (settings.arguments is ChildModel?) {
+            final child = settings.arguments as ChildModel?;
+            return MaterialPageRoute(
+                builder: (_) => AddWeightPage(
+                      child: child,
+                    ));
+          } else {
+            final arg = settings.arguments as Map<String, dynamic>;
+            return MaterialPageRoute(
+                builder: (_) => AddWeightPage(
+                    record: arg["record"] as WeightModel?,
+                    child: arg["child"] as ChildModel?));
+          }
         }
       case addweeklyrecordpage:
         {
@@ -93,6 +103,14 @@ class AppRoute {
                       date: arg["date"] as DateTime?,
                     ));
           }
+        }
+      case weightrecordspage:
+        {
+          final child = settings.arguments as ChildModel?;
+          return MaterialPageRoute(
+              builder: (_) => WeightRecordsPage(
+                    child: child,
+                  ));
         }
       default:
         throw 'No Page Found!!';

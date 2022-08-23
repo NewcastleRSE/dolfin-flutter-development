@@ -1,62 +1,26 @@
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/data/models/record_model.dart';
-import 'package:dolfin_flutter/presentation/screens/addrecord_page.dart';
+import 'package:dolfin_flutter/data/models/weight_model.dart';
 import 'package:dolfin_flutter/shared/constants/strings.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
-class RecordContainer extends StatelessWidget {
-  final RecordModel record;
+class WeightContainer extends StatelessWidget {
+  final WeightModel record;
   final ChildModel? child;
-  late bool editable;
+  final bool editable;
 
-  RecordContainer({Key? key, required this.child, required this.record})
-      : super(key: key) {
-    editable = false;
+  const WeightContainer(
+      {Key? key,
+      required this.child,
+      required this.record,
+      required this.editable})
+      : super(key: key);
 
-    var difference = DateTime.now().difference(record.dateSubmitted).inDays;
-    if (difference < 2) {
-      editable = true;
-    }
-  }
-
-  String supplementToString(SupplementOptions? options) {
-    if (record.id == "0") {
-      return "No Record";
-    }
-    switch (options) {
-      case SupplementOptions.noDose:
-        {
-          return "Supplement: No";
-        }
-      default:
-        {
-          return "Supplement: Yes";
-        }
-    }
-  }
-
-  Color? getColour(SupplementOptions? options) {
-    if (record.id == "0") {
-      return AppColours.grey;
-    }
-
-    switch (options) {
-      case SupplementOptions.fullDose:
-        {
-          return AppColours.green;
-        }
-      case SupplementOptions.partialDose:
-        {
-          return AppColours.yellow;
-        }
-      default:
-        {
-          return AppColours.red;
-        }
-    }
+  Color? getColour() {
+    return AppColours.light_blue;
   }
 
   @override
@@ -68,7 +32,7 @@ class RecordContainer extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: getColour(record.supplement),
+        color: getColour(),
       ),
       child: Column(
         children: [
@@ -83,7 +47,7 @@ class RecordContainer extends StatelessWidget {
                     ),
               ),
               Text(
-                supplementToString(record.supplement),
+                "TEXT GOES HERE",
                 textAlign: TextAlign.left,
                 style: Theme.of(context).textTheme.headline2!.copyWith(
                       color: Colors.white,

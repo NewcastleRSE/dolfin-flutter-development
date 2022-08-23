@@ -306,6 +306,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
     if (_formKey.currentState!.validate()) {
       WeightModel record = WeightModel(
         date: recordDate,
+        dateSubmitted: DateTime.now(),
         weight: _weightcontroller.text,
         child: widget.child!.id,
         studyID: widget.child!.studyID,

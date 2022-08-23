@@ -415,6 +415,7 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
             child: child,
             studyID: studyID,
             date: currentDate,
+            dateSubmitted: DateTime.now(),
             weight: "1kg",
             numScoops: "2"));
       }

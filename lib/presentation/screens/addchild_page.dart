@@ -264,6 +264,24 @@ class _AddChildPageState extends State<AddChildPage> {
               details['recruitedAfterDischarge'],
               supplementStartDate: details['suppStart'])
               : FireStoreCrud().addChild(child: child);
+
+          showDialog<String>(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) => AlertDialog(
+                content: const Text(
+                    "Thank you. Your child has been added."),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    child: const Text('OK'),
+                  )
+                ],
+              ));
+
         } else {
           print('child does not exist in study');
           MySnackBar.error(
@@ -481,7 +499,6 @@ class _AddChildPageState extends State<AddChildPage> {
           return childDetails;
 
         } else {
-          // todo
           // return false;
         }
 

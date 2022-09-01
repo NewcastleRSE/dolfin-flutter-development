@@ -54,13 +54,11 @@ class _AddChildPageState extends State<AddChildPage> {
     _trialIDcontroller =
         TextEditingController(text: isEditMode ? widget.child!.studyID : '');
     dateOfBirth =
-        isEditMode ? DateTime.parse(widget.child!.dob) : DateTime.now();
-    dischargeDate = isEditMode
-        ? DateTime.parse(widget.child!.dischargeDate)
-        : DateTime.now();
-    dueDate =
-        isEditMode ? DateTime.parse(widget.child!.dueDate) : DateTime.now();
-    recruitedAfterDischarge = false;
+    isEditMode ? DateTime.parse(widget.child!.dob) : DateTime.now();
+    // dischargeDate = isEditMode
+    //     ? DateTime.parse(widget.child!.dischargeDate)
+    //     : DateTime.now();
+    // recruitedAfterDischarge = false;
   }
 
   @override
@@ -158,31 +156,6 @@ class _AddChildPageState extends State<AddChildPage> {
             height: 3.h,
           ),
           Text(
-            'Due date',
-            style: Theme.of(context)
-                .textTheme
-                .headline1!
-                .copyWith(fontSize: 14.sp),
-          ),
-          SizedBox(
-            height: 1.h,
-          ),
-          MyTextfield(
-            hint: DateFormat('dd/MM/yyyy').format(dueDate),
-            icon: Icons.calendar_today,
-            readonly: true,
-            showicon: false,
-            validator: (value) {},
-            ontap: () {
-              !isEditMode ? _showdatepickerdued() : null;
-            },
-            textEditingController: TextEditingController(),
-            keyboardtype: TextInputType.none,
-          ),
-          SizedBox(
-            height: 3.h,
-          ),
-          Text(
             'Date of birth',
             style: Theme.of(context)
                 .textTheme
@@ -206,32 +179,6 @@ class _AddChildPageState extends State<AddChildPage> {
           ),
           SizedBox(
             height: 3.h,
-          ),
-          Text(
-            'Discharge date',
-            style: Theme.of(context)
-                .textTheme
-                .headline1!
-                .copyWith(fontSize: 14.sp),
-          ),
-          SizedBox(
-            height: 1.h,
-          ),
-          MyTextfield(
-            hint: DateFormat('dd/MM/yyyy').format(dischargeDate),
-            icon: Icons.calendar_today,
-            readonly: true,
-            showicon: false,
-            validator: (value) {},
-            ontap: () {
-              !isEditMode ? _showdatepickerdd() : null;
-            },
-            textEditingController: TextEditingController(),
-            keyboardtype: TextInputType.none,
-          ),
-          _showRecruitmentOption(),
-          SizedBox(
-            height: 5.h,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -257,20 +204,25 @@ class _AddChildPageState extends State<AddChildPage> {
   _addChild() {
     // is form complete and is child registered with Oxford?
     if (_formKey.currentState!.validate()) {
-      checkChild(_trialIDcontroller.text).then((childExists) {
+      checkChild(_trialIDcontroller.text).then((childExists) async {
         // child is study participant
         if (childExists) {
-          print('child is a study participant so save to DB');
+
+          // get child details from Oxford API
+          var details = await getChildDetails(_trialIDcontroller.text);
+          print('details in add child');
+          print(details);
+
 
           ChildModel child = ChildModel(
-              name: _namecontroller.text,
               dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-              dischargeDate: DateFormat('yyyy-MM-dd').format(dischargeDate),
-              dueDate: DateFormat('yyyy-MM-dd').format(dueDate),
+              name: _namecontroller.text,
+              supplementStartDate: details['suppStart'],
+              dischargeDate: details['dischargeDate'],
               studyID: _trialIDcontroller.text,
               parentID: FirebaseAuth.instance.currentUser!.uid,
               id: '',
-              recruitedAfterDischarge: recruitedAfterDischarge);
+              recruitedAfterDischarge: details['recruitedAfterDischarge']);
 
           isEditMode
               ? showDialog<String>(
@@ -283,19 +235,16 @@ class _AddChildPageState extends State<AddChildPage> {
                           TextButton(
                             onPressed: () {
                               ChildModel updatedChild = ChildModel(
+                                  dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
                                   name: _namecontroller.text,
-                                  dob: DateFormat('yyyy-MM-dd')
-                                      .format(dateOfBirth),
-                                  dischargeDate: DateFormat('yyyy-MM-dd')
-                                      .format(dischargeDate),
-                                  dueDate:
-                                      DateFormat('yyyy-MM-dd').format(dueDate),
+                                  dischargeDate: details['dischargeDate'],
                                   studyID: _trialIDcontroller.text,
                                   parentID:
                                       FirebaseAuth.instance.currentUser!.uid,
                                   id: widget.child!.id,
                                   recruitedAfterDischarge:
-                                      recruitedAfterDischarge);
+                                  details['recruitedAfterDischarge'],
+                                  supplementStartDate: details['suppStart']);
                               Navigator.pushNamed(context, childinfopage,
                                   arguments: updatedChild);
                             },
@@ -307,13 +256,32 @@ class _AddChildPageState extends State<AddChildPage> {
 
           isEditMode
               ? FireStoreCrud().updateChild(
-                  docid: widget.child!.id,
-                  name: _namecontroller.text,
-                  dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-                  dischargeDate: DateFormat('yyyy-MM-dd').format(dischargeDate),
-                  dueDate: DateFormat('yyyy-MM-dd').format(dueDate),
-                  recruitedAfterDischarge: recruitedAfterDischarge)
+              name: _namecontroller.text,
+              dischargeDate: details['dischargeDate'],
+              docid: widget.child!.id,
+              dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
+              recruitedAfterDischarge:
+              details['recruitedAfterDischarge'],
+              supplementStartDate: details['suppStart'])
               : FireStoreCrud().addChild(child: child);
+
+          showDialog<String>(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) => AlertDialog(
+                content: const Text(
+                    "Thank you. Your child has been added."),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    child: const Text('OK'),
+                  )
+                ],
+              ));
+
         } else {
           print('child does not exist in study');
           MySnackBar.error(
@@ -476,6 +444,64 @@ class _AddChildPageState extends State<AddChildPage> {
           return false;
         }
       }
+    } catch (err) {
+      print(err);
+      return false;
+    }
+  }
+
+  // http request to get child's details
+  getChildDetails(childID) async {
+    try {
+      // acquire jwt from NPEU
+      await dotenv.load();
+      var baseUrl = dotenv.get('NPEU_URL');
+      var authUrl = 'https://' + baseUrl + '/identityauthority/connect/token';
+
+      var body = {
+        'client_id': dotenv.get('CLIENT_ID'),
+        'client_secret': dotenv.get('CLIENT_SECRET'),
+        'scope': dotenv.get('SCOPE'),
+        'grant_type': dotenv.get('GRANT_TYPE')
+      };
+
+      var authResponse = await http.post(Uri.parse(authUrl), body: body);
+        var token = jsonDecode(authResponse.body)['access_token'];
+
+        var childDatesUrl = Uri.https(baseUrl,
+            '/dolfindata/api/participant/dates/$childID');
+
+        // returns dates as dictionary or 204 if child does not exist
+        final response = await http
+            .get(childDatesUrl, headers: {'Authorization': 'Bearer $token'});
+        if (response.statusCode == 200) {
+          var details = jsonDecode(response.body);
+          var dischargeTimestamp = DateTime.parse(details['DISCHARGE_DATE']);
+          var suppStartTimestamp = DateTime.parse(details['SUPPLEMENT_START_DATE']);
+          var recruitedAfterD = true;
+          // if supp start date is before discharge, recruited before discharge
+          // is true, otherwise false
+          if (dischargeTimestamp.isAfter(suppStartTimestamp)) {
+            print('recruited before discharge');
+            recruitedAfterD = false;
+          }
+
+          // convert timestamp to strings for Firestore
+          var dischargeStr = DateFormat('yyyy-MM-dd').format(dischargeTimestamp);
+          var suppStartStr = DateFormat('yyyy-MM-dd').format(suppStartTimestamp);
+
+          var childDetails = {
+            'dischargeDate': dischargeStr,
+            'recruitedAfterDischarge': recruitedAfterD,
+            'suppStart': suppStartStr
+          };
+
+          return childDetails;
+
+        } else {
+          // return false;
+        }
+
     } catch (err) {
       print(err);
       return false;

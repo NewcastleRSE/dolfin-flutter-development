@@ -2,19 +2,19 @@ class ChildModel {
   final String id;
   final String studyID;
   final String name;
-  final String dob;
   final String dischargeDate;
-  final String dueDate;
   final String parentID;
+  final String supplementStartDate;
+  final String dob;
   final bool recruitedAfterDischarge;
 
   ChildModel({
     required this.id,
+    required this.dob,
     required this.studyID,
     required this.name,
-    required this.dob,
+    required this.supplementStartDate,
     required this.dischargeDate,
-    required this.dueDate,
     required this.parentID,
     required this.recruitedAfterDischarge,
   });
@@ -25,8 +25,8 @@ class ChildModel {
         studyID: json['study_id'],
         name: json['name'],
         dob: json['dob'],
+        supplementStartDate: json['supplementStartDate'],
         dischargeDate: json['dischargeDate'],
-        dueDate: json['dueDate'],
         recruitedAfterDischarge: json['recruitedAfterDischarge'],
         parentID: json['parent_id']);
   }
@@ -34,10 +34,10 @@ class ChildModel {
   Map<String, dynamic> tojson() {
     return {
       'study_id': studyID,
-      'name': name,
       'dob': dob,
+      'name': name,
+      'supplementStartDate': supplementStartDate,
       'dischargeDate': dischargeDate,
-      'dueDate': dueDate,
       'recruitedAfterDischarge': recruitedAfterDischarge,
       'parent_id': parentID
     };

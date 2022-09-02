@@ -792,13 +792,6 @@ PODS:
     - Flutter
   - PromisesObjC (2.1.0)
   - ReachabilitySwift (5.0.0)
-  - Sentry (7.11.0):
-    - Sentry/Core (= 7.11.0)
-  - Sentry/Core (7.11.0)
-  - sentry_flutter (0.0.1):
-    - Flutter
-    - FlutterMacOS
-    - Sentry (~> 7.11.0)
   - shared_preferences_ios (0.0.1):
     - Flutter
   - url_launcher_ios (0.0.1):
@@ -816,7 +809,6 @@ DEPENDENCIES:
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
-  - sentry_flutter (from `.symlinks/plugins/sentry_flutter/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
@@ -845,7 +837,6 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - ReachabilitySwift
-    - Sentry
 
 EXTERNAL SOURCES:
   awesome_notifications:
@@ -870,8 +861,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_sign_in_ios/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
-  sentry_flutter:
-    :path: ".symlinks/plugins/sentry_flutter/ios"
   shared_preferences_ios:
     :path: ".symlinks/plugins/shared_preferences_ios/ios"
   url_launcher_ios:
@@ -912,8 +901,6 @@ SPEC CHECKSUMS:
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
-  Sentry: 0c5cd63d714187b4a39c331c1f0eb04ba7868341
-  sentry_flutter: efb3df2c203cd03aad255892a8d628a458656d14
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
 

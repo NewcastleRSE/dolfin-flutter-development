@@ -48,7 +48,6 @@ dependencies:
   awesome_notifications: ^0.6.21
   google_sign_in: ^5.2.4
   device_preview: ^1.0.0
-  sentry_flutter: ^6.4.0
   firebase_messaging: ^11.2.13
   flutter_local_notifications: ^9.4.0
   toggle_switch: ^2.0.1

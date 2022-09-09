@@ -1,7 +1,5 @@
 import 'dart:convert';
-
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:day_night_time_picker/day_night_time_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/shared/constants/strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,12 +9,10 @@ import 'package:sizer/sizer.dart';
 import 'package:dolfin_flutter/data/repositories/firestore_crud.dart';
 import 'package:dolfin_flutter/presentation/widgets/mybutton.dart';
 import 'package:dolfin_flutter/presentation/widgets/mytextfield.dart';
-import 'package:dolfin_flutter/shared/constants/consts_variables.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
 import 'package:http/http.dart' as http;
 import 'package:toggle_switch/toggle_switch.dart';
 
-import '../../shared/services/notification_service.dart';
 import '../widgets/mysnackbar.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -204,96 +200,120 @@ class _AddChildPageState extends State<AddChildPage> {
   _addChild() {
     // is form complete and is child registered with Oxford?
     if (_formKey.currentState!.validate()) {
-      checkChild(_trialIDcontroller.text).then((childExists) async {
-        // child is study participant
-        if (childExists) {
+      FireStoreCrud()
+          .childNotRegisteredAlready(studyID: _trialIDcontroller.text).then((proceed) {
 
-          // get child details from Oxford API
-          var details = await getChildDetails(_trialIDcontroller.text);
-          print('details in add child');
-          print(details);
-
-
-          ChildModel child = ChildModel(
-              dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-              name: _namecontroller.text,
-              supplementStartDate: details['suppStart'],
-              dischargeDate: details['dischargeDate'],
-              studyID: _trialIDcontroller.text,
-              parentID: FirebaseAuth.instance.currentUser!.uid,
-              id: '',
-              recruitedAfterDischarge: details['recruitedAfterDischarge']);
-
-          isEditMode
-              ? showDialog<String>(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext context) => AlertDialog(
-                        content: const Text(
-                            "Thank you. Your child's details have been updated successfully."),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              ChildModel updatedChild = ChildModel(
-                                  dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-                                  name: _namecontroller.text,
-                                  dischargeDate: details['dischargeDate'],
-                                  studyID: _trialIDcontroller.text,
-                                  parentID:
-                                      FirebaseAuth.instance.currentUser!.uid,
-                                  id: widget.child!.id,
-                                  recruitedAfterDischarge:
-                                  details['recruitedAfterDischarge'],
-                                  supplementStartDate: details['suppStart']);
-                              Navigator.pushNamed(context, childinfopage,
-                                  arguments: updatedChild);
-                            },
-                            child: const Text('OK'),
-                          )
-                        ],
-                      ))
-              : Navigator.pop(context);
-
-          isEditMode
-              ? FireStoreCrud().updateChild(
-              name: _namecontroller.text,
-              dischargeDate: details['dischargeDate'],
-              docid: widget.child!.id,
-              dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-              recruitedAfterDischarge:
-              details['recruitedAfterDischarge'],
-              supplementStartDate: details['suppStart'])
-              : FireStoreCrud().addChild(child: child);
-
-          showDialog<String>(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) => AlertDialog(
-                content: const Text(
-                    "Thank you. Your child has been added."),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                    child: const Text('OK'),
-                  )
-                ],
-              ));
+            if (!proceed) {
+              print('child already registered');
+              MySnackBar.error(
+                  message:
+                  "This child has already been registered.",
+                  color: Colors.red,
+                  context: context);
 
         } else {
-          print('child does not exist in study');
-          MySnackBar.error(
-              message:
-                  "Problem with child's Study Number, please check the ID is correct and"
-                  " try again",
-              color: Colors.red,
-              context: context);
+              MySnackBar.error(
+                  message:
+                  "Checking child details are correct...",
+                  color: Colors.blue,
+                  context: context);
+
+
+        checkChild(_trialIDcontroller.text).then((childExists) async {
+          // child is study participant
+          if (childExists) {
+            // get child details from Oxford API
+            var details = await getChildDetails(_trialIDcontroller.text);
+            print('details in add child');
+            print(details);
+
+
+            ChildModel child = ChildModel(
+                dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
+                name: _namecontroller.text,
+                supplementStartDate: details['suppStart'],
+                dischargeDate: details['dischargeDate'],
+                studyID: _trialIDcontroller.text,
+                parentID: FirebaseAuth.instance.currentUser!.uid,
+                id: '',
+                recruitedAfterDischarge: details['recruitedAfterDischarge']);
+
+            isEditMode
+                ? showDialog<String>(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) =>
+                    AlertDialog(
+                      content: const Text(
+                          "Thank you. Your child's details have been updated successfully."),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            ChildModel updatedChild = ChildModel(
+                                dob: DateFormat('yyyy-MM-dd').format(
+                                    dateOfBirth),
+                                name: _namecontroller.text,
+                                dischargeDate: details['dischargeDate'],
+                                studyID: _trialIDcontroller.text,
+                                parentID:
+                                FirebaseAuth.instance.currentUser!.uid,
+                                id: widget.child!.id,
+                                recruitedAfterDischarge:
+                                details['recruitedAfterDischarge'],
+                                supplementStartDate: details['suppStart']);
+                            Navigator.pushNamed(context, childinfopage,
+                                arguments: updatedChild);
+                          },
+                          child: const Text('OK'),
+                        )
+                      ],
+                    ))
+                : Navigator.pop(context);
+
+            isEditMode
+                ? FireStoreCrud().updateChild(
+                name: _namecontroller.text,
+                dischargeDate: details['dischargeDate'],
+                docid: widget.child!.id,
+                dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
+                recruitedAfterDischarge:
+                details['recruitedAfterDischarge'],
+                supplementStartDate: details['suppStart'])
+                : FireStoreCrud().addChild(child: child);
+
+            showDialog<String>(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) =>
+                    AlertDialog(
+                      content: const Text(
+                          "Thank you. Your child has been added."),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                          child: const Text('OK'),
+                        )
+                      ],
+                    ));
+          } else {
+            print('child does not exist in study');
+            MySnackBar.error(
+                message:
+                "Problem with child's Study Number, please check the ID is correct and"
+                    " try again",
+                color: Colors.red,
+                context: context);
+          }
+        });
         }
-      }); // child exists with Oxford
-    } // validate
-  }
+
+      });// child exists with Oxford
+      } // validate
+    }
+
 
   _showdatepickerdob() async {
     var selecteddate = await showDatePicker(
@@ -406,9 +426,19 @@ class _AddChildPageState extends State<AddChildPage> {
     );
   }
 
+  // returns false if the child has already been added to the Dolfin app
+  Future<bool> childNotRegistered(childID) async {
+    print('find out if child registered');
+
+    return await FireStoreCrud()
+        .childNotRegisteredAlready(studyID: childID);
+  }
+
   // http request to check child's ID is valid
   Future<bool> checkChild(childCheck) async {
+
     try {
+
       // acquire jwt from NPEU
       await dotenv.load();
       var baseUrl = dotenv.get('NPEU_URL');
@@ -450,9 +480,11 @@ class _AddChildPageState extends State<AddChildPage> {
     }
   }
 
+
   // http request to get child's details
   getChildDetails(childID) async {
     try {
+
       // acquire jwt from NPEU
       await dotenv.load();
       var baseUrl = dotenv.get('NPEU_URL');

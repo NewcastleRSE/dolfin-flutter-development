@@ -141,9 +141,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   bool checkDailyNotificationsVisibility() {
+
     var childrenSnapshot = FireStoreCrud()
         .getChildren(parentID: FirebaseAuth.instance.currentUser!.uid);
-
     // today's date
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);

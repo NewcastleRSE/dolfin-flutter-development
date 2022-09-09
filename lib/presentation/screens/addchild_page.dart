@@ -212,6 +212,11 @@ class _AddChildPageState extends State<AddChildPage> {
                   context: context);
 
         } else {
+              MySnackBar.error(
+                  message:
+                  "Checking child details are correct...",
+                  color: Colors.blue,
+                  context: context);
 
 
         checkChild(_trialIDcontroller.text).then((childExists) async {

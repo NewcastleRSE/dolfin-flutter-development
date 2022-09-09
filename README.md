@@ -1,7 +1,6 @@
 # dolfin-flutter
 The Flutter-based app for the DOLFIN Project
 
-
 ## About
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin ante at eleifend eleifend. Sed non vestibulum nisi. Aliquam vel condimentum quam. Donec fringilla et purus at auctor. Praesent euismod vitae metus non consectetur. 

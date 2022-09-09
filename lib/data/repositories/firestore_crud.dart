@@ -52,6 +52,18 @@ class FireStoreCrud {
             .toList());
   }
 
+  Future<bool> childNotRegisteredAlready({required String studyID}) async {
+    final querySnapshot = await _firestore
+        .collection('children')
+        .where('study_id', isEqualTo: studyID)
+        .get();
+
+    if (querySnapshot.size > 0) {
+      return false;
+    }
+    return true;
+  }
+
   Future<List<String>> getDischargeDates({required String parentID}) async {
     List<String> dates = [];
 

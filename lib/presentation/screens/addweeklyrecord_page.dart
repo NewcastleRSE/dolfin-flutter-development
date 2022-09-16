@@ -489,7 +489,7 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                       .copyWith(fontSize: 14.sp),
                 ),
                 TextSpan(
-                  text: '[here]',
+                  text: 'https://www.npeu.ox.ac.uk/dolfin/parents/resources',
                   style: Theme.of(context)
                       .textTheme
                       .headline1!

@@ -93,7 +93,7 @@ class _AddChildPageState extends State<AddChildPage> {
             height: 3.h,
           ),
           Text(
-            "Thank you for taking part in the DOLFIN trial. Please enter your child's details below. You will need to know their study number, which should have been provided when you registered.",
+            "Thank you for taking part in the DOLFIN trial. Please enter your child's details below. You will need to know their study number, which should have been provided when you enrolled them on the DOLFIN study.",
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium!

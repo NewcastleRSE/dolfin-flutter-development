@@ -260,7 +260,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
                       .copyWith(fontSize: 14.sp),
                 ),
                 TextSpan(
-                  text: '[here]',
+                  text: 'https://www.npeu.ox.ac.uk/dolfin/parents/resources',
                   style: Theme.of(context)
                       .textTheme
                       .headline1!

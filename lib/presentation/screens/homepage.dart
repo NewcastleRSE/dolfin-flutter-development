@@ -565,15 +565,20 @@ class _notificationsSelectorState extends State<notificationsSelector> {
 
   // check shared prefs to see if user has previously checked or unchecked this
   getDailyNotificationPref() async {
+    print('daily not check');
     // adjust notification preferences in Firestore
     var collection = FirebaseFirestore.instance.collection('parents');
     var docSnapshot =
         await collection.doc(FirebaseAuth.instance.currentUser?.uid).get();
     // note thinks this field is a String evn though saved and updated as bool in Firestore
     bool notifications = true;
-    if (docSnapshot.exists && docSnapshot.get('dailyNotifications')) {
+    print(docSnapshot.data()!['dailyNotifications']);
+    if (docSnapshot.exists && docSnapshot.data()!['dailyNotifications'] != null) {
+      print('daily notifications in firestore');
+      print(docSnapshot.get('dailyNotifications'));
       notifications = docSnapshot.get('dailyNotifications');
     } else {
+      print('daily notifications not yet saved');
       // save to Firestore initial daily preference
       saveDailyNotificationsPref(true);
     }
@@ -591,7 +596,7 @@ class _notificationsSelectorState extends State<notificationsSelector> {
     FirebaseFirestore.instance
         .collection('parents')
         .doc(FirebaseAuth.instance.currentUser?.uid)
-        .set({'dailyNotifications': true}, SetOptions(merge: value));
+        .set({'dailyNotifications': value}, SetOptions(merge: true));
   }
 
   Widget build(BuildContext context) {
@@ -605,7 +610,7 @@ class _notificationsSelectorState extends State<notificationsSelector> {
             onChanged: (value) {
               setState(() {
                 _notifications = NotificationsOptions.daily;
-                // saveDailyNotificationsPref(true);
+                 saveDailyNotificationsPref(true);
 
                 // adjust notification preferences in Firestore
                 FirebaseFirestore.instance
@@ -630,7 +635,7 @@ class _notificationsSelectorState extends State<notificationsSelector> {
                     .set(
                         {'dailyNotifications': false}, SetOptions(merge: true));
                 _notifications = NotificationsOptions.weekly;
-                // saveDailyNotificationsPref(false);
+                 saveDailyNotificationsPref(false);
               });
             },
           ),

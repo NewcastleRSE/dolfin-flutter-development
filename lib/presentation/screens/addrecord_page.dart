@@ -34,7 +34,13 @@ class _AddRecordPageState extends State<AddRecordPage> {
   late TextEditingController _reasoncontroller;
 
   late SupplementOptions? _supplement;
-  late ReasonOptions? _reason;
+  late List _reasons;
+  late bool reason0;
+  late bool reason1;
+  late bool reason2;
+  late bool reason3;
+  late bool reason4;
+  late bool reason5;
 
   late DateTime recordDate;
   late bool _moreInfoVisible;
@@ -50,7 +56,13 @@ class _AddRecordPageState extends State<AddRecordPage> {
     _supplement =
         isEditMode ? widget.record!.supplement : SupplementOptions.fullDose;
 
-    _reason = isEditMode ? widget.record!.reason : ReasonOptions.forgot;
+    _reasons = isEditMode ? widget.record!.reasons : [];
+    reason0 = isEditMode ? widget.record!.reasons.contains('I forgot') : false;
+    reason1 = isEditMode ? widget.record!.reasons.contains('I have run out') : false;
+    reason2 = isEditMode ? widget.record!.reasons.contains('My baby refused it') : false;
+    reason3 = isEditMode ? widget.record!.reasons.contains('My baby spat it out') : false;
+    reason4 = isEditMode ? widget.record!.reasons.contains('My baby was too unwell to take the supplement') : false;
+    reason5 = isEditMode ? widget.record!.reasons.contains('Other') : false;
 
     _reasoncontroller = TextEditingController(
         text: isEditMode ? widget.record!.otherReason : '');
@@ -64,12 +76,12 @@ class _AddRecordPageState extends State<AddRecordPage> {
         : false;
 
     _otherReasonVisible =
-        (isEditMode && widget.record!.reason == ReasonOptions.other)
+        (isEditMode )
             ? true
             : false;
 
     _ranOutVisible =
-        (isEditMode && widget.record!.reason == ReasonOptions.ranOut)
+        (isEditMode )
             ? true
             : false;
 
@@ -121,7 +133,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             height: 3.h,
           ),
           Text(
-            'If you have any questions or concerns about your baby or giving the supplement, please contact your local clinical team using the contact details in your Parent Discharge Pack. If you are having trouble completing this form, please contact the research team on dolfin@npeu.ox.ac.uk / 01865 617919.',
+            'If you have any questions or concerns about your baby or giving the supplement, please contact your local NHS clinical team using the contact details in your Parent Discharge Pack. If you are having trouble completing this form, please contact the research team on dolfin@npeu.ox.ac.uk / 01865 617919.',
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium!
@@ -236,84 +248,106 @@ class _AddRecordPageState extends State<AddRecordPage> {
                   children: <Widget>[
                     ListTile(
                       title: const Text('I forgot'),
-                      leading: Radio<ReasonOptions>(
-                        value: ReasonOptions.forgot,
-                        groupValue: _reason,
-                        onChanged: (ReasonOptions? value) {
+                      leading: Checkbox(
+                        value: reason0,
+                        onChanged: (bool? value) {
                           setState(() {
-                            _reason = value;
-                            _otherReasonVisible = false;
-                            _ranOutVisible = false;
+                            reason0 = value!;
+                            if (value == true) {
+                              _reasons.add('I forgot');
+                            } else {
+                              _reasons.removeWhere((element) => element == 'I forgot');
+                            }
+
                           });
                         },
                       ),
                     ),
                     ListTile(
-                      title: const Text('We have run out'),
-                      leading: Radio<ReasonOptions>(
-                        value: ReasonOptions.ranOut,
-                        groupValue: _reason,
-                        onChanged: (ReasonOptions? value) {
+                      title: const Text('I have run out'),
+                      leading: Checkbox(
+                        value: reason1,
+                        onChanged: (bool? value) {
                           setState(() {
-                            _reason = value;
-                            _otherReasonVisible = false;
-                            _ranOutVisible = true;
+                            reason1 = value!;
+                            if (value == true) {
+                              _reasons.add('I have run out');
+                              _ranOutVisible = true;
+                            } else {
+                              _ranOutVisible = false;
+                              _reasons.removeWhere((element) => element == 'I have run out');
+                            }
+
                           });
                         },
                       ),
                     ),
                     ListTile(
                       title: const Text('My baby refused it'),
-                      leading: Radio<ReasonOptions>(
-                        value: ReasonOptions.refused,
-                        groupValue: _reason,
-                        onChanged: (ReasonOptions? value) {
+                      leading: Checkbox(
+                        value: reason2,
+                        onChanged: (bool? value) {
                           setState(() {
-                            _reason = value;
-                            _otherReasonVisible = false;
-                            _ranOutVisible = false;
+                            reason2 = value!;
+                            if (value == true) {
+                              _reasons.add('My baby refused it');
+                            } else {
+                              _reasons.removeWhere((element) => element == 'My baby refused it');
+                            }
+
                           });
                         },
                       ),
                     ),
                     ListTile(
                       title: const Text('My baby spat it out'),
-                      leading: Radio<ReasonOptions>(
-                        value: ReasonOptions.spatOut,
-                        groupValue: _reason,
-                        onChanged: (ReasonOptions? value) {
+                      leading: Checkbox(
+                        value: reason3,
+                        onChanged: (bool? value) {
                           setState(() {
-                            _reason = value;
-                            _otherReasonVisible = false;
-                            _ranOutVisible = false;
+                            reason3 = value!;
+                            if (value == true) {
+                              _reasons.add('My baby spat it out');
+                            } else {
+                              _reasons.removeWhere((element) => element == 'My baby spat it out');
+                            }
+
                           });
                         },
                       ),
                     ),
                     ListTile(
-                      title: const Text('My baby is unwell'),
-                      leading: Radio<ReasonOptions>(
-                        value: ReasonOptions.unwell,
-                        groupValue: _reason,
-                        onChanged: (ReasonOptions? value) {
+                      title: const Text('My baby was too unwell to take the supplement'),
+                      leading: Checkbox(
+                        value: reason4,
+                        onChanged: (bool? value) {
                           setState(() {
-                            _reason = value;
-                            _otherReasonVisible = false;
-                            _ranOutVisible = false;
+                            reason4 = value!;
+                            if (value == true) {
+                              _reasons.add('My baby was too unwell to take the supplement');
+                            } else {
+                              _reasons.removeWhere((element) => element == 'My baby was too unwell to take the supplement');
+                            }
+
                           });
                         },
                       ),
                     ),
                     ListTile(
                       title: const Text('Other'),
-                      leading: Radio<ReasonOptions>(
-                        value: ReasonOptions.other,
-                        groupValue: _reason,
-                        onChanged: (ReasonOptions? value) {
+                      leading: Checkbox(
+                        value: reason5,
+                        onChanged: (bool? value) {
                           setState(() {
-                            _reason = value;
-                            _otherReasonVisible = true;
-                            _ranOutVisible = false;
+                            reason5 = value!;
+                            if (value == true) {
+                              _reasons.add('Other');
+                              _otherReasonVisible = true;
+                            } else {
+                              _otherReasonVisible = false;
+                              _reasons.removeWhere((element) => element == 'Other');
+                            }
+
                           });
                         },
                       ),
@@ -324,16 +358,6 @@ class _AddRecordPageState extends State<AddRecordPage> {
                   visible: _ranOutVisible || _otherReasonVisible,
                   child: SizedBox(
                     height: 2.h,
-                  ),
-                ),
-                Visibility(
-                  visible: _ranOutVisible,
-                  child: Text(
-                    "If you have run out of supplement, please contact the research team at dolfin@npeu.ox.ac.uk / 01865 617919",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline1!
-                        .copyWith(fontSize: 14.sp, color: AppColours.red),
                   ),
                 ),
                 Visibility(
@@ -349,6 +373,16 @@ class _AddRecordPageState extends State<AddRecordPage> {
                     textEditingController: _reasoncontroller,
                   ),
                 ),
+                Visibility(
+                  visible: _ranOutVisible,
+                  child: Text(
+                    "If you have run out of supplement, please contact the research team at dolfin@npeu.ox.ac.uk / 01865 617919",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline1!
+                        .copyWith(fontSize: 14.sp, color: AppColours.red),
+                  ),
+                ),
               ],
             ),
           ),
@@ -359,7 +393,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: 'The DOLFIN supplement dosing chart can be found ',
+                  text: 'The DOLFIN supplement dosing chart can be seen at ',
                   style: Theme.of(context)
                       .textTheme
                       .headline1!
@@ -386,16 +420,6 @@ class _AddRecordPageState extends State<AddRecordPage> {
                 ),
               ],
             ),
-          ),
-          SizedBox(
-            height: 3.h,
-          ),
-          Text(
-            "Remember: please let your local clinical team know if your baby has an unplanned admission to hospital, as these need to be recorded as part of the DOLFIN trial.",
-            style: Theme.of(context)
-                .textTheme
-                .headline1!
-                .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
             height: 3.h,
@@ -441,7 +465,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
         date: recordDate,
         dateSubmitted: DateTime.now(),
         supplement: _supplement,
-        reason: _reason,
+        reasons: _reasons,
         otherReason: _reasoncontroller.text,
         child: isEditMode ? widget.record!.child : widget.child!.id,
         studyID: isEditMode ? widget.record!.studyID : widget.child!.studyID,
@@ -451,7 +475,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
           ? FireStoreCrud().updateRecord(
               docid: widget.record!.id,
               supplement: _supplement.toString(),
-              reason: _reason.toString(),
+              reasons: _reasons,
               otherReason: _reasoncontroller.text,
             )
           : FireStoreCrud().addRecord(record: record);

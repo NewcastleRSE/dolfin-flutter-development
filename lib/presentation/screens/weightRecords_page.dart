@@ -207,7 +207,7 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                                       children: [
                                         TextSpan(
                                           text:
-                                              'The DOLFIN supplement dosing chart can be found ',
+                                              'The DOLFIN supplement dosing chart can be seen at ',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline1!

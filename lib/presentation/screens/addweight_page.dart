@@ -84,7 +84,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
             height: 3.h,
           ),
           Text(
-            "We would like you to let us know your baby's weight once a month. Do you have a recent weight for your baby that you would like to let us know about?",
+            "We would like you to let us know your baby's weight once a month.",
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium!
@@ -92,41 +92,6 @@ class _AddWeightPageState extends State<AddWeightPage> {
           ),
           SizedBox(
             height: 3.h,
-          ),
-          Text(
-            'Date',
-            style: Theme.of(context)
-                .textTheme
-                .headline1!
-                .copyWith(fontSize: 14.sp),
-          ),
-          SizedBox(
-            height: 1.h,
-          ),
-          Text(
-            'When was this measurement recorded?',
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(fontSize: 14.sp),
-          ),
-          SizedBox(
-            height: 2.h,
-          ),
-          MyTextfield(
-            hint: DateFormat('dd/MM/yyyy').format(_recordDate),
-            icon: Icons.calendar_today,
-            readonly: true,
-            showicon: false,
-            validator: (value) {},
-            ontap: () {
-              _showdatepicker();
-            },
-            textEditingController: TextEditingController(),
-            keyboardtype: TextInputType.none,
-          ),
-          SizedBox(
-            height: 4.h,
           ),
           Text(
             'Weight',
@@ -162,6 +127,41 @@ class _AddWeightPageState extends State<AddWeightPage> {
               return null;
             },
             textEditingController: _weightcontroller,
+          ),
+          SizedBox(
+            height: 4.h,
+          ),
+          Text(
+            'Date',
+            style: Theme.of(context)
+                .textTheme
+                .headline1!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 1.h,
+          ),
+          Text(
+            'When was this measurement recorded?',
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(fontSize: 14.sp),
+          ),
+          SizedBox(
+            height: 2.h,
+          ),
+          MyTextfield(
+            hint: DateFormat('dd/MM/yyyy').format(_recordDate),
+            icon: Icons.calendar_today,
+            readonly: true,
+            showicon: false,
+            validator: (value) {},
+            ontap: () {
+              _showdatepicker();
+            },
+            textEditingController: TextEditingController(),
+            keyboardtype: TextInputType.none,
           ),
           SizedBox(
             height: 4.h,
@@ -253,7 +253,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: 'The DOLFIN supplement dosing chart can be found ',
+                  text: 'The DOLFIN supplement dosing chart can be seen at ',
                   style: Theme.of(context)
                       .textTheme
                       .headline1!

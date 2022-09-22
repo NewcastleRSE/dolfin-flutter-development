@@ -119,45 +119,43 @@ class FireStoreCrud {
 
   Future<void> updateChild(
       {required String name,
-      required supplementStartDate,
       required docid,
         required dob,
       required dischargeDate,
-      required recruitedAfterDischarge}) async {
+      required parent_email}) async {
     var childcollection = _firestore.collection('children');
     await childcollection.doc(docid).update({
       'name': name,
       'dob': dob,
-      'supplementStartDate': supplementStartDate,
       'dischargeDate': dischargeDate,
-      'recruitedAfterDischarge': recruitedAfterDischarge
+      'parent_email': parent_email
     });
   }
 
   Future<void> updateRecord({
     required String supplement,
-    reason,
+    reasons,
     otherReason,
     docid,
   }) async {
     var recordcollection = _firestore.collection('records');
     await recordcollection.doc(docid).update({
       'supplement': supplement,
-      'reason': reason,
+      'reasons': reasons,
       'other_reason': otherReason
     });
   }
 
   Future<void> updateWeeklyRecord({
     required String supplement,
-    reason,
+    reasons,
     otherReason,
     docid,
   }) async {
     var recordcollection = _firestore.collection('weekly_records');
     await recordcollection.doc(docid).update({
       'supplement': supplement,
-      'reason': reason,
+      'reasons': reasons,
       'other_reason': otherReason
     });
   }

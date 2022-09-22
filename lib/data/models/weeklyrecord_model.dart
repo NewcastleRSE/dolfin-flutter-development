@@ -9,7 +9,7 @@ class WeeklyRecordModel {
   final DateTime date;
   final int? numSupplements;
   final bool? problem;
-  final ReasonOptions? reason;
+ final List reasons;
   final String otherReason;
 
   WeeklyRecordModel({
@@ -19,7 +19,7 @@ class WeeklyRecordModel {
     required this.date,
     required this.numSupplements,
     required this.problem,
-    required this.reason,
+    required this.reasons,
     required this.otherReason,
   });
 
@@ -31,7 +31,7 @@ class WeeklyRecordModel {
         studyID: json['study_id'],
         date: timestamp.toDate(),
         numSupplements: int.parse(json['supplement']),
-        reason: deserialiseReason(json['reason']),
+        reasons: (json['reasons']),
         otherReason: json['other_reason'],
         problem: json['problem']);
   }
@@ -42,7 +42,7 @@ class WeeklyRecordModel {
       'study_id': studyID,
       'date': date,
       'supplement': numSupplements.toString(),
-      'reason': reason.toString(),
+      'reasons': reasons,
       'other_reason': otherReason,
       'problem': problem
     };

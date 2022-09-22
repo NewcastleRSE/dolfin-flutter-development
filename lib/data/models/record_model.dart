@@ -20,7 +20,7 @@ class RecordModel {
   final DateTime date;
   final DateTime dateSubmitted;
   final SupplementOptions? supplement;
-  final ReasonOptions? reason;
+  final List reasons;
   final String otherReason;
 
   RecordModel({
@@ -30,7 +30,7 @@ class RecordModel {
     required this.date,
     required this.dateSubmitted,
     required this.supplement,
-    required this.reason,
+    required this.reasons,
     required this.otherReason,
   });
 
@@ -46,7 +46,7 @@ class RecordModel {
         date: date.toDate(),
         dateSubmitted: submitted.toDate(),
         supplement: deserialiseSupplement(json['supplement']),
-        reason: deserialiseReason(json['reason']),
+        reasons: json['reasons'],
         otherReason: json['other_reason']);
   }
 
@@ -57,7 +57,7 @@ class RecordModel {
       'date': date,
       'date_submitted': dateSubmitted,
       'supplement': supplement.toString(),
-      'reason': reason.toString(),
+      'reasons': reasons,
       'other_reason': otherReason,
     };
   }

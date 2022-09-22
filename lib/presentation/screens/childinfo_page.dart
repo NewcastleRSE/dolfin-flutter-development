@@ -52,8 +52,6 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
     super.initState();
     _childName = widget.child != null ? widget.child!.name : "Child Name";
 
-    // todo check this
-    // NotificationsHandler.requestpermission(context);
   }
 
   Future<HttpsCallableResult> _getChildInfo() async {
@@ -424,7 +422,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
             date: currentDate,
             dateSubmitted: DateTime.now(),
             supplement: SupplementOptions.fullDose,
-            reason: ReasonOptions.forgot,
+            reasons: [],
             otherReason: ""));
       }
 

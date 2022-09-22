@@ -59,8 +59,6 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
 
     _numSupplements = isEditMode ? widget.record!.numSupplements : 0;
 
-    // _reason = isEditMode ? widget.record!.reason : ReasonOptions.forgot;
-
     _reasons = [];
     reason0 = false;
     reason1 = false;
@@ -372,7 +370,6 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                             reason0 = value!;
                             if (value == true) {
                               _reasons.add('I forgot');
-                              _ranOutVisible = false;
                             } else {
                               _reasons.removeWhere((element) => element == 'I forgot');
                             }
@@ -390,8 +387,9 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                             reason1 = value!;
                             if (value == true) {
                               _reasons.add('I have run out');
-                              _ranOutVisible = false;
+                              _ranOutVisible = true;
                             } else {
+                              _ranOutVisible = false;
                               _reasons.removeWhere((element) => element == 'I have run out');
                             }
 
@@ -408,7 +406,6 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                             reason2 = value!;
                             if (value == true) {
                               _reasons.add('My baby refused it');
-                              _ranOutVisible = false;
                             } else {
                               _reasons.removeWhere((element) => element == 'My baby refused it');
                             }
@@ -426,7 +423,6 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                             reason3 = value!;
                             if (value == true) {
                               _reasons.add('My baby spat it out');
-                              _ranOutVisible = false;
                             } else {
                               _reasons.removeWhere((element) => element == 'My baby spat it out');
                             }
@@ -444,7 +440,6 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                             reason4 = value!;
                             if (value == true) {
                               _reasons.add('My baby was too unwell to take the supplement');
-                              _ranOutVisible = false;
                             } else {
                               _reasons.removeWhere((element) => element == 'My baby was too unwell to take the supplement');
                             }
@@ -462,9 +457,9 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                             reason5 = value!;
                             if (value == true) {
                               _reasons.add('Other');
-                              _ranOutVisible = false;
                               _otherReasonVisible = true;
                             } else {
+                              _otherReasonVisible = false;
                               _reasons.removeWhere((element) => element == 'Other');
                             }
 
@@ -481,16 +476,6 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                   ),
                 ),
                 Visibility(
-                  visible: _ranOutVisible,
-                  child: Text(
-                    "If you have run out of supplement, please contact the research team at dolfin@npeu.ox.ac.uk / 01865 617919",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline1!
-                        .copyWith(fontSize: 14.sp, color: AppColours.red),
-                  ),
-                ),
-                Visibility(
                   visible: _otherReasonVisible,
                   child: MyTextfield(
                     readonly: false,
@@ -501,6 +486,16 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                       return null;
                     },
                     textEditingController: _reasoncontroller,
+                  ),
+                ),
+                Visibility(
+                  visible: _ranOutVisible,
+                  child: Text(
+                    "If you have run out of supplement, please contact the research team at dolfin@npeu.ox.ac.uk / 01865 617919",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline1!
+                        .copyWith(fontSize: 14.sp, color: AppColours.red),
                   ),
                 ),
                 SizedBox(
@@ -591,7 +586,7 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
           ? FireStoreCrud().updateRecord(
               docid: widget.record!.id,
               supplement: _numSupplements.toString(),
-              reason:  _reasons,
+              reasons:  _reasons,
               otherReason: _reasoncontroller.text,
             )
           : FireStoreCrud().addWeeklyRecord(record: record);

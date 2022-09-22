@@ -326,6 +326,19 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                   SizedBox(
                                     height: 3.h,
                                   ),
+                                      Container(
+                                        margin: EdgeInsets.all(10),
+                                        padding: EdgeInsets.all(10),
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: AppColours.red, // Set border color
+                                                width: 3.0),   // Set border width
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10.0))// Make rounded corner of border
+                                        ),
+                                        child: Text("Please only start adding supplement records once your child has been discharged home from hospital."),
+                                      ),
                                   ListView.builder(
                                     scrollDirection: Axis.vertical,
                                     shrinkWrap: true,

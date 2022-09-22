@@ -224,19 +224,19 @@ class _AddChildPageState extends State<AddChildPage> {
           if (childExists) {
             // get child details from Oxford API
             var details = await getChildDetails(_trialIDcontroller.text);
-            print('details in add child');
-            print(details);
 
+
+            String? parentEmail = FirebaseAuth.instance.currentUser!.email;
 
             ChildModel child = ChildModel(
                 dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
                 name: _namecontroller.text,
-                supplementStartDate: details['suppStart'],
-                dischargeDate: details['dischargeDate'],
+                dischargeDate: details,
                 studyID: _trialIDcontroller.text,
                 parentID: FirebaseAuth.instance.currentUser!.uid,
                 id: '',
-                recruitedAfterDischarge: details['recruitedAfterDischarge']);
+              parent_email: parentEmail.toString()
+            );
 
             isEditMode
                 ? showDialog<String>(
@@ -253,14 +253,13 @@ class _AddChildPageState extends State<AddChildPage> {
                                 dob: DateFormat('yyyy-MM-dd').format(
                                     dateOfBirth),
                                 name: _namecontroller.text,
-                                dischargeDate: details['dischargeDate'],
+                                dischargeDate: details,
                                 studyID: _trialIDcontroller.text,
                                 parentID:
                                 FirebaseAuth.instance.currentUser!.uid,
                                 id: widget.child!.id,
-                                recruitedAfterDischarge:
-                                details['recruitedAfterDischarge'],
-                                supplementStartDate: details['suppStart']);
+                                parent_email: parentEmail.toString()
+                               );
                             Navigator.pushNamed(context, childinfopage,
                                 arguments: updatedChild);
                           },
@@ -273,12 +272,10 @@ class _AddChildPageState extends State<AddChildPage> {
             isEditMode
                 ? FireStoreCrud().updateChild(
                 name: _namecontroller.text,
-                dischargeDate: details['dischargeDate'],
+                dischargeDate: details,
                 docid: widget.child!.id,
                 dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-                recruitedAfterDischarge:
-                details['recruitedAfterDischarge'],
-                supplementStartDate: details['suppStart'])
+                parent_email: parentEmail.toString())
                 : FireStoreCrud().addChild(child: child);
 
             showDialog<String>(
@@ -508,32 +505,20 @@ class _AddChildPageState extends State<AddChildPage> {
             .get(childDatesUrl, headers: {'Authorization': 'Bearer $token'});
         if (response.statusCode == 200) {
           var details = jsonDecode(response.body);
+          // if discharge date is null then add null to firestore
+          if (details['DISCHARGE_DATE'] == null) {
+            return null;
+          } else {
+          // otherwise get date formatted correctly
           var dischargeTimestamp = DateTime.parse(details['DISCHARGE_DATE']);
-          var suppStartTimestamp = DateTime.parse(details['SUPPLEMENT_START_DATE']);
-          var recruitedAfterD = true;
-          // if supp start date is before discharge, recruited before discharge
-          // is true, otherwise false
-          if (dischargeTimestamp.isAfter(suppStartTimestamp)) {
-            print('recruited before discharge');
-            recruitedAfterD = false;
-          }
 
           // convert timestamp to strings for Firestore
           var dischargeStr = DateFormat('yyyy-MM-dd').format(dischargeTimestamp);
-          var suppStartStr = DateFormat('yyyy-MM-dd').format(suppStartTimestamp);
 
-          var childDetails = {
-            'dischargeDate': dischargeStr,
-            'recruitedAfterDischarge': recruitedAfterD,
-            'suppStart': suppStartStr
-          };
+          return dischargeStr;
 
-          return childDetails;
-
-        } else {
-          // return false;
         }
-
+    }
     } catch (err) {
       print(err);
       return false;

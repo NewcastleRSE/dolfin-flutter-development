@@ -119,18 +119,16 @@ class FireStoreCrud {
 
   Future<void> updateChild(
       {required String name,
-      required supplementStartDate,
       required docid,
         required dob,
       required dischargeDate,
-      required recruitedAfterDischarge}) async {
+      required parent_email}) async {
     var childcollection = _firestore.collection('children');
     await childcollection.doc(docid).update({
       'name': name,
       'dob': dob,
-      'supplementStartDate': supplementStartDate,
       'dischargeDate': dischargeDate,
-      'recruitedAfterDischarge': recruitedAfterDischarge
+      'parent_email': parent_email
     });
   }
 

@@ -249,7 +249,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                       ),
                     ),
                     ListTile(
-                      title: const Text('We have run out'),
+                      title: const Text('I have run out'),
                       leading: Radio<ReasonOptions>(
                         value: ReasonOptions.ranOut,
                         groupValue: _reason,
@@ -291,7 +291,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                       ),
                     ),
                     ListTile(
-                      title: const Text('My baby is unwell'),
+                      title: const Text('My baby was too unwell to take the supplement'),
                       leading: Radio<ReasonOptions>(
                         value: ReasonOptions.unwell,
                         groupValue: _reason,
@@ -359,7 +359,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: 'The DOLFIN supplement dosing chart can be found ',
+                  text: 'The DOLFIN supplement dosing chart can be seen at ',
                   style: Theme.of(context)
                       .textTheme
                       .headline1!
@@ -386,16 +386,6 @@ class _AddRecordPageState extends State<AddRecordPage> {
                 ),
               ],
             ),
-          ),
-          SizedBox(
-            height: 3.h,
-          ),
-          Text(
-            "Remember: please let your local clinical team know if your baby has an unplanned admission to hospital, as these need to be recorded as part of the DOLFIN trial.",
-            style: Theme.of(context)
-                .textTheme
-                .headline1!
-                .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
             height: 3.h,

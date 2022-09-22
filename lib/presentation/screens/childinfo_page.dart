@@ -471,7 +471,7 @@ class HospitalAdmissionWidget extends StatelessWidget {
         context: context,
         builder: (BuildContext context) => AlertDialog(
           content: const Text(
-              'Have you had any new unplanned hospital admissions in the last week?'),
+              'Has your child had any new unplanned hospital admissions in the last week?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {

@@ -121,7 +121,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             height: 3.h,
           ),
           Text(
-            'If you have any questions or concerns about your baby or giving the supplement, please contact your local clinical team using the contact details in your Parent Discharge Pack. If you are having trouble completing this form, please contact the research team on dolfin@npeu.ox.ac.uk / 01865 617919.',
+            'If you have any questions or concerns about your baby or giving the supplement, please contact your local NHS clinical team using the contact details in your Parent Discharge Pack. If you are having trouble completing this form, please contact the research team on dolfin@npeu.ox.ac.uk / 01865 617919.',
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium!

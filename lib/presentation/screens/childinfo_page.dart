@@ -178,7 +178,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                         direction: Axis.horizontal,
                         children: [
                           SizedBox(
-                              width: 80.0,
+                              width: 120.0,
                               child: Text(
                                 _childName,
                                 overflow: TextOverflow.ellipsis,

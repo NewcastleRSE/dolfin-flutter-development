@@ -63,7 +63,7 @@ class RecordContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 100.w,
-      height: 16.h,
+      height: 19.h,
       margin: EdgeInsets.symmetric(vertical: 1.h),
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
       decoration: BoxDecoration(

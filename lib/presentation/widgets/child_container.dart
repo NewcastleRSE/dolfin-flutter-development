@@ -20,9 +20,9 @@ class ChildContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 100.w,
-      height: 10.h,
+      height: 12.h,
       margin: EdgeInsets.symmetric(vertical: 1.h),
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 28),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: AppColours.light_blue,

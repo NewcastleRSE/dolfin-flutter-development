@@ -172,11 +172,13 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                       SizedBox(
                         height: 3.h,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                      Wrap(
+                        spacing: 1.0, // gap between adjacent chips
+                        runSpacing: 4.0, // gap between lines
+                        direction: Axis.horizontal,
                         children: [
                           SizedBox(
-                              width: 150.0,
+                              width: 80.0,
                               child: Text(
                                 _childName,
                                 overflow: TextOverflow.ellipsis,

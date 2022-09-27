@@ -306,6 +306,10 @@ class _AddWeightPageState extends State<AddWeightPage> {
   }
 
   _addWeight() {
+    // make time midday to avoid problem of timezones
+    print(_recordDate);
+    var middayDate  = DateTime(_recordDate.year, _recordDate.month, _recordDate.day, 12, 00, 00);
+    print(middayDate);
     if (_formKey.currentState!.validate()) {
       WeightModel record = WeightModel(
         date: _recordDate,

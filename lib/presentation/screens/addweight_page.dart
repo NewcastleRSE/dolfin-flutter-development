@@ -305,15 +305,12 @@ class _AddWeightPageState extends State<AddWeightPage> {
     );
   }
 
+
   _addWeight() {
-    // make time midday to avoid problem of timezones
-    print(_recordDate);
-    var middayDate  = DateTime(_recordDate.year, _recordDate.month, _recordDate.day, 12, 00, 00);
-    print(middayDate);
     if (_formKey.currentState!.validate()) {
       WeightModel record = WeightModel(
-        date: _recordDate,
-        dateSubmitted: DateTime.now(),
+        date: FireStoreCrud().setTimeToMidday(_recordDate),
+        dateSubmitted: FireStoreCrud().setTimeToMidday(DateTime.now()),
         weight: _weightcontroller.text,
         child: widget.child!.id,
         studyID: widget.child!.studyID,
@@ -323,7 +320,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
       isEditMode
           ? FireStoreCrud().updateWeight(
               docid: widget.record!.id,
-              date: record.date,
+              date: FireStoreCrud().setTimeToMidday(record.date),
               weight: record.weight,
               numScoops: record.numScoops)
           : FireStoreCrud().addWeight(record: record);

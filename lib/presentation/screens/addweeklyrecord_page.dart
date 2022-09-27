@@ -573,7 +573,7 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
   _addWeeklyRecord() {
     if (_formKey.currentState!.validate()) {
       WeeklyRecordModel record = WeeklyRecordModel(
-        date: recordDate,
+        date: FireStoreCrud().setTimeToMidday(recordDate),
         numSupplements: _numSupplements,
         reasons: _reasons,
         otherReason: _reasoncontroller.text,

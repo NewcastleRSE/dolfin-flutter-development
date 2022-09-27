@@ -11,6 +11,11 @@ class FireStoreCrud {
 
   final _firestore = FirebaseFirestore.instance;
 
+  setTimeToMidday(time) {
+    // make time midday to avoid problem of timezones
+    return DateTime(time.year, time.month, time.day, 12, 00, 00);
+  }
+
   Future<void> addChild({required ChildModel child}) async {
     var childcollection = _firestore.collection('children');
     await childcollection.add(child.tojson());
@@ -33,7 +38,7 @@ class FireStoreCrud {
 
   Future<void> addChildHospitalAdmission(
       String child_id, String study_id) async {
-    DateTime now = DateTime.now();
+    DateTime now = setTimeToMidday(DateTime.now());
     // String today = DateTime(now.year, now.month, now.day).toString();
     // // strip time from date
     // today = today.split(' ')[0];

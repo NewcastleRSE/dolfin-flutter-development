@@ -305,11 +305,12 @@ class _AddWeightPageState extends State<AddWeightPage> {
     );
   }
 
+
   _addWeight() {
     if (_formKey.currentState!.validate()) {
       WeightModel record = WeightModel(
-        date: _recordDate,
-        dateSubmitted: DateTime.now(),
+        date: FireStoreCrud().setTimeToMidday(_recordDate),
+        dateSubmitted: FireStoreCrud().setTimeToMidday(DateTime.now()),
         weight: _weightcontroller.text,
         child: widget.child!.id,
         studyID: widget.child!.studyID,
@@ -319,7 +320,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
       isEditMode
           ? FireStoreCrud().updateWeight(
               docid: widget.record!.id,
-              date: record.date,
+              date: FireStoreCrud().setTimeToMidday(record.date),
               weight: record.weight,
               numScoops: record.numScoops)
           : FireStoreCrud().addWeight(record: record);

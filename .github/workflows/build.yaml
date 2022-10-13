@@ -51,11 +51,6 @@ jobs:
           SCOPE: ${{secrets.SCOPE}}
           GRANT_TYPE: ${{secrets.GRANT_TYPE}}
           CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
-      - name: Print things
-        shell: bash
-        run: |
-          echo ${{steps.decode_keystore.outputs.filePath}}
-          ls keys/android/
       - name: Decode Keystore
         id: decode_keystore
         uses: timheuer/base64-to-file@v1
@@ -63,6 +58,11 @@ jobs:
           fileDir: 'keys/android/'
           fileName: 'upload-keystore.jks'
           encodedString: ${{ secrets.KEYSTORE }}
+      - name: Print things
+        shell: bash
+        run: |
+          echo ${{steps.decode_keystore.outputs.filePath}}
+          ls keys/android/          
       - name: Move keystore
         working-directory: ./keys/android
         run: mv ${{ steps.decode_keystore.outputs.filePath }} .

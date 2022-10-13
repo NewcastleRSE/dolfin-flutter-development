@@ -58,14 +58,12 @@ jobs:
           fileDir: 'keys/android/'
           fileName: 'upload-keystore.jks'
           encodedString: ${{ secrets.KEYSTORE }}
-      - name: Print things
-        shell: bash
-        run: |
-          echo ${{steps.decode_keystore.outputs.filePath}}
-          ls keys/android/          
       - name: Move keystore
         working-directory: ./keys/android
-        run: mv ${{ steps.decode_keystore.outputs.filePath }} .
+        run: |
+          echo ${{steps.decode_keystore.outputs.filePath}}
+          ls keys/android/   
+          mv ${{ steps.decode_keystore.outputs.filePath }} . 
       - name: Fastlane Build & Release
         working-directory: ./android
         run: bundle exec fastlane alpha

@@ -61,9 +61,8 @@ jobs:
       - name: Move keystore
         working-directory: ./keys/android
         run: |
-          echo ${{steps.decode_keystore.outputs.filePath}}
-          ls keys/android/   
-          mv ${{ steps.decode_keystore.outputs.filePath }} . 
+          ls   
+          # mv ${{ steps.decode_keystore.outputs.filePath }} . 
       - name: Fastlane Build & Release
         working-directory: ./android
         run: bundle exec fastlane alpha

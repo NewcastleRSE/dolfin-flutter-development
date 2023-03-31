@@ -1,5 +1,5 @@
-# dolfin-flutter
-The Flutter-based app for the [DOLFIN Project](https://www.npeu.ox.ac.uk/dolfin).   
+# dolfin-flutter-development
+The Flutter-based app for the [DOLFIN Project](https://www.npeu.ox.ac.uk/dolfin).   This is a development application. Interaction with NPEU databases have been removed from sing up and add child pages.
 
 ## About
 

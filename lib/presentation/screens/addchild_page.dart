@@ -219,19 +219,19 @@ class _AddChildPageState extends State<AddChildPage> {
                   context: context);
 
 
-        checkChild(_trialIDcontroller.text).then((childExists) async {
-          // child is study participant
-          if (childExists) {
+        // checkChild(_trialIDcontroller.text).then((childExists) async {
+        //   // child is study participant
+        //   if (childExists) {
             // get child details from Oxford API
-            var details = await getChildDetails(_trialIDcontroller.text);
+            // var details = await getChildDetails(_trialIDcontroller.text);
 
 
             String? parentEmail = FirebaseAuth.instance.currentUser!.email;
-
+// use hard coded discharge date to avoid interacting with NPEU
             ChildModel child = ChildModel(
                 dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
                 name: _namecontroller.text,
-                dischargeDate: details,
+                dischargeDate: '2022-12-03',
                 studyID: _trialIDcontroller.text,
                 parentID: FirebaseAuth.instance.currentUser!.uid,
                 id: '',
@@ -253,7 +253,7 @@ class _AddChildPageState extends State<AddChildPage> {
                                 dob: DateFormat('yyyy-MM-dd').format(
                                     dateOfBirth),
                                 name: _namecontroller.text,
-                                dischargeDate: details,
+                                dischargeDate:  '2022-12-03',
                                 studyID: _trialIDcontroller.text,
                                 parentID:
                                 FirebaseAuth.instance.currentUser!.uid,
@@ -272,7 +272,7 @@ class _AddChildPageState extends State<AddChildPage> {
             isEditMode
                 ? FireStoreCrud().updateChild(
                 name: _namecontroller.text,
-                dischargeDate: details,
+                dischargeDate: '2022-12-03',
                 docid: widget.child!.id,
                 dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
                 parent_email: parentEmail.toString())
@@ -295,16 +295,16 @@ class _AddChildPageState extends State<AddChildPage> {
                         )
                       ],
                     ));
-          } else {
-            print('child does not exist in study');
-            MySnackBar.error(
-                message:
-                "Problem with child's Study Number, please check the ID is correct and"
-                    " try again",
-                color: Colors.red,
-                context: context);
-          }
-        });
+        //   } else {
+        //     print('child does not exist in study');
+        //     MySnackBar.error(
+        //         message:
+        //         "Problem with child's Study Number, please check the ID is correct and"
+        //             " try again",
+        //         color: Colors.red,
+        //         context: context);
+        //   }
+        // });
         }
 
       });// child exists with Oxford

@@ -95,7 +95,7 @@ class MyApp extends StatelessWidget {
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'DOLFIN App',
+            title: 'DOLFIN DEV App',
             themeMode: ThemeMode.light,
             theme: MyTheme.lightTheme,
             darkTheme: MyTheme.darkTheme,

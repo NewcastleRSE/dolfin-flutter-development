@@ -16,6 +16,11 @@ class FireStoreCrud {
     return DateTime(time.year, time.month, time.day, 12, 00, 00);
   }
 
+    setTimeToEarly(time) {
+    // make time midday to avoid problem of timezones
+    return DateTime(time.year, time.month, time.day, 06, 00, 00);
+  }
+
   Future<void> addChild({required ChildModel child}) async {
     var childcollection = _firestore.collection('children');
     await childcollection.add(child.tojson());

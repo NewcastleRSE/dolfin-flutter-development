@@ -24,7 +24,7 @@ jobs:
           ruby-version: 2.6
           bundler-cache: true
       - name: Setup Flutter
-        uses: subosito/flutter-action@v1
+        uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
       - name: Install Ruby Dependencies

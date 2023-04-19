@@ -65,7 +65,7 @@ jobs:
           # mv ${{ steps.decode_keystore.outputs.filePath }} .
       - name : check file
         working-directory: .
-        run: ls ./android/keys/android
+        run: pwd
       - name : check file 2
         working-directory: ./keys/android
         run: cat upload-keystore.jks

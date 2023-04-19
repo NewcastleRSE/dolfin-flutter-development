@@ -66,4 +66,3 @@ jobs:
       - name: Fastlane Build & Release
         working-directory: ./android
         run: bundle exec fastlane alpha
-

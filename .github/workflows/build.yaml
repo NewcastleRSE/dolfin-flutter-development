@@ -62,7 +62,9 @@ jobs:
         working-directory: ./keys/android
         run: |
           ls   
-          # mv ${{ steps.decode_keystore.outputs.filePath }} . 
+          # mv ${{ steps.decode_keystore.outputs.filePath }} .
+      - name : check file
+        run: ls /home/runner/work/dolfin-flutter-development/dolfin-flutter-development/android/keys/android/upload-keystore.jks
       - name: Fastlane Build & Release
         working-directory: ./android
         run: bundle exec fastlane alpha

@@ -59,10 +59,12 @@ jobs:
           fileName: 'upload-keystore.jks'
           encodedString: ${{ secrets.KEYSTORE }}
       - name: Move keystore
-        working-directory: android/keys/android
+        working-directory: ./keys/android
         run: |
           ls   
           # mv ${{ steps.decode_keystore.outputs.filePath }} .
+      - name : check file 2
+        working-directory: ./keys/android
+        run: cat upload-keystore.jks
       - name: Fastlane Build & Release
-        working-directory: ./android
         run: bundle exec fastlane alpha

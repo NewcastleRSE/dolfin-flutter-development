@@ -1,5 +1,7 @@
 # dolfin-flutter-development
-The Flutter-based app for the [DOLFIN Project](https://www.npeu.ox.ac.uk/dolfin).   This is a development application. Interaction with NPEU databases have been removed from sing up and add child pages.
+The Flutter-based app for the [DOLFIN Project](https://www.npeu.ox.ac.uk/dolfin).   This is a development application.
+
+Interaction with the NPEU database can be skipped by manually adding a user and child through the Firebase UI.      
 
 ## About
 

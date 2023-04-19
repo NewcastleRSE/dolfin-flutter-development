@@ -60,6 +60,8 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
     var childDetails = await checkChild
         .call(<String, String>{"child_id": widget.child!.id}).catchError(
             (error) => nope(error));
+    print('CHILDINFO');
+    print(childDetails);
     return childDetails;
   }
 
@@ -221,6 +223,8 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                             future: _getChildInfo(),
                             builder: (BuildContext context,
                                 AsyncSnapshot<HttpsCallableResult> snapshot) {
+                              print('SNAPSHOT');
+                              print(snapshot.error);
                               if (snapshot.hasError) {
                                 return const Text('ERROR');
                               } else if (!snapshot.hasData) {

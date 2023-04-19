@@ -151,7 +151,9 @@ class _HomePageState extends State<HomePage> {
     bool past3 = false;
 
     childrenSnapshot.listen((children) {
+      print('CHILDREN SNAP');
       for (final child in children) {
+        print(child);
         DateTime dischargeDate = DateTime.parse(child.dischargeDate);
 
         // if it has been over 3 months since hospital discharge show option to turn off daily reminders

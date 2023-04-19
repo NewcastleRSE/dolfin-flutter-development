@@ -203,113 +203,113 @@ class _AddChildPageState extends State<AddChildPage> {
       FireStoreCrud()
           .childNotRegisteredAlready(studyID: _trialIDcontroller.text).then((proceed) {
 
-            if (!proceed) {
-              print('child already registered');
-              MySnackBar.error(
-                  message:
-                  "This child has already been registered.",
-                  color: Colors.red,
-                  context: context);
+        if (!proceed) {
+          print('child already registered');
+          MySnackBar.error(
+              message:
+              "This child has already been registered.",
+              color: Colors.red,
+              context: context);
 
         } else {
+          MySnackBar.error(
+              message:
+              "Checking child details are correct...",
+              color: Colors.blue,
+              context: context);
+
+
+          checkChild(_trialIDcontroller.text).then((childExists) async {
+            // child is study participant
+            if (childExists) {
+              // get child details from Oxford API
+              var details = await getChildDetails(_trialIDcontroller.text);
+
+
+              String? parentEmail = FirebaseAuth.instance.currentUser!.email;
+
+              ChildModel child = ChildModel(
+                  dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
+                  name: _namecontroller.text,
+                  dischargeDate: details,
+                  studyID: _trialIDcontroller.text,
+                  parentID: FirebaseAuth.instance.currentUser!.uid,
+                  id: '',
+                  parent_email: parentEmail.toString()
+              );
+
+              isEditMode
+                  ? showDialog<String>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) =>
+                      AlertDialog(
+                        content: const Text(
+                            "Thank you. Your child's details have been updated successfully."),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              ChildModel updatedChild = ChildModel(
+                                  dob: DateFormat('yyyy-MM-dd').format(
+                                      dateOfBirth),
+                                  name: _namecontroller.text,
+                                  dischargeDate: details,
+                                  studyID: _trialIDcontroller.text,
+                                  parentID:
+                                  FirebaseAuth.instance.currentUser!.uid,
+                                  id: widget.child!.id,
+                                  parent_email: parentEmail.toString()
+                              );
+                              Navigator.pushNamed(context, childinfopage,
+                                  arguments: updatedChild);
+                            },
+                            child: const Text('OK'),
+                          )
+                        ],
+                      ))
+                  : Navigator.pop(context);
+
+              isEditMode
+                  ? FireStoreCrud().updateChild(
+                  name: _namecontroller.text,
+                  dischargeDate: details,
+                  docid: widget.child!.id,
+                  dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
+                  parent_email: parentEmail.toString())
+                  : FireStoreCrud().addChild(child: child);
+
+              showDialog<String>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) =>
+                      AlertDialog(
+                        content: const Text(
+                            "Thank you. Your child has been added."),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                            child: const Text('OK'),
+                          )
+                        ],
+                      ));
+            } else {
+              print('child does not exist in study');
               MySnackBar.error(
                   message:
-                  "Checking child details are correct...",
-                  color: Colors.blue,
+                  "Problem with child's Study Number, please check the ID is correct and"
+                      " try again",
+                  color: Colors.red,
                   context: context);
-
-
-        // checkChild(_trialIDcontroller.text).then((childExists) async {
-        //   // child is study participant
-        //   if (childExists) {
-            // get child details from Oxford API
-            // var details = await getChildDetails(_trialIDcontroller.text);
-
-
-            String? parentEmail = FirebaseAuth.instance.currentUser!.email;
-// use hard coded discharge date to avoid interacting with NPEU
-            ChildModel child = ChildModel(
-                dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-                name: _namecontroller.text,
-                dischargeDate: '2022-12-03',
-                studyID: _trialIDcontroller.text,
-                parentID: FirebaseAuth.instance.currentUser!.uid,
-                id: '',
-              parent_email: parentEmail.toString()
-            );
-
-            isEditMode
-                ? showDialog<String>(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) =>
-                    AlertDialog(
-                      content: const Text(
-                          "Thank you. Your child's details have been updated successfully."),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            ChildModel updatedChild = ChildModel(
-                                dob: DateFormat('yyyy-MM-dd').format(
-                                    dateOfBirth),
-                                name: _namecontroller.text,
-                                dischargeDate:  '2022-12-03',
-                                studyID: _trialIDcontroller.text,
-                                parentID:
-                                FirebaseAuth.instance.currentUser!.uid,
-                                id: widget.child!.id,
-                                parent_email: parentEmail.toString()
-                               );
-                            Navigator.pushNamed(context, childinfopage,
-                                arguments: updatedChild);
-                          },
-                          child: const Text('OK'),
-                        )
-                      ],
-                    ))
-                : Navigator.pop(context);
-
-            isEditMode
-                ? FireStoreCrud().updateChild(
-                name: _namecontroller.text,
-                dischargeDate: '2022-12-03',
-                docid: widget.child!.id,
-                dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-                parent_email: parentEmail.toString())
-                : FireStoreCrud().addChild(child: child);
-
-            showDialog<String>(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) =>
-                    AlertDialog(
-                      content: const Text(
-                          "Thank you. Your child has been added."),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                          child: const Text('OK'),
-                        )
-                      ],
-                    ));
-        //   } else {
-        //     print('child does not exist in study');
-        //     MySnackBar.error(
-        //         message:
-        //         "Problem with child's Study Number, please check the ID is correct and"
-        //             " try again",
-        //         color: Colors.red,
-        //         context: context);
-        //   }
-        // });
+            }
+          });
         }
 
       });// child exists with Oxford
-      } // validate
-    }
+    } // validate
+  }
 
 
   _showdatepickerdob() async {
@@ -363,7 +363,7 @@ class _AddChildPageState extends State<AddChildPage> {
         Text(
           'Were you recruited to the study before hospital discharge?',
           style:
-              Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14.sp),
+          Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14.sp),
         ),
         SizedBox(
           height: 2.h,
@@ -416,7 +416,7 @@ class _AddChildPageState extends State<AddChildPage> {
         Text(
           isEditMode ? 'Edit Child Details' : 'Add a Child',
           style:
-              Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14.sp),
+          Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14.sp),
         ),
         const SizedBox()
       ],
@@ -495,20 +495,20 @@ class _AddChildPageState extends State<AddChildPage> {
       };
 
       var authResponse = await http.post(Uri.parse(authUrl), body: body);
-        var token = jsonDecode(authResponse.body)['access_token'];
+      var token = jsonDecode(authResponse.body)['access_token'];
 
-        var childDatesUrl = Uri.https(baseUrl,
-            '/dolfindata/api/participant/dates/$childID');
+      var childDatesUrl = Uri.https(baseUrl,
+          '/dolfindata/api/participant/dates/$childID');
 
-        // returns dates as dictionary or 204 if child does not exist
-        final response = await http
-            .get(childDatesUrl, headers: {'Authorization': 'Bearer $token'});
-        if (response.statusCode == 200) {
-          var details = jsonDecode(response.body);
-          // if discharge date is null then add null to firestore
-          if (details['DISCHARGE_DATE'] == null) {
-            return null;
-          } else {
+      // returns dates as dictionary or 204 if child does not exist
+      final response = await http
+          .get(childDatesUrl, headers: {'Authorization': 'Bearer $token'});
+      if (response.statusCode == 200) {
+        var details = jsonDecode(response.body);
+        // if discharge date is null then add null to firestore
+        if (details['DISCHARGE_DATE'] == null) {
+          return null;
+        } else {
           // otherwise get date formatted correctly
           var dischargeTimestamp = DateTime.parse(details['DISCHARGE_DATE']);
 
@@ -518,7 +518,7 @@ class _AddChildPageState extends State<AddChildPage> {
           return dischargeStr;
 
         }
-    }
+      }
     } catch (err) {
       print(err);
       return false;

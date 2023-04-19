@@ -58,11 +58,11 @@ jobs:
           fileDir: 'keys/android/'
           fileName: 'upload-keystore.jks'
           encodedString: ${{ secrets.KEYSTORE }}
-      - name: Move keystore
-        working-directory: ./keys/android
-        run: |
-          ls   
-          # mv ${{ steps.decode_keystore.outputs.filePath }} .
+#      - name: Move keystore
+#        working-directory: ./keys/android
+#        run: |
+#          ls
+#          # mv ${{ steps.decode_keystore.outputs.filePath }} .
       - name: Copy keystore
         working-directory: ./android
         run: |

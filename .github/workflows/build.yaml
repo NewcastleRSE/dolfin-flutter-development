@@ -62,7 +62,7 @@ jobs:
         working-directory: ./android
         run: |
           ls
-#           mv ${{ steps.decode_keystore.outputs.filePath }} .
+          mv ${{ steps.decode_keystore.outputs.filePath }} .
 #      - name: Copy keystore
 #        working-directory: ./android
 #        run: |

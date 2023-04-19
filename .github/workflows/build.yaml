@@ -63,8 +63,9 @@ jobs:
         run: |
           ls   
           # mv ${{ steps.decode_keystore.outputs.filePath }} .
-      - name : check file 2
-        working-directory: ./keys/android
-        run: cat upload-keystore.jks
+      - name: Copy keystore
+        working directory: ./keys/android
+        run: cp upload-keystore.jks ../../android/keys/android
       - name: Fastlane Build & Release
+        working-directory: ./android
         run: bundle exec fastlane alpha

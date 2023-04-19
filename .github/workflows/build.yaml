@@ -65,7 +65,9 @@ jobs:
           # mv ${{ steps.decode_keystore.outputs.filePath }} .
       - name: Copy keystore
         working-directory: ./android
-        run: cp ${{ steps.decode_keystore.outputs.filePath }} ./keys/android/upload-keystore.jks
+        run: |
+          mkdir -p keys/android
+          cp ${{ steps.decode_keystore.outputs.filePath }} keys/android/
       - name: Fastlane Build & Release
         working-directory: ./android
         run: bundle exec fastlane alpha

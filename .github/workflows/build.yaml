@@ -64,7 +64,7 @@ jobs:
           ls   
           # mv ${{ steps.decode_keystore.outputs.filePath }} .
       - name: Copy keystore
-        working directory: ./keys/android
+        working-directory: ./keys/android
         run: cp upload-keystore.jks ../../android/keys/android
       - name: Fastlane Build & Release
         working-directory: ./android

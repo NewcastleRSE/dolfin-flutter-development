@@ -67,4 +67,3 @@ jobs:
         working-directory: ./android
         run: bundle exec fastlane alpha
 
-

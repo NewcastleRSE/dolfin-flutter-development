@@ -68,7 +68,11 @@ Deploying to a production style setup but on the local system. Examples of this 
 
 ### Production
 
-Deploying to the production system. Examples of this would include cloud, HPC or virtual machine. 
+The GitHub Action for building the Android app requires you to add secrets to GitHub.
+
+You will need to create a Google Play json key and give a service account email access to your app. You can follow instructions to do this [here](https://help.radio.co/en/articles/6232140-how-to-get-your-google-play-json-key). 
+
+You will also need to generate an app signing key, encode it and add it to GitHub secrets, following instructions from step 2 [here](https://proandroiddev.com/how-to-securely-build-and-sign-your-android-app-with-github-actions-ad5323452ce). 
 
 ## Usage
 

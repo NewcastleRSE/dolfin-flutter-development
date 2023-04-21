@@ -462,8 +462,8 @@ class _AddRecordPageState extends State<AddRecordPage> {
           : "Thank you for submitting your baby's supplement data.";
 
       RecordModel record = RecordModel(
-        date: FireStoreCrud().setTimeToEarly(recordDate),
-        dateSubmitted: FireStoreCrud().setTimeToEarly(DateTime.now()),
+        date: FireStoreCrud().setTimeToMidday(recordDate),
+        dateSubmitted: FireStoreCrud().setTimeToMidday(DateTime.now()),
         supplement: _supplement,
         reasons: _reasons,
         otherReason: _reasoncontroller.text,

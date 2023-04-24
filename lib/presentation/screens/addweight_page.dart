@@ -309,8 +309,8 @@ class _AddWeightPageState extends State<AddWeightPage> {
   _addWeight() {
     if (_formKey.currentState!.validate()) {
       WeightModel record = WeightModel(
-        date: FireStoreCrud().setTimeToMidday(_recordDate),
-        dateSubmitted: FireStoreCrud().setTimeToMidday(DateTime.now()),
+        date: FireStoreCrud().setTimeToEarly(_recordDate),
+        dateSubmitted: FireStoreCrud().setTimeToEarly(DateTime.now()),
         weight: _weightcontroller.text,
         child: widget.child!.id,
         studyID: widget.child!.studyID,

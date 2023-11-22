@@ -142,7 +142,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
             height: 1.h,
           ),
           Text(
-            'When was this measurement recorded?',
+            'What date was this weight recorded?',
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium!
@@ -240,7 +240,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
             height: 4.h,
           ),
           Text(
-            "Getting low on supplement? If you have less than 30 sachets of supplement left, please contact the research team on dolfin@npeu.ox.ac.uk / 01865 617919",
+            "Getting low on supplement? Your local NHS clinical team will arrange a delivery to you, but if you have any concerns about this do get in touch with them.",
             style: Theme.of(context)
                 .textTheme
                 .headline1!

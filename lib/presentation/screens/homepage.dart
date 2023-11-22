@@ -519,7 +519,7 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-  
+
   Widget _nodatawidget() {
     return Center(
       child: Column(

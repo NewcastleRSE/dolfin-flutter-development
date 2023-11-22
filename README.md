@@ -17,6 +17,7 @@ The NPEU team have access to the Firebase database using a service account with 
 * [Mike Simpson](https://rse.ncldata.dev/mike-simpson) [(@mdsimpson42)](https://github.com/mdsimpson42) 
 * [Kate Court](https://rse.ncldata.dev/kate-court) [(@KateCourt)](https://github.com/KateCourt) 
 * [Mark Turner](https://rse.ncldata.dev/mark-turner) [(@markdturner)](https://github.com/markdturner)
+* [Imre Draskovits](https://rse.ncldata.dev/imre-draskovits) [(@notimre)](https://github.com/notimre)
 
 ## Getting Started
 
@@ -43,9 +44,13 @@ Once Flutter, Android Studio and VS Code are installed and configured, you can r
 
 ### Debugging the App (iOS)
 
+`N/A`
+
 ### Installation
 
 #### Android
+
+`N/A`
 
 #### iOS
 
@@ -58,26 +63,8 @@ flutter build ipa
 bundle exec fastlane beta
 ```
 
-### Running Tests
-
-How to run tests on your local system.
-
-## Deployment
-
-### Local
-
-Deploying to a production style setup but on the local system. Examples of this would include `venv`, `anaconda`, `Docker` or `minikube`. 
-
-### Production
-
-Deploying to the production system. Examples of this would include cloud, HPC or virtual machine. 
-
-## Usage
-
-Any links to production environment, video demos and screenshots.
-
 ### Regenerating the Icons
-The base icon image is specified in `pubspec.yaml` and the relevent dependencies should be installed automatically.
+The base icon image is specified in `pubspec.yaml` and the relevant dependencies should be installed automatically.
 To regenerate the icons (for Android and iOS), edit the master image file and then use the following commands:
 
 ```
@@ -90,7 +77,6 @@ flutter pub run flutter_launcher_icons:main
 - [x] Initial Development  
 - [x] Minimum viable product  
 - [x] Feature-Complete
-- [ ] Testing
 
 ## Acknowledgements
 This work was funded by a grant from the UK Research Councils, EPSRC grant ref. EP/L012345/1, “Example project title, please update”.

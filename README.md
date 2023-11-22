@@ -14,10 +14,10 @@ The NPEU team have access to the Firebase database using a service account with 
 ### Project Team
 **PI(s):** [Jeremy Parr](https://research.ncl.ac.uk/neurodisability/theteam/jeremyparr/)  
 **RSE(s):** 
-* [Mike Simpson](https://rse.ncldata.dev/mike-simpson) [(@mdsimpson42)](https://github.com/mdsimpson42) 
-* [Kate Court](https://rse.ncldata.dev/kate-court) [(@KateCourt)](https://github.com/KateCourt) 
-* [Mark Turner](https://rse.ncldata.dev/mark-turner) [(@markdturner)](https://github.com/markdturner)
-* [Imre Draskovits](https://rse.ncldata.dev/imre-draskovits) [(@notimre)](https://github.com/notimre)
+* [Mike Simpson](https://rse.ncldata.dev/team/mike-simpson) [(@mdsimpson42)](https://github.com/mdsimpson42) 
+* [Kate Court](https://rse.ncldata.dev/team/kate-court) [(@KateCourt)](https://github.com/KateCourt) 
+* [Mark Turner](https://rse.ncldata.dev/team/mark-turner) [(@markdturner)](https://github.com/markdturner)
+* [Imre Draskovits](https://rse.ncldata.dev/team/imre-draskovits) [(@notimre)](https://github.com/notimre)
 
 ## Getting Started
 

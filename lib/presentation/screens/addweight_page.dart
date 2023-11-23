@@ -305,7 +305,6 @@ class _AddWeightPageState extends State<AddWeightPage> {
     );
   }
 
-
   _addWeight() {
     if (_formKey.currentState!.validate()) {
       WeightModel record = WeightModel(

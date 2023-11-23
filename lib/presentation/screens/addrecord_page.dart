@@ -58,10 +58,18 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
     _reasons = isEditMode ? widget.record!.reasons : [];
     reason0 = isEditMode ? widget.record!.reasons.contains('I forgot') : false;
-    reason1 = isEditMode ? widget.record!.reasons.contains('I have run out') : false;
-    reason2 = isEditMode ? widget.record!.reasons.contains('My baby refused it') : false;
-    reason3 = isEditMode ? widget.record!.reasons.contains('My baby spat it out') : false;
-    reason4 = isEditMode ? widget.record!.reasons.contains('My baby was too unwell to take the supplement') : false;
+    reason1 =
+        isEditMode ? widget.record!.reasons.contains('I have run out') : false;
+    reason2 = isEditMode
+        ? widget.record!.reasons.contains('My baby refused it')
+        : false;
+    reason3 = isEditMode
+        ? widget.record!.reasons.contains('My baby spat it out')
+        : false;
+    reason4 = isEditMode
+        ? widget.record!.reasons
+            .contains('My baby was too unwell to take the supplement')
+        : false;
     reason5 = isEditMode ? widget.record!.reasons.contains('Other') : false;
 
     _reasoncontroller = TextEditingController(
@@ -75,15 +83,9 @@ class _AddRecordPageState extends State<AddRecordPage> {
         ? true
         : false;
 
-    _otherReasonVisible =
-        (isEditMode )
-            ? true
-            : false;
+    _otherReasonVisible = (isEditMode) ? true : false;
 
-    _ranOutVisible =
-        (isEditMode )
-            ? true
-            : false;
+    _ranOutVisible = (isEditMode) ? true : false;
 
     _childStudyID = isEditMode ? widget.record!.studyID : widget.child!.studyID;
   }
@@ -256,9 +258,9 @@ class _AddRecordPageState extends State<AddRecordPage> {
                             if (value == true) {
                               _reasons.add('I forgot');
                             } else {
-                              _reasons.removeWhere((element) => element == 'I forgot');
+                              _reasons.removeWhere(
+                                  (element) => element == 'I forgot');
                             }
-
                           });
                         },
                       ),
@@ -275,9 +277,9 @@ class _AddRecordPageState extends State<AddRecordPage> {
                               _ranOutVisible = true;
                             } else {
                               _ranOutVisible = false;
-                              _reasons.removeWhere((element) => element == 'I have run out');
+                              _reasons.removeWhere(
+                                  (element) => element == 'I have run out');
                             }
-
                           });
                         },
                       ),
@@ -292,9 +294,9 @@ class _AddRecordPageState extends State<AddRecordPage> {
                             if (value == true) {
                               _reasons.add('My baby refused it');
                             } else {
-                              _reasons.removeWhere((element) => element == 'My baby refused it');
+                              _reasons.removeWhere(
+                                  (element) => element == 'My baby refused it');
                             }
-
                           });
                         },
                       ),
@@ -309,26 +311,29 @@ class _AddRecordPageState extends State<AddRecordPage> {
                             if (value == true) {
                               _reasons.add('My baby spat it out');
                             } else {
-                              _reasons.removeWhere((element) => element == 'My baby spat it out');
+                              _reasons.removeWhere((element) =>
+                                  element == 'My baby spat it out');
                             }
-
                           });
                         },
                       ),
                     ),
                     ListTile(
-                      title: const Text('My baby was too unwell to take the supplement'),
+                      title: const Text(
+                          'My baby was too unwell to take the supplement'),
                       leading: Checkbox(
                         value: reason4,
                         onChanged: (bool? value) {
                           setState(() {
                             reason4 = value!;
                             if (value == true) {
-                              _reasons.add('My baby was too unwell to take the supplement');
+                              _reasons.add(
+                                  'My baby was too unwell to take the supplement');
                             } else {
-                              _reasons.removeWhere((element) => element == 'My baby was too unwell to take the supplement');
+                              _reasons.removeWhere((element) =>
+                                  element ==
+                                  'My baby was too unwell to take the supplement');
                             }
-
                           });
                         },
                       ),
@@ -345,9 +350,9 @@ class _AddRecordPageState extends State<AddRecordPage> {
                               _otherReasonVisible = true;
                             } else {
                               _otherReasonVisible = false;
-                              _reasons.removeWhere((element) => element == 'Other');
+                              _reasons
+                                  .removeWhere((element) => element == 'Other');
                             }
-
                           });
                         },
                       ),

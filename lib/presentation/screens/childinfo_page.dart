@@ -223,7 +223,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                           if (snapshot.hasError) {
                             return const Text('ERROR');
                           } else if (!snapshot.hasData) {
-                            return Column(children: [
+                            return const Column(children: [
                               Center(
                                   child: Text('Loading...',
                                       textAlign: TextAlign.center))
@@ -253,9 +253,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
 
                           String displayText = showButton
                               ? "Your next weekly supplement check is due. Please click the button below to submit your child's dosage info for the last 7 days."
-                              : "You have already submitted your weekly supplement data for " +
-                                  widget.child!.name +
-                                  " this week.";
+                              : "You have already submitted your weekly supplement data for ${widget.child!.name} this week.";
 
                           if (weekly) {
                             return Column(children: [
@@ -282,8 +280,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                       },
                                     )
                                   : Text(
-                                      "Your next supplement check is due on: " +
-                                          dueDate,
+                                      "Your next supplement check is due on: $dueDate",
                                       textAlign: TextAlign.left,
                                       style: Theme.of(context)
                                           .textTheme
@@ -333,12 +330,12 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                             // Set border color
                                             width: 3.0),
                                         // Set border width
-                                        borderRadius: BorderRadius.all(
+                                        borderRadius: const BorderRadius.all(
                                             Radius.circular(
                                                 10.0)) // Make rounded corner of border
                                         ),
-                                    child: Text(
-                                        "Please only start adding supplement records once your child has been discharged home from hospital."),
+                                    child: const Text(
+                                        " "), //"Please only start adding supplement records once your child has been discharged home from hospital."),
                                   ),
                                   ListView.builder(
                                     scrollDirection: Axis.vertical,

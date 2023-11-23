@@ -6,6 +6,7 @@ import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/presentation/widgets/child_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -23,6 +24,7 @@ import 'package:dolfin_flutter/shared/services/notification_service.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -263,6 +265,32 @@ class _HomePageState extends State<HomePage> {
                             ),
                           )
                         ],
+                      ),
+                      SizedBox(
+                        height: 3.h,
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          text: "You can find the app user guide at ",
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(fontSize: 10.sp),
+                          children: [
+                          TextSpan(
+                          text: 'https://www.npeu.ox.ac.uk/dolfin/parents/resources',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(fontSize: 10.sp, color: AppColours.light_blue),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              launch(
+                                  'https://www.npeu.ox.ac.uk/dolfin/parents/resources');
+                            },
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(
                         height: 3.h,

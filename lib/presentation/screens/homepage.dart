@@ -271,7 +271,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       RichText(
                         text: TextSpan(
-                          text: "You can find the app user guide at ",
+                          text: "You can find the app user guide at \n",
                           style: Theme.of(context)
                               .textTheme
                               .displayMedium!

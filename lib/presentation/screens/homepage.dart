@@ -39,8 +39,8 @@ class _HomePageState extends State<HomePage> {
       text: FirebaseAuth.instance.currentUser!.displayName);
 
   late bool past3;
-  String _versionNo = "v";
-  String _buildNo = "b";
+  final String _versionNo = "v";
+  final String _buildNo = "b";
 
   @override
   void initState() {
@@ -232,7 +232,7 @@ class _HomePageState extends State<HomePage> {
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline1!
+                                  .displayLarge!
                                   .copyWith(fontSize: 15.sp),
                             ),
                           ),
@@ -274,7 +274,7 @@ class _HomePageState extends State<HomePage> {
                             DateFormat('dd MMMM').format(currentdate),
                             style: Theme.of(context)
                                 .textTheme
-                                .headline1!
+                                .displayLarge!
                                 .copyWith(fontSize: 17.sp),
                           ),
                           const Spacer(),
@@ -414,7 +414,7 @@ class _HomePageState extends State<HomePage> {
                       'Settings',
                       style: Theme.of(context)
                           .textTheme
-                          .headline1!
+                          .displayLarge!
                           .copyWith(fontSize: 14.sp),
                     ),
                     SizedBox(
@@ -424,7 +424,7 @@ class _HomePageState extends State<HomePage> {
                       'User display name:',
                       style: Theme.of(context)
                           .textTheme
-                          .headline2!
+                          .displayMedium!
                           .copyWith(fontSize: 12.sp),
                     ),
                     SizedBox(
@@ -444,7 +444,7 @@ class _HomePageState extends State<HomePage> {
                       'I want to receive reminders:',
                       style: Theme.of(context)
                           .textTheme
-                          .headline2!
+                          .displayMedium!
                           .copyWith(fontSize: 12.sp),
                     ),
                     SizedBox(
@@ -535,7 +535,7 @@ class _HomePageState extends State<HomePage> {
             textAlign: TextAlign.center,
             style: Theme.of(context)
                 .textTheme
-                .headline1!
+                .displayLarge!
                 .copyWith(fontSize: 16.sp),
           ),
         ],

@@ -19,14 +19,40 @@ The NPEU team have access to the Firebase database using a service account with 
 * [Mark Turner](https://rse.ncldata.dev/team/mark-turner) [(@markdturner)](https://github.com/markdturner)
 * [Imre Draskovits](https://rse.ncldata.dev/team/imre-draskovits) [(@notimre)](https://github.com/notimre)
 
-## Getting Started
+## Project Diagram
+
+<img src="./assets/images/project-diagram.jpg"  alt="project-diagram"/>
+
+This repository contains both 'DOLFIN App' & 'DOLFIN App _Admin_'.  
+The apps are identical with a key exception: **_Admin_ app is built with the `.env` file pointing to the test API, while the DOLFIN App is the production ready version.  
+THe production ready version is not accessible to anyone either from DOLFIN or RSE teams. 
 
 ### Prerequisites
 
 The application uses Flutter.
 
 * The instructions for installing Flutter on various platforms are [here](https://docs.flutter.dev/get-started/install).
-* Instructions for configuring VS Code are [here](https://docs.flutter.dev/development/tools/vs-code). 
+* Instructions for configuring VS Code are [here](https://docs.flutter.dev/development/tools/vs-code).
+* Install [XCode](https://apps.apple.com/us/app/xcode/id497799835?mt=12)
+
+### Much preferred way to create a pre-set up Android-focused environment is downloading Android Studio through the [_Jetbrains Toolbox_ app](https://www.jetbrains.com/toolbox-app/).
+
+For Mac you need to install [rbenv](https://github.com/rbenv/rbenv). A Ruby version manager.
+You cannot use the MacOS built in Ruby for development. To determine if you need to install this run
+
+```
+    $ which ruby
+```
+
+If it returns
+
+```
+    $ /usr/bin/ruby
+```
+
+**You need to download and install a separate version of Ruby to continue development for MacOS/iOS.**
+
+
 
 These include instructions for installing and configuring the Flutter SDK and Android Studio, including setting up a device emulator.
 

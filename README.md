@@ -1,4 +1,8 @@
-# dolfin-flutter
+&nbsp;
+
+<img align="left" width="100" height="100" src="./assets/icons/Icon-192.png" alt="app-logo">
+
+# DOLFIN App
 The Flutter-based app for the [DOLFIN Project](https://www.npeu.ox.ac.uk/dolfin).   
 
 ## About

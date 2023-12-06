@@ -148,7 +148,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             'Date',
             style: Theme.of(context)
                 .textTheme
-                .headline1!
+                .displayLarge!
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
@@ -170,7 +170,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             'Supplement',
             style: Theme.of(context)
                 .textTheme
-                .headline1!
+                .displayLarge!
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
@@ -384,7 +384,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                     "If you have run out of supplement, please contact the research team at dolfin@npeu.ox.ac.uk / 01865 617919",
                     style: Theme.of(context)
                         .textTheme
-                        .headline1!
+                        .displayLarge!
                         .copyWith(fontSize: 14.sp, color: AppColours.red),
                   ),
                 ),
@@ -401,14 +401,14 @@ class _AddRecordPageState extends State<AddRecordPage> {
                   text: 'The DOLFIN supplement dosing chart can be seen at ',
                   style: Theme.of(context)
                       .textTheme
-                      .headline1!
+                      .displayLarge!
                       .copyWith(fontSize: 14.sp),
                 ),
                 TextSpan(
                   text: 'https://www.npeu.ox.ac.uk/dolfin/parents/resources',
                   style: Theme.of(context)
                       .textTheme
-                      .headline1!
+                      .displayLarge!
                       .copyWith(fontSize: 14.sp, color: AppColours.light_blue),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
@@ -420,7 +420,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                   text: ' and is also included in your Parent Discharge Pack.',
                   style: Theme.of(context)
                       .textTheme
-                      .headline1!
+                      .displayLarge!
                       .copyWith(fontSize: 14.sp),
                 ),
               ],
@@ -433,7 +433,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             "Thank you for completing this daily supplement check.",
             style: Theme.of(context)
                 .textTheme
-                .headline1!
+                .displayLarge!
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
@@ -519,7 +519,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
         Text(
           isEditMode ? 'Edit Record' : 'Daily Supplement Check',
           style:
-              Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14.sp),
+              Theme.of(context).textTheme.displayLarge!.copyWith(fontSize: 14.sp),
         ),
         const SizedBox()
       ],

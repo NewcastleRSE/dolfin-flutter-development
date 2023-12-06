@@ -684,20 +684,21 @@ Widget _showInstructionText(BuildContext context, bool isNotEmpty) {
       SizedBox(
         height: 3.h,
       ),
-      Container(
-        margin: const EdgeInsets.all(10),
-        padding: const EdgeInsets.all(10),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            border: Border.all(
-                color: AppColours.red, // Set border color
-                width: 3.0), // Set border width
-            borderRadius: const BorderRadius.all(
-                Radius.circular(10.0)) // Make rounded corner of border
-            ),
-        child: const Text(
-            "Please only start adding supplement records once your child has been discharged home from hospital."),
-      )
+      // @imre-patch-8: remove this text-box
+      // Container(
+      //   margin: const EdgeInsets.all(10),
+      //   padding: const EdgeInsets.all(10),
+      //   alignment: Alignment.center,
+      //   decoration: BoxDecoration(
+      //       border: Border.all(
+      //           color: AppColours.red, // Set border color
+      //           width: 3.0), // Set border width
+      //       borderRadius: const BorderRadius.all(
+      //           Radius.circular(10.0)) // Make rounded corner of border
+      //       ),
+      //   child: const Text(
+      //       "Please only start adding supplement records once your child has been discharged home from hospital."),
+      // )
     ]);
   } else {
     return Container();

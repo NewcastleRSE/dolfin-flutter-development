@@ -197,6 +197,16 @@ class _AddRecordPageState extends State<AddRecordPage> {
                     setState(() {
                       _supplement = value;
                       _moreInfoVisible = false;
+
+                      // Wipe the reasons list empty and uncheck all the boxes
+                      _reasons.clear(); // clears the reasons list
+                      // uncheck all the check boxes
+                      reason0 = false;
+                      reason1 = false;
+                      reason2 = false;
+                      reason3 = false;
+                      reason4 = false;
+                      reason5 = false;
                     });
                   },
                 ),
@@ -518,8 +528,10 @@ class _AddRecordPageState extends State<AddRecordPage> {
         ),
         Text(
           isEditMode ? 'Edit Record' : 'Daily Supplement Check',
-          style:
-              Theme.of(context).textTheme.displayLarge!.copyWith(fontSize: 14.sp),
+          style: Theme.of(context)
+              .textTheme
+              .displayLarge!
+              .copyWith(fontSize: 14.sp),
         ),
         const SizedBox()
       ],

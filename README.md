@@ -13,6 +13,7 @@ DOLFIN aims to answer the research question:
 
 In babies who are born very early or who suffer poor blood supply or lack of oxygen to the brain before or around birth, does giving a nutritional supplement daily for a year improve long-term cognitive development?
 
+## Nice to know
 ### The NPEU team have access to the Firebase database using a service account with a private key. This expires around the beginning of June annually. NPEU will give us  a new public key and we upload this to the service account through the Google console. 
 
 ### Project Team
@@ -41,30 +42,42 @@ The production ready version is not accessible to anyone besides the trial parti
 
 The application uses [Flutter](https://flutter.dev/), which is written in [Dart](https://dart.dev); both developed and maintained by Google.
 
-Install the following to get started on the project:
+1. Install the following to get started on the project:
 
-* Flutter Framework (this also installs Dart for you, no need to do it explicitly): [Flutter MacOS](https://docs.flutter.dev/get-started/install/macos)
-* Xcode available on the [Mac App Store](https://apps.apple.com/us/app/xcode/id497799835?mt=12)
-* Android Studio available from the [Jetbrains Toolbox App](https://www.jetbrains.com/toolbox-app/)
+   * Flutter Framework (this also installs Dart for you, no need to do it explicitly): [Flutter MacOS](https://docs.flutter.dev/get-started/install/macos)
+   * Xcode available on the [Mac App Store](https://apps.apple.com/us/app/xcode/id497799835?mt=12)
+   * Android Studio available from the [Jetbrains Toolbox App](https://www.jetbrains.com/toolbox-app/)
 
-Developing on Mac requires you to install additional Ruby versions, which is not interfering with the system built-in one.  
-Recommended to check out [rbenv](https://github.com/rbenv/rbenv). A Ruby version manager.  `chruby` is also a good alternative.
+2. Determine whether you need Ruby (version manager) on a Mac
 
-To determine if you need to install a Ruby Version manager, run:
-```
-    $ which ruby
-```
+   Developing on Mac requires you to install additional Ruby versions, which is not interfering with the system built-in one.  
+   Recommended to check out [rbenv](https://github.com/rbenv/rbenv). A Ruby version manager.  `chruby` is also a good alternative.
+   
+   To determine if you need to install a Ruby Version manager, run:
+   ```
+       $ which ruby
+   ```
+   
+   If it returns
+   ```
+       $ /usr/bin/ruby
+   ```
 
-If it returns
-```
-    $ /usr/bin/ruby
-```
+   **You need to install a ruby version manager for MacOS to develop iOS apps.**
 
-**You need to install a ruby version manager for MacOS to develop iOS apps.**
+3. Refer to [rbenv repo](https://github.com/rbenv/rbenv) regarding installation.
 
-Optionally you also want to set up an Android device with API 34 or above running Android 14 or above.  
-The project is 80:20 split focused in favour of Android, recommended to use Android Studio throughout the development.  
-XCode 15 (or above) will come pre-installed with the relevant up-to-date iOS simulators.
+4. Install Android Emulator
+   
+   #### Android requires Java 11. Anything newer will NOT work.
+
+   You want to set up an Android emulator with API 34 or above running Android 14 or above. Do this within Android Studio (Step 1)  
+   The project is 80:20 split focused in favour of Android, recommended to use Android Studio throughout the development in general.
+
+5. Install iOS Simulators
+
+   XCode 15 (or newer) will come pre-installed with the relevant up-to-date iOS simulators.
+   No need to do anything else.
 
 ### Getting Started
 
@@ -80,13 +93,13 @@ If you see the following output, you are good to go:
 
 ### Project Setup to Firebase
 
-First things first, find the `.env` file on RSE Team OneDrive.
-Place it to `dolfin-flutter/` directory at root level.
+1. Find the `.env` file on RSE Team OneDrive.
+2. Clone the repository and place the `.env` file at root level of `dolfin-flutter/` directory
 
 You need to configure the application on Android as well as on iOS with Firebase.   
 If you skip this step, you will have a hard time debugging what is going on with no errors showing.
 
-#### Android
+### Android
 
 1. Download the relevant `google-services.json` file [from Firebase](https://console.firebase.google.com/project/dolfin-ec4ba/settings/general/android:uk.ac.ncl.rse.dolfin).    
    To confirm you have the correct file, you will see `uk.ac.ncl.rse.dolfin` under `package-name`.
@@ -148,7 +161,7 @@ flutter build ipa
 bundle exec fastlane beta
 ```
 
-### Regenerating the Icons
+### Regenerating the Icons (not sure if needed)
 The base icon image is specified in `pubspec.yaml` and the relevant dependencies should be installed automatically.
 To regenerate the icons (for Android and iOS), edit the master image file and then use the following commands:
 

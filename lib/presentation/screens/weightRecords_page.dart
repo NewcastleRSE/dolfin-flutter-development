@@ -150,7 +150,11 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                                   ]);
                                 }
 
-                                final records = snapshot.data!;
+                                // @imre-patch-9: Update order of weight of the infant (desc)
+                                final recordsTmp = snapshot.data!;
+                                List<WeightModel> records = List.from(recordsTmp)..sort((a, b) => b.dateSubmitted.compareTo(a.dateSubmitted));
+                                // end patch
+
                                 var instructions = "";
 
                                 bool allowSubmit = true;

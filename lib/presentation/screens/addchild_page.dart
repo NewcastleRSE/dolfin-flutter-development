@@ -131,7 +131,7 @@ class _AddChildPageState extends State<AddChildPage> {
             'Name',
             style: Theme.of(context)
                 .textTheme
-                .headline1!
+                .displayLarge!
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
@@ -155,7 +155,7 @@ class _AddChildPageState extends State<AddChildPage> {
             'Date of birth',
             style: Theme.of(context)
                 .textTheme
-                .headline1!
+                .displayLarge!
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(

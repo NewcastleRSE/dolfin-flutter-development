@@ -10,6 +10,12 @@ class WeightModel {
   final String weight;
   final String numScoops;
 
+  // @imre-patch: Adding this to make it easier to debug
+  // @override
+  // String toString() {
+  //   return 'WeightModel{id: $id, child: $child, studyID: $studyID, date: $date, dateSubmitted: $dateSubmitted, weight: $weight, numScoops: $numScoops}\n\n';
+  // }
+
   WeightModel({
     required this.id,
     required this.child,

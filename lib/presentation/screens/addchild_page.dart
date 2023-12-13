@@ -106,7 +106,7 @@ class _AddChildPageState extends State<AddChildPage> {
             'Study Number',
             style: Theme.of(context)
                 .textTheme
-                .headline1!
+                .displayLarge!
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
@@ -203,7 +203,7 @@ class _AddChildPageState extends State<AddChildPage> {
       FireStoreCrud()
           .childNotRegisteredAlready(studyID: _trialIDcontroller.text)
           .then((proceed) {
-        if (!proceed) { 
+        if (!proceed) {
           print('child already registered');
           MySnackBar.error(
               message: "This child has already been registered.",

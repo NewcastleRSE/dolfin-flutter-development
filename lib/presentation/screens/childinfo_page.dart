@@ -133,7 +133,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline1!
+                                  .displayLarge!
                                   .copyWith(fontSize: 15.sp),
                             ),
                           ),
@@ -181,7 +181,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline1!
+                                    .displayLarge!
                                     .copyWith(fontSize: 13.sp),
                               )),
                           const Spacer(),
@@ -262,7 +262,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                 textAlign: TextAlign.left,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline2!
+                                    .displayMedium!
                                     .copyWith(fontSize: 18.sp),
                               ),
                               SizedBox(
@@ -284,7 +284,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                       textAlign: TextAlign.left,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline2!
+                                          .displayMedium!
                                           .copyWith(fontSize: 18.sp),
                                     ),
                             ]);
@@ -338,6 +338,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                   //   child: Text(
                                   //       "Please only start adding supplement records once your child has been discharged home from hospital."),
                                   // ),
+                                  // end of @imre-patch-8
                                   ListView.builder(
                                     scrollDirection: Axis.vertical,
                                     shrinkWrap: true,
@@ -396,41 +397,41 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
 
   List<RecordModel>? formatRecordData(
       List<RecordModel>? record, DateTime start, DateTime end) {
-    List<RecordModel>? results = [];
+        List<RecordModel>? results = [];
 
-    DateTime currentDate = end;
+        DateTime currentDate = end;
 
-    String child = widget.child!.id;
-    String studyID = widget.child!.studyID;
+        String child = widget.child!.id;
+        String studyID = widget.child!.studyID;
 
-    for (int i = 0; i < 7; i++) {
-      bool found = false;
+        for (int i = 0; i < 7; i++) {
+          bool found = false;
 
-      if (record != null) {
-        for (RecordModel r in record) {
-          if (r.date.isSameDate(currentDate)) {
-            results.add(r);
-            found = true;
+          if (record != null) {
+            for (RecordModel r in record) {
+              if (r.date.isSameDate(currentDate)) {
+                results.add(r);
+                found = true;
+              }
+            }
           }
+
+          if (!found) {
+            results.add(RecordModel(
+                id: "0",
+                child: child,
+                studyID: studyID,
+                date: currentDate,
+                dateSubmitted: DateTime.now(),
+                supplement: SupplementOptions.fullDose,
+                reasons: [],
+                otherReason: ""));
+          }
+
+          currentDate = currentDate.subtract(Duration(days: 1));
         }
-      }
 
-      if (!found) {
-        results.add(RecordModel(
-            id: "0",
-            child: child,
-            studyID: studyID,
-            date: currentDate,
-            dateSubmitted: DateTime.now(),
-            supplement: SupplementOptions.fullDose,
-            reasons: [],
-            otherReason: ""));
-      }
-
-      currentDate = currentDate.subtract(Duration(days: 1));
-    }
-
-    return results;
+      return results;
   }
 
   Widget _nodatawidget() {
@@ -449,7 +450,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
             textAlign: TextAlign.center,
             style: Theme.of(context)
                 .textTheme
-                .headline1!
+                .displayLarge!
                 .copyWith(fontSize: 16.sp),
           ),
         ],

@@ -125,7 +125,7 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                                       overflow: TextOverflow.ellipsis,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline1!
+                                          .displayLarge!
                                           .copyWith(fontSize: 17.sp),
                                     )),
                                 const Spacer()
@@ -143,23 +143,25 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                                 if (snapshot.hasError) {
                                   return const Text('ERROR');
                                 } else if (!snapshot.hasData) {
-                                  return Column(children: [
+                                  return const Column(children: [
                                     Center(
                                         child: Text('Loading...',
                                             textAlign: TextAlign.center))
                                   ]);
                                 }
 
-                                final records = snapshot.data!;
+                                // @imre-patch-9: Update order of weight of the infant (desc)
+                                final recordsTmp = snapshot.data!;
+                                List<WeightModel> records = List.from(recordsTmp)..sort((a, b) => b.dateSubmitted.compareTo(a.dateSubmitted));
+                                // end patch
+
                                 var instructions = "";
 
                                 bool allowSubmit = true;
 
-                                if (records.length == 0) {
+                                if (records.length == 0 || records.isEmpty) {
                                   instructions =
-                                      "You have not submitted any weight data for " +
-                                          widget.child!.name +
-                                          " yet.\n";
+                                      "You have not submitted any weight data for ${widget.child!.name} yet.\n";
                                 } else {
                                   var lastDate =
                                       records[records.length - 1].date;
@@ -173,9 +175,7 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                                   }
 
                                   instructions =
-                                      "You last submitted a weight reading on " +
-                                          formatDate(lastDate) +
-                                          ". We recommend submitting a reading once a month.\n";
+                                      "You last submitted a weight reading on ${formatDate(lastDate)}. We recommend submitting a reading once a month.\n";
                                 }
 
                                 return SingleChildScrollView(
@@ -210,14 +210,15 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                                               'The DOLFIN supplement dosing chart can be seen at ',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline1!
+                                              .displayLarge!
                                               .copyWith(fontSize: 14.sp),
                                         ),
                                         TextSpan(
-                                          text: 'https://www.npeu.ox.ac.uk/dolfin/parents/resources',
+                                          text:
+                                              'https://www.npeu.ox.ac.uk/dolfin/parents/resources',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline1!
+                                              .displayLarge!
                                               .copyWith(
                                                   fontSize: 14.sp,
                                                   color: AppColours.light_blue),
@@ -232,7 +233,7 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                                               ' and is also included in your Parent Discharge Pack.',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline1!
+                                              .displayLarge!
                                               .copyWith(fontSize: 14.sp),
                                         ),
                                       ],
@@ -262,7 +263,7 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
           "Weight Records",
           overflow: TextOverflow.ellipsis,
           style:
-              Theme.of(context).textTheme.headline1!.copyWith(fontSize: 15.sp),
+              Theme.of(context).textTheme.displayLarge!.copyWith(fontSize: 15.sp),
         ),
         const SizedBox()
       ],
@@ -275,7 +276,7 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
     BuildContext context,
     List<WeightModel> records,
   ) {
-    if (records.length > 0) {
+    if (records.length > 0 || records.isNotEmpty) {
       return Column(children: [
         SizedBox(
           height: 4.h,
@@ -290,7 +291,7 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
         ),
         Table(
           border: TableBorder.all(color: AppColours.grey),
-          columnWidths: {
+          columnWidths: const {
             0: FlexColumnWidth(3),
             1: FlexColumnWidth(2),
             2: FlexColumnWidth(2),
@@ -301,12 +302,12 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
               TableCell(
                   child: Container(
                       color: AppColours.light_blue,
-                      padding: EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(10.0),
                       child: Text("Date",
                           textAlign: TextAlign.center,
                           style: Theme.of(context)
                               .textTheme
-                              .headline2!
+                              .displayMedium!
                               .copyWith(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.bold,
@@ -314,12 +315,12 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
               TableCell(
                   child: Container(
                       color: AppColours.light_blue,
-                      padding: EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(10.0),
                       child: Text("Weight",
                           textAlign: TextAlign.center,
                           style: Theme.of(context)
                               .textTheme
-                              .headline2!
+                              .displayMedium!
                               .copyWith(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.bold,
@@ -327,12 +328,12 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
               TableCell(
                   child: Container(
                       color: AppColours.light_blue,
-                      padding: EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(10.0),
                       child: Text("Scoops",
                           textAlign: TextAlign.center,
                           style: Theme.of(context)
                               .textTheme
-                              .headline2!
+                              .displayMedium!
                               .copyWith(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.bold,
@@ -361,7 +362,7 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                   },
                   child: Table(
                       border: TableBorder.all(color: AppColours.grey),
-                      columnWidths: {
+                      columnWidths: const {
                         0: FlexColumnWidth(3),
                         1: FlexColumnWidth(2),
                         2: FlexColumnWidth(2),
@@ -374,12 +375,12 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                                   color: editable
                                       ? AppColours.lighter_blue
                                       : AppColours.white,
-                                  padding: EdgeInsets.all(10.0),
+                                  padding: const EdgeInsets.all(10.0),
                                   child: Text(formatDate(record.date),
                                       textAlign: TextAlign.center,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline2!
+                                          .displayMedium!
                                           .copyWith(
                                               fontSize: 14.sp,
                                               color: editable
@@ -390,12 +391,12 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                                   color: editable
                                       ? AppColours.lighter_blue
                                       : AppColours.white,
-                                  padding: EdgeInsets.all(10.0),
+                                  padding: const EdgeInsets.all(10.0),
                                   child: Text(record.weight,
                                       textAlign: TextAlign.center,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline2!
+                                          .displayMedium!
                                           .copyWith(
                                               fontSize: 14.sp,
                                               color: editable
@@ -406,12 +407,12 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
                                   color: editable
                                       ? AppColours.lighter_blue
                                       : AppColours.white,
-                                  padding: EdgeInsets.all(10.0),
+                                  padding: const EdgeInsets.all(10.0),
                                   child: Text(record.numScoops,
                                       textAlign: TextAlign.center,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline2!
+                                          .displayMedium!
                                           .copyWith(
                                               fontSize: 14.sp,
                                               color: editable
@@ -458,7 +459,7 @@ class _WeightRecordsPageState extends State<WeightRecordsPage> {
             numScoops: "2"));
       }
 
-      currentDate = currentDate.subtract(Duration(days: 1));
+      currentDate = currentDate.subtract(const Duration(days: 1));
     }
 
     return results;

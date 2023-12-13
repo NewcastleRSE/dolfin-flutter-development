@@ -58,10 +58,18 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
     _reasons = isEditMode ? widget.record!.reasons : [];
     reason0 = isEditMode ? widget.record!.reasons.contains('I forgot') : false;
-    reason1 = isEditMode ? widget.record!.reasons.contains('I have run out') : false;
-    reason2 = isEditMode ? widget.record!.reasons.contains('My baby refused it') : false;
-    reason3 = isEditMode ? widget.record!.reasons.contains('My baby spat it out') : false;
-    reason4 = isEditMode ? widget.record!.reasons.contains('My baby was too unwell to take the supplement') : false;
+    reason1 =
+        isEditMode ? widget.record!.reasons.contains('I have run out') : false;
+    reason2 = isEditMode
+        ? widget.record!.reasons.contains('My baby refused it')
+        : false;
+    reason3 = isEditMode
+        ? widget.record!.reasons.contains('My baby spat it out')
+        : false;
+    reason4 = isEditMode
+        ? widget.record!.reasons
+            .contains('My baby was too unwell to take the supplement')
+        : false;
     reason5 = isEditMode ? widget.record!.reasons.contains('Other') : false;
 
     _reasoncontroller = TextEditingController(
@@ -75,15 +83,9 @@ class _AddRecordPageState extends State<AddRecordPage> {
         ? true
         : false;
 
-    _otherReasonVisible =
-        (isEditMode )
-            ? true
-            : false;
+    _otherReasonVisible = (isEditMode) ? true : false;
 
-    _ranOutVisible =
-        (isEditMode )
-            ? true
-            : false;
+    _ranOutVisible = (isEditMode) ? true : false;
 
     _childStudyID = isEditMode ? widget.record!.studyID : widget.child!.studyID;
   }
@@ -146,7 +148,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             'Date',
             style: Theme.of(context)
                 .textTheme
-                .headline1!
+                .displayLarge!
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
@@ -168,7 +170,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             'Supplement',
             style: Theme.of(context)
                 .textTheme
-                .headline1!
+                .displayLarge!
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
@@ -195,6 +197,16 @@ class _AddRecordPageState extends State<AddRecordPage> {
                     setState(() {
                       _supplement = value;
                       _moreInfoVisible = false;
+
+                      // Wipe the reasons list empty and uncheck all the boxes
+                      _reasons.clear(); // clears the reasons list
+                      // uncheck all the check boxes
+                      reason0 = false;
+                      reason1 = false;
+                      reason2 = false;
+                      reason3 = false;
+                      reason4 = false;
+                      reason5 = false;
                     });
                   },
                 ),
@@ -256,9 +268,9 @@ class _AddRecordPageState extends State<AddRecordPage> {
                             if (value == true) {
                               _reasons.add('I forgot');
                             } else {
-                              _reasons.removeWhere((element) => element == 'I forgot');
+                              _reasons.removeWhere(
+                                  (element) => element == 'I forgot');
                             }
-
                           });
                         },
                       ),
@@ -275,9 +287,9 @@ class _AddRecordPageState extends State<AddRecordPage> {
                               _ranOutVisible = true;
                             } else {
                               _ranOutVisible = false;
-                              _reasons.removeWhere((element) => element == 'I have run out');
+                              _reasons.removeWhere(
+                                  (element) => element == 'I have run out');
                             }
-
                           });
                         },
                       ),
@@ -292,9 +304,9 @@ class _AddRecordPageState extends State<AddRecordPage> {
                             if (value == true) {
                               _reasons.add('My baby refused it');
                             } else {
-                              _reasons.removeWhere((element) => element == 'My baby refused it');
+                              _reasons.removeWhere(
+                                  (element) => element == 'My baby refused it');
                             }
-
                           });
                         },
                       ),
@@ -309,26 +321,29 @@ class _AddRecordPageState extends State<AddRecordPage> {
                             if (value == true) {
                               _reasons.add('My baby spat it out');
                             } else {
-                              _reasons.removeWhere((element) => element == 'My baby spat it out');
+                              _reasons.removeWhere((element) =>
+                                  element == 'My baby spat it out');
                             }
-
                           });
                         },
                       ),
                     ),
                     ListTile(
-                      title: const Text('My baby was too unwell to take the supplement'),
+                      title: const Text(
+                          'My baby was too unwell to take the supplement'),
                       leading: Checkbox(
                         value: reason4,
                         onChanged: (bool? value) {
                           setState(() {
                             reason4 = value!;
                             if (value == true) {
-                              _reasons.add('My baby was too unwell to take the supplement');
+                              _reasons.add(
+                                  'My baby was too unwell to take the supplement');
                             } else {
-                              _reasons.removeWhere((element) => element == 'My baby was too unwell to take the supplement');
+                              _reasons.removeWhere((element) =>
+                                  element ==
+                                  'My baby was too unwell to take the supplement');
                             }
-
                           });
                         },
                       ),
@@ -345,9 +360,9 @@ class _AddRecordPageState extends State<AddRecordPage> {
                               _otherReasonVisible = true;
                             } else {
                               _otherReasonVisible = false;
-                              _reasons.removeWhere((element) => element == 'Other');
+                              _reasons
+                                  .removeWhere((element) => element == 'Other');
                             }
-
                           });
                         },
                       ),
@@ -379,7 +394,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                     "If you have run out of supplement, please contact the research team at dolfin@npeu.ox.ac.uk / 01865 617919",
                     style: Theme.of(context)
                         .textTheme
-                        .headline1!
+                        .displayLarge!
                         .copyWith(fontSize: 14.sp, color: AppColours.red),
                   ),
                 ),
@@ -396,14 +411,14 @@ class _AddRecordPageState extends State<AddRecordPage> {
                   text: 'The DOLFIN supplement dosing chart can be seen at ',
                   style: Theme.of(context)
                       .textTheme
-                      .headline1!
+                      .displayLarge!
                       .copyWith(fontSize: 14.sp),
                 ),
                 TextSpan(
                   text: 'https://www.npeu.ox.ac.uk/dolfin/parents/resources',
                   style: Theme.of(context)
                       .textTheme
-                      .headline1!
+                      .displayLarge!
                       .copyWith(fontSize: 14.sp, color: AppColours.light_blue),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
@@ -415,7 +430,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                   text: ' and is also included in your Parent Discharge Pack.',
                   style: Theme.of(context)
                       .textTheme
-                      .headline1!
+                      .displayLarge!
                       .copyWith(fontSize: 14.sp),
                 ),
               ],
@@ -428,7 +443,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
             "Thank you for completing this daily supplement check.",
             style: Theme.of(context)
                 .textTheme
-                .headline1!
+                .displayLarge!
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
@@ -513,8 +528,10 @@ class _AddRecordPageState extends State<AddRecordPage> {
         ),
         Text(
           isEditMode ? 'Edit Record' : 'Daily Supplement Check',
-          style:
-              Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14.sp),
+          style: Theme.of(context)
+              .textTheme
+              .displayLarge!
+              .copyWith(fontSize: 14.sp),
         ),
         const SizedBox()
       ],

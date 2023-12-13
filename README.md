@@ -1,4 +1,8 @@
-# dolfin-flutter
+&nbsp;
+
+<img align="left" width="100" height="100" src="./assets/icons/Icon-192.png" alt="app-logo">
+
+# DOLFIN App
 The Flutter-based app for the [DOLFIN Project](https://www.npeu.ox.ac.uk/dolfin).   
 
 ## About
@@ -9,45 +13,144 @@ DOLFIN aims to answer the research question:
 
 In babies who are born very early or who suffer poor blood supply or lack of oxygen to the brain before or around birth, does giving a nutritional supplement daily for a year improve long-term cognitive development?
 
-The NPEU team have access to the Firebase database using a service account with a private key. This expires around the beginning of June annually. NPEU will give us  a new public key and we upload this to the service account through the Google console. 
+## Nice to know
+### The NPEU team have access to the Firebase database using a service account with a private key. This expires around the beginning of June annually. NPEU will give us  a new public key and we upload this to the service account through the Google console. 
 
 ### Project Team
 **PI(s):** [Jeremy Parr](https://research.ncl.ac.uk/neurodisability/theteam/jeremyparr/)  
 **RSE(s):** 
-* [Mike Simpson](https://rse.ncldata.dev/mike-simpson) [(@mdsimpson42)](https://github.com/mdsimpson42) 
-* [Kate Court](https://rse.ncldata.dev/kate-court) [(@KateCourt)](https://github.com/KateCourt) 
-* [Mark Turner](https://rse.ncldata.dev/mark-turner) [(@markdturner)](https://github.com/markdturner)
+* [Mike Simpson](https://rse.ncldata.dev/team/mike-simpson) [(@mdsimpson42)](https://github.com/mdsimpson42) 
+* [Kate Court](https://rse.ncldata.dev/team/kate-court) [(@KateCourt)](https://github.com/KateCourt) 
+* [Mark Turner](https://rse.ncldata.dev/team/mark-turner) [(@markdturner)](https://github.com/markdturner)
+* [Imre Draskovits](https://rse.ncldata.dev/team/imre-draskovits) [(@notimre)](https://github.com/notimre)
 
-## Getting Started
+## Project Structure
 
-### Prerequisites
+- [doflin-flutter](https://github.com/NewcastleRSE/dolfin-flutter/): This repository (left side of the diagram)
+- [dolfin-development](https://github.com/NewcastleRSE/dolfin-flutter-development) [DEPRECATED]: This is now included in this repository (right side of the diagram)
+- [dolfin-firebase](https://github.com/NewcastleRSE/dolfin-firebase): Includes Firebase Cloud Funcitons, Push Notifications and Database (top of the diagram)
 
-The application uses Flutter.
+## Project Diagram
 
-* The instructions for installing Flutter on various platforms are [here](https://docs.flutter.dev/get-started/install).
-* Instructions for configuring VS Code are [here](https://docs.flutter.dev/development/tools/vs-code). 
+<img src="./assets/images/project-diagram.jpg"  alt="project-diagram"/>
 
-These include instructions for installing and configuring the Flutter SDK and Android Studio, including setting up a device emulator.
+This repository contains both 'DOLFIN App' & 'DOLFIN App _Admin_'.  
+The apps are identical with a key exception: _Admin_ app is built with the `.env` file pointing to the test API, while the DOLFIN App is the production ready version.  
+The production ready version is not accessible to anyone besides the trial participants. This also excludes both DOLFIN and RSE teams. 
 
-The project expects environment variables stored in a `.env` file saved at the project root. See `.env.example` for details of what is required.
+### Prerequisite Installs
 
-### Firebase Setup
+The application uses [Flutter](https://flutter.dev/), which is written in [Dart](https://dart.dev); both developed and maintained by Google.
 
-To get the app to work correctly with Firebase:
+1. Install the following to get started on the project:
 
-* **Android** - download google-services.json for the app on Firebase and copy it to the "android/app" folder.
+   * Flutter Framework (this also installs Dart for you, no need to do it explicitly): [Flutter MacOS](https://docs.flutter.dev/get-started/install/macos)
+   * Xcode available on the [Mac App Store](https://apps.apple.com/us/app/xcode/id497799835?mt=12)
+   * Android Studio available from the [Jetbrains Toolbox App](https://www.jetbrains.com/toolbox-app/)
 
-### Debugging the App (Android)
+2. Determine whether you need Ruby (version manager) on a Mac
 
-Once Flutter, Android Studio and VS Code are installed and configured, you can run the app on the Android device emulator. The Android Emulator should appear in the list of available devices in VS Code and, once selected, can be run with "Run -> Start Debugging" (or F5).
+   Developing on Mac requires you to install additional Ruby versions, which is not interfering with the system built-in one.  
+   Recommended to check out [rbenv](https://github.com/rbenv/rbenv). A Ruby version manager.  `chruby` is also a good alternative.
+   
+   To determine if you need to install a Ruby Version manager, run:
+   ```
+       $ which ruby
+   ```
+   
+   If it returns
+   ```
+       $ /usr/bin/ruby
+   ```
 
-### Debugging the App (iOS)
+   **You need to install a ruby version manager for MacOS to develop iOS apps.**
 
-### Installation
+3. Refer to [rbenv repo](https://github.com/rbenv/rbenv) regarding installation.
 
-#### Android
+4. Install Android Emulator
+   
+   #### Android requires Java 11. Anything newer will NOT work.
+
+   You want to set up an Android emulator with API 34 or above running Android 14 or above. Do this within Android Studio (Step 1)  
+   The project is 80:20 split focused in favour of Android, recommended to use Android Studio throughout the development in general.
+
+5. Install iOS Simulators
+
+   XCode 15 (or newer) will come pre-installed with the relevant up-to-date iOS simulators.
+   No need to do anything else.
+
+### Getting Started
+
+Run the following command to confirm you installed everything above correctly:
+```
+    $ flutter doctor
+```
+
+If you see the following output, you are good to go:
+
+<img src="./assets/images/flutter-doctor.png" alt="flutter-doctor"/>
+
+
+### Project Setup to Firebase
+
+1. Find the `.env` file on RSE Team OneDrive.
+2. Clone the repository and place the `.env` file at root level of `dolfin-flutter/` directory
+
+You need to configure the application on Android as well as on iOS with Firebase.   
+If you skip this step, you will have a hard time debugging what is going on with no errors showing.
+
+### Android
+
+1. Download the relevant `google-services.json` file [from Firebase](https://console.firebase.google.com/project/dolfin-ec4ba/settings/general/android:uk.ac.ncl.rse.dolfin).    
+   To confirm you have the correct file, you will see `uk.ac.ncl.rse.dolfin` under `package-name`.
+2. Copy the file to `dolfin-flutter/android/app/` directory
+
+Run the Android App for the first time
+1. Open the Android Simulator manually (as flutter can't do it for you)
+2. Install the flutter packages
+    ```
+        $ flutter pub get 
+    ```
+3. Run the project
+    ```
+        $ flutter run
+    ```
+4. Manually select the Android Simulator
+5. Wait until it builds
 
 #### iOS
+
+1. Download the relevant `GoogleService-Info.plist` file [from Firebase](https://console.firebase.google.com/project/dolfin-ec4ba/settings/general/ios:uk.ac.ncl.rse.dolfin)
+2. Copy the file to `dolfin-flutter/ios/` directory
+3. Open XCode at `dolfin-flutter/ios/Runner.xcodeproj`
+4. Right-click 'Runner'
+5. Add Files to "Runner"
+6. Select `GoogleService-Info.plist`
+7. To confirm XCode recognises your file, you need to see it in the XCode file directory
+
+If it doesn't work, [follow these steps](https://stackoverflow.com/a/73627958).
+
+Run the iOS App for the first time
+1. Open the iOS Simulator manually (as flutter can't do it for you)
+2. Install the flutter packages
+    ```
+        $ flutter pub get
+    ```
+3. Install `Pods`
+    ```
+        $ cd ios 
+    ```
+    ```
+        $ pod install 
+    ```
+4. Run the project
+     ```
+         $ flutter run
+     ```
+5. Manually select the iOS Simulator
+6. Wait until it builds
+
+### Building the iOS app to the App Store
 
 ```
 fastlane match development
@@ -58,26 +161,8 @@ flutter build ipa
 bundle exec fastlane beta
 ```
 
-### Running Tests
-
-How to run tests on your local system.
-
-## Deployment
-
-### Local
-
-Deploying to a production style setup but on the local system. Examples of this would include `venv`, `anaconda`, `Docker` or `minikube`. 
-
-### Production
-
-Deploying to the production system. Examples of this would include cloud, HPC or virtual machine. 
-
-## Usage
-
-Any links to production environment, video demos and screenshots.
-
-### Regenerating the Icons
-The base icon image is specified in `pubspec.yaml` and the relevent dependencies should be installed automatically.
+### Regenerating the Icons (not sure if needed)
+The base icon image is specified in `pubspec.yaml` and the relevant dependencies should be installed automatically.
 To regenerate the icons (for Android and iOS), edit the master image file and then use the following commands:
 
 ```
@@ -90,7 +175,7 @@ flutter pub run flutter_launcher_icons:main
 - [x] Initial Development  
 - [x] Minimum viable product  
 - [x] Feature-Complete
-- [ ] Testing
+- [x] Late 2023 Update
 
 ## Acknowledgements
 This work was funded by a grant from the UK Research Councils, EPSRC grant ref. EP/L012345/1, “Example project title, please update”.

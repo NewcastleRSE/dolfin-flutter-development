@@ -211,9 +211,9 @@ class _LoginPageState extends State<LoginPage> {
                                     .textTheme
                                     .headline1
                                     ?.copyWith(
-                                  fontSize: 9.sp,
-                                  color: AppColours.dark_blue,
-                                ),
+                                      fontSize: 9.sp,
+                                      color: AppColours.dark_blue,
+                                    ),
                               ),
                             ),
                           ],

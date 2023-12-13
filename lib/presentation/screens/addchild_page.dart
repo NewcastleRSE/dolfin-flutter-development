@@ -50,7 +50,7 @@ class _AddChildPageState extends State<AddChildPage> {
     _trialIDcontroller =
         TextEditingController(text: isEditMode ? widget.child!.studyID : '');
     dateOfBirth =
-    isEditMode ? DateTime.parse(widget.child!.dob) : DateTime.now();
+        isEditMode ? DateTime.parse(widget.child!.dob) : DateTime.now();
     // dischargeDate = isEditMode
     //     ? DateTime.parse(widget.child!.dischargeDate)
     //     : DateTime.now();
@@ -106,7 +106,7 @@ class _AddChildPageState extends State<AddChildPage> {
             'Study Number',
             style: Theme.of(context)
                 .textTheme
-                .headline1!
+                .displayLarge!
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
@@ -131,7 +131,7 @@ class _AddChildPageState extends State<AddChildPage> {
             'Name',
             style: Theme.of(context)
                 .textTheme
-                .headline1!
+                .displayLarge!
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
@@ -155,7 +155,7 @@ class _AddChildPageState extends State<AddChildPage> {
             'Date of birth',
             style: Theme.of(context)
                 .textTheme
-                .headline1!
+                .displayLarge!
                 .copyWith(fontSize: 14.sp),
           ),
           SizedBox(
@@ -201,116 +201,105 @@ class _AddChildPageState extends State<AddChildPage> {
     // is form complete and is child registered with Oxford?
     if (_formKey.currentState!.validate()) {
       FireStoreCrud()
-          .childNotRegisteredAlready(studyID: _trialIDcontroller.text).then((proceed) {
+          .childNotRegisteredAlready(studyID: _trialIDcontroller.text)
+          .then((proceed) {
+        if (!proceed) {
+          print('child already registered');
+          MySnackBar.error(
+              message: "This child has already been registered.",
+              color: Colors.red,
+              context: context);
+        } else {
+          MySnackBar.error(
+              message: "Checking child details are correct...",
+              color: Colors.blue,
+              context: context);
 
-            if (!proceed) {
-              print('child already registered');
+          checkChild(_trialIDcontroller.text).then((childExists) async {
+            // child is study participant
+            if (childExists) {
+              // get child details from Oxford API
+              var details = await getChildDetails(_trialIDcontroller.text);
+
+              String? parentEmail = FirebaseAuth.instance.currentUser!.email;
+
+              ChildModel child = ChildModel(
+                  dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
+                  name: _namecontroller.text,
+                  dischargeDate: details,
+                  studyID: _trialIDcontroller.text,
+                  parentID: FirebaseAuth.instance.currentUser!.uid,
+                  id: '',
+                  parent_email: parentEmail.toString());
+
+              isEditMode
+                  ? showDialog<String>(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) => AlertDialog(
+                            content: const Text(
+                                "Thank you. Your child's details have been updated successfully."),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  ChildModel updatedChild = ChildModel(
+                                      dob: DateFormat('yyyy-MM-dd')
+                                          .format(dateOfBirth),
+                                      name: _namecontroller.text,
+                                      dischargeDate: details,
+                                      studyID: _trialIDcontroller.text,
+                                      parentID: FirebaseAuth
+                                          .instance.currentUser!.uid,
+                                      id: widget.child!.id,
+                                      parent_email: parentEmail.toString());
+                                  Navigator.pushNamed(context, childinfopage,
+                                      arguments: updatedChild);
+                                },
+                                child: const Text('OK'),
+                              )
+                            ],
+                          ))
+                  : Navigator.pop(context);
+
+              isEditMode
+                  ? FireStoreCrud().updateChild(
+                      name: _namecontroller.text,
+                      dischargeDate: details,
+                      docid: widget.child!.id,
+                      dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
+                      parent_email: parentEmail.toString())
+                  : FireStoreCrud().addChild(child: child);
+
+              showDialog<String>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) => AlertDialog(
+                        content:
+                            const Text("Thank you. Your child has been added."),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                            child: const Text('OK'),
+                          )
+                        ],
+                      ));
+            } else {
+              print('child does not exist in study');
               MySnackBar.error(
                   message:
-                  "This child has already been registered.",
+                      "Problem with child's Study Number, please check the ID is correct and"
+                      " try again",
                   color: Colors.red,
                   context: context);
-
-        } else {
-              MySnackBar.error(
-                  message:
-                  "Checking child details are correct...",
-                  color: Colors.blue,
-                  context: context);
-
-
-        checkChild(_trialIDcontroller.text).then((childExists) async {
-          // child is study participant
-          if (childExists) {
-            // get child details from Oxford API
-            var details = await getChildDetails(_trialIDcontroller.text);
-
-
-            String? parentEmail = FirebaseAuth.instance.currentUser!.email;
-
-            ChildModel child = ChildModel(
-                dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-                name: _namecontroller.text,
-                dischargeDate: details,
-                studyID: _trialIDcontroller.text,
-                parentID: FirebaseAuth.instance.currentUser!.uid,
-                id: '',
-              parent_email: parentEmail.toString()
-            );
-
-            isEditMode
-                ? showDialog<String>(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) =>
-                    AlertDialog(
-                      content: const Text(
-                          "Thank you. Your child's details have been updated successfully."),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            ChildModel updatedChild = ChildModel(
-                                dob: DateFormat('yyyy-MM-dd').format(
-                                    dateOfBirth),
-                                name: _namecontroller.text,
-                                dischargeDate: details,
-                                studyID: _trialIDcontroller.text,
-                                parentID:
-                                FirebaseAuth.instance.currentUser!.uid,
-                                id: widget.child!.id,
-                                parent_email: parentEmail.toString()
-                               );
-                            Navigator.pushNamed(context, childinfopage,
-                                arguments: updatedChild);
-                          },
-                          child: const Text('OK'),
-                        )
-                      ],
-                    ))
-                : Navigator.pop(context);
-
-            isEditMode
-                ? FireStoreCrud().updateChild(
-                name: _namecontroller.text,
-                dischargeDate: details,
-                docid: widget.child!.id,
-                dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
-                parent_email: parentEmail.toString())
-                : FireStoreCrud().addChild(child: child);
-
-            showDialog<String>(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) =>
-                    AlertDialog(
-                      content: const Text(
-                          "Thank you. Your child has been added."),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                          child: const Text('OK'),
-                        )
-                      ],
-                    ));
-          } else {
-            print('child does not exist in study');
-            MySnackBar.error(
-                message:
-                "Problem with child's Study Number, please check the ID is correct and"
-                    " try again",
-                color: Colors.red,
-                context: context);
-          }
-        });
+            }
+          });
         }
-
-      });// child exists with Oxford
-      } // validate
-    }
-
+      }); // child exists with Oxford
+    } // validate
+  }
 
   _showdatepickerdob() async {
     var selecteddate = await showDatePicker(
@@ -427,15 +416,12 @@ class _AddChildPageState extends State<AddChildPage> {
   Future<bool> childNotRegistered(childID) async {
     print('find out if child registered');
 
-    return await FireStoreCrud()
-        .childNotRegisteredAlready(studyID: childID);
+    return await FireStoreCrud().childNotRegisteredAlready(studyID: childID);
   }
 
   // http request to check child's ID is valid
   Future<bool> checkChild(childCheck) async {
-
     try {
-
       // acquire jwt from NPEU
       await dotenv.load();
       var baseUrl = dotenv.get('NPEU_URL');
@@ -477,11 +463,9 @@ class _AddChildPageState extends State<AddChildPage> {
     }
   }
 
-
   // http request to get child's details
   getChildDetails(childID) async {
     try {
-
       // acquire jwt from NPEU
       await dotenv.load();
       var baseUrl = dotenv.get('NPEU_URL');
@@ -495,30 +479,30 @@ class _AddChildPageState extends State<AddChildPage> {
       };
 
       var authResponse = await http.post(Uri.parse(authUrl), body: body);
-        var token = jsonDecode(authResponse.body)['access_token'];
+      var token = jsonDecode(authResponse.body)['access_token'];
 
-        var childDatesUrl = Uri.https(baseUrl,
-            '/dolfindata/api/participant/dates/$childID');
+      var childDatesUrl =
+          Uri.https(baseUrl, '/dolfindata/api/participant/dates/$childID');
 
-        // returns dates as dictionary or 204 if child does not exist
-        final response = await http
-            .get(childDatesUrl, headers: {'Authorization': 'Bearer $token'});
-        if (response.statusCode == 200) {
-          var details = jsonDecode(response.body);
-          // if discharge date is null then add null to firestore
-          if (details['DISCHARGE_DATE'] == null) {
-            return null;
-          } else {
+      // returns dates as dictionary or 204 if child does not exist
+      final response = await http
+          .get(childDatesUrl, headers: {'Authorization': 'Bearer $token'});
+      if (response.statusCode == 200) {
+        var details = jsonDecode(response.body);
+        // if discharge date is null then add null to firestore
+        if (details['DISCHARGE_DATE'] == null) {
+          return null;
+        } else {
           // otherwise get date formatted correctly
           var dischargeTimestamp = DateTime.parse(details['DISCHARGE_DATE']);
 
           // convert timestamp to strings for Firestore
-          var dischargeStr = DateFormat('yyyy-MM-dd').format(dischargeTimestamp);
+          var dischargeStr =
+              DateFormat('yyyy-MM-dd').format(dischargeTimestamp);
 
           return dischargeStr;
-
         }
-    }
+      }
     } catch (err) {
       print(err);
       return false;

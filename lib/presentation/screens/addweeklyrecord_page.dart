@@ -16,6 +16,7 @@ class AddWeeklyRecordPage extends StatefulWidget {
   final ChildModel? child;
   final WeeklyRecordModel? record;
   final DateTime? date;
+
   const AddWeeklyRecordPage({
     this.child,
     this.record,
@@ -35,6 +36,7 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
   late TextEditingController _reasoncontroller;
 
   late int? _numSupplements;
+
   // late ReasonOptions? _reason;
   late bool? _problem;
 
@@ -42,7 +44,7 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
   late bool _moreInfoVisible;
   late bool _otherReasonVisible;
   late bool _ranOutVisible;
-  
+
   late List _reasons;
   late bool reason0;
   late bool reason1;
@@ -77,15 +79,9 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
         ? true
         : false;
 
-    _ranOutVisible =
-        (isEditMode )
-            ? true
-            : false;
+    _ranOutVisible = (isEditMode) ? true : false;
 
-    _otherReasonVisible =
-        (isEditMode )
-            ? true
-            : false;
+    _otherReasonVisible = (isEditMode) ? true : false;
 
     _childStudyID = isEditMode ? widget.record!.studyID : widget.child!.studyID;
 
@@ -371,9 +367,9 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                             if (value == true) {
                               _reasons.add('I forgot');
                             } else {
-                              _reasons.removeWhere((element) => element == 'I forgot');
+                              _reasons.removeWhere(
+                                  (element) => element == 'I forgot');
                             }
-
                           });
                         },
                       ),
@@ -390,9 +386,9 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                               _ranOutVisible = true;
                             } else {
                               _ranOutVisible = false;
-                              _reasons.removeWhere((element) => element == 'I have run out');
+                              _reasons.removeWhere(
+                                  (element) => element == 'I have run out');
                             }
-
                           });
                         },
                       ),
@@ -407,9 +403,9 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                             if (value == true) {
                               _reasons.add('My baby refused it');
                             } else {
-                              _reasons.removeWhere((element) => element == 'My baby refused it');
+                              _reasons.removeWhere(
+                                  (element) => element == 'My baby refused it');
                             }
-
                           });
                         },
                       ),
@@ -424,26 +420,29 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                             if (value == true) {
                               _reasons.add('My baby spat it out');
                             } else {
-                              _reasons.removeWhere((element) => element == 'My baby spat it out');
+                              _reasons.removeWhere((element) =>
+                                  element == 'My baby spat it out');
                             }
-
                           });
                         },
                       ),
                     ),
                     ListTile(
-                      title: const Text('My baby was too unwell to take the supplement'),
+                      title: const Text(
+                          'My baby was too unwell to take the supplement'),
                       leading: Checkbox(
                         value: reason4,
                         onChanged: (bool? value) {
                           setState(() {
                             reason4 = value!;
                             if (value == true) {
-                              _reasons.add('My baby was too unwell to take the supplement');
+                              _reasons.add(
+                                  'My baby was too unwell to take the supplement');
                             } else {
-                              _reasons.removeWhere((element) => element == 'My baby was too unwell to take the supplement');
+                              _reasons.removeWhere((element) =>
+                                  element ==
+                                  'My baby was too unwell to take the supplement');
                             }
-
                           });
                         },
                       ),
@@ -460,9 +459,9 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                               _otherReasonVisible = true;
                             } else {
                               _otherReasonVisible = false;
-                              _reasons.removeWhere((element) => element == 'Other');
+                              _reasons
+                                  .removeWhere((element) => element == 'Other');
                             }
-
                           });
                         },
                       ),
@@ -586,7 +585,7 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
           ? FireStoreCrud().updateRecord(
               docid: widget.record!.id,
               supplement: _numSupplements.toString(),
-              reasons:  _reasons,
+              reasons: _reasons,
               otherReason: _reasoncontroller.text,
             )
           : FireStoreCrud().addWeeklyRecord(record: record);

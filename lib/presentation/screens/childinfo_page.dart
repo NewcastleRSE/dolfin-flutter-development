@@ -51,7 +51,6 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
   void initState() {
     super.initState();
     _childName = widget.child != null ? widget.child!.name : "Child Name";
-
   }
 
   Future<HttpsCallableResult> _getChildInfo() async {
@@ -90,29 +89,29 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
     return Scaffold(
         body: MultiBlocListener(
             listeners: [
-              BlocListener<ConnectivityCubit, ConnectivityState>(
-                  listener: (context, state) {
-                    if (state is ConnectivityOnlineState) {
-                      MySnackBar.error(
-                          message: 'You Are Online Now ',
-                          color: Colors.green,
-                          context: context);
-                    } else {
-                      MySnackBar.error(
-                          message: 'Please Check Your Internet Connection',
-                          color: Colors.red,
-                          context: context);
-                    }
-                  }),
-              BlocListener<AuthenticationCubit, AuthenticationState>(
-                listener: (context, state) {
-                  if (state is UnAuthenticationState) {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, welcomepage, (route) => false);
-                  }
-                },
-              )
-            ],
+          BlocListener<ConnectivityCubit, ConnectivityState>(
+              listener: (context, state) {
+            if (state is ConnectivityOnlineState) {
+              MySnackBar.error(
+                  message: 'You Are Online Now ',
+                  color: Colors.green,
+                  context: context);
+            } else {
+              MySnackBar.error(
+                  message: 'Please Check Your Internet Connection',
+                  color: Colors.red,
+                  context: context);
+            }
+          }),
+          BlocListener<AuthenticationCubit, AuthenticationState>(
+            listener: (context, state) {
+              if (state is UnAuthenticationState) {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, welcomepage, (route) => false);
+              }
+            },
+          )
+        ],
             child: BlocBuilder<AuthenticationCubit, AuthenticationState>(
               builder: (context, state) {
                 if (state is AuthenticationLoadingState) {
@@ -121,315 +120,318 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
 
                 return SafeArea(
                     child: Padding(
-                      padding:
+                  padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "Records",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline1!
-                                      .copyWith(fontSize: 15.sp),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    homepage,
-                                  );
-                                },
-                                child: Icon(
-                                  Icons.home_rounded,
-                                  size: 25.sp,
-                                  color: AppColours.black,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 3.w,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    onboarding,
-                                  );
-                                },
-                                child: Icon(
-                                  Icons.help,
-                                  size: 25.sp,
-                                  color: AppColours.black,
-                                ),
-                              )
-                            ],
+                          Expanded(
+                            child: Text(
+                              "Records",
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayLarge!
+                                  .copyWith(fontSize: 15.sp),
+                            ),
                           ),
-                          SizedBox(
-                            height: 3.h,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              SizedBox(
-                                  width: 80.0,
-                                  child: Text(
-                                    _childName,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline1!
-                                        .copyWith(fontSize: 13.sp),
-                                  )),
-                              const Spacer(),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(context, addchildpage,
-                                      arguments: widget.child);
-                                },
-                                child: Icon(Icons.edit, color: Colors.white),
-                                style: ElevatedButton.styleFrom(
-                                    shape: CircleBorder(),
-                                    padding: EdgeInsets.all(12),
-                                    primary: AppColours.light_blue),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(context, weightrecordspage,
-                                      arguments: widget.child);
-                                },
-                                child: Icon(Icons.add_chart_rounded,
-                                    color: Colors.white),
-                                style: ElevatedButton.styleFrom(
-                                    shape: CircleBorder(),
-                                    padding: EdgeInsets.all(12),
-                                    primary: AppColours.light_blue),
-                              ),
-                              HospitalAdmissionWidget(child: widget.child)
-                            ],
-                          ),
-//-------------------------------------------------------------------------------
-
-                          SizedBox(
-                            height: 4.h,
-                          ),
-                          FutureBuilder<HttpsCallableResult>(
-                            future: _getChildInfo(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<HttpsCallableResult> snapshot) {
-                              if (snapshot.hasError) {
-                                return const Text('ERROR');
-                              } else if (!snapshot.hasData) {
-                                return Column(children: [
-                                  Center(
-                                      child: Text('Loading...',
-                                          textAlign: TextAlign.center))
-                                ]);
-                              }
-
-                              final data = snapshot.data!;
-                              bool weekly = data.data["showWeeklyForms"];
-                              //weekly = true;
-
-                              bool showButton = true;
-                              String dueDate = "";
-
-                              var dateString = data.data["lastWeekSubmitted"];
-                              if (dateString != "0000-00-00") {
-                                var parsedDate = DateTime.parse(dateString);
-                                var now = DateTime.now();
-                                var difference = now.difference(parsedDate).inDays;
-                                if (difference < 7) {
-                                  showButton = false;
-
-                                  var nextDate = parsedDate.add(Duration(days: 7));
-                                  dueDate =
-                                      DateFormat("dd-MM-yyyy").format(nextDate);
-                                }
-                              }
-
-                              String displayText = showButton
-                                  ? "Your next weekly supplement check is due. Please click the button below to submit your child's dosage info for the last 7 days."
-                                  : "You have already submitted your weekly supplement data for " +
-                                  widget.child!.name +
-                                  " this week.";
-
-                              if (weekly) {
-                                return Column(children: [
-                                  Text(
-                                    displayText,
-                                    textAlign: TextAlign.left,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline2!
-                                        .copyWith(fontSize: 18.sp),
-                                  ),
-                                  SizedBox(
-                                    height: 4.h,
-                                  ),
-                                  showButton
-                                      ? MyButton(
-                                    color: AppColours.dark_blue,
-                                    width: 60.w,
-                                    title: '+ Add Weekly Record',
-                                    func: () {
-                                      Navigator.pushNamed(
-                                          context, addweeklyrecordpage,
-                                          arguments: widget.child);
-                                    },
-                                  )
-                                      : Text(
-                                    "Your next supplement check is due on: " +
-                                        dueDate,
-                                    textAlign: TextAlign.left,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline2!
-                                        .copyWith(fontSize: 18.sp),
-                                  ),
-                                ]);
-                              } else {
-                                return Expanded(
-                                    child: StreamBuilder(
-                                      stream: FireStoreCrud().getRecordsRange(
-                                          childID: widget.child!.id,
-                                          start: lastWeek,
-                                          end: today),
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<List<RecordModel>> snapshot) {
-                                        if (snapshot.hasError) {
-                                          return _nodatawidget();
-                                        }
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const MyCircularIndicator();
-                                        }
-
-                                        List<RecordModel>? records = formatRecordData(
-                                            snapshot.data, lastWeek, today);
-
-                                        return SingleChildScrollView(
-                                            child: Column(children: [
-                                              Text(
-                                                "Below are your child's supplement records for the last seven days. Tap on a record with a blue button to add/edit that record.",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .copyWith(fontSize: 14.sp),
-                                              ),
-                                              SizedBox(
-                                                height: 3.h,
-                                              ),
-                                              Container(
-                                                margin: EdgeInsets.all(10),
-                                                padding: EdgeInsets.all(10),
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: AppColours.red, // Set border color
-                                                        width: 3.0),   // Set border width
-                                                    borderRadius: BorderRadius.all(
-                                                        Radius.circular(10.0))// Make rounded corner of border
-                                                ),
-                                                child: Text("Please only start adding supplement records once your child has been discharged home from hospital."),
-                                              ),
-                                              ListView.builder(
-                                                scrollDirection: Axis.vertical,
-                                                shrinkWrap: true,
-                                                physics: const BouncingScrollPhysics(),
-                                                itemCount: records!.length,
-                                                itemBuilder: (context, index) {
-                                                  var record = records[index];
-                                                  Widget _taskcontainer = RecordContainer(
-                                                      record: record, child: widget.child);
-                                                  return InkWell(
-                                                      onTap: () {
-                                                        record.id == "0"
-                                                            ? // New Record
-                                                        Navigator.pushNamed(
-                                                            context, addrecordpage,
-                                                            arguments: <String,
-                                                                dynamic>{
-                                                              "data": widget.child,
-                                                              "date": record.date
-                                                            })
-                                                            : //Edit Record
-                                                        index <= 1
-                                                            ? Navigator.pushNamed(
-                                                            context, addrecordpage,
-                                                            arguments: <String,
-                                                                dynamic>{
-                                                              "data": record,
-                                                              "date":
-                                                              DateTime.now()
-                                                            })
-                                                            : null;
-                                                      },
-                                                      child: index % 2 == 0
-                                                          ? BounceInLeft(
-                                                          duration: const Duration(
-                                                              milliseconds: 1000),
-                                                          child: _taskcontainer)
-                                                          : BounceInRight(
-                                                          duration: const Duration(
-                                                              milliseconds: 1000),
-                                                          child: _taskcontainer));
-                                                },
-                                              )
-                                            ]));
-                                      },
-                                    ));
-                              }
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                homepage,
+                              );
                             },
+                            child: Icon(
+                              Icons.home_rounded,
+                              size: 25.sp,
+                              color: AppColours.black,
+                            ),
                           ),
+                          SizedBox(
+                            width: 3.w,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                onboarding,
+                              );
+                            },
+                            child: Icon(
+                              Icons.help,
+                              size: 25.sp,
+                              color: AppColours.black,
+                            ),
+                          )
                         ],
                       ),
-                    ));
+                      SizedBox(
+                        height: 3.h,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          SizedBox(
+                              width: 80.0,
+                              child: Text(
+                                _childName,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayLarge!
+                                    .copyWith(fontSize: 13.sp),
+                              )),
+                          const Spacer(),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, addchildpage,
+                                  arguments: widget.child);
+                            },
+                            child: Icon(Icons.edit, color: Colors.white),
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                padding: EdgeInsets.all(12),
+                                primary: AppColours.light_blue),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, weightrecordspage,
+                                  arguments: widget.child);
+                            },
+                            child: Icon(Icons.add_chart_rounded,
+                                color: Colors.white),
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                padding: EdgeInsets.all(12),
+                                primary: AppColours.light_blue),
+                          ),
+                          HospitalAdmissionWidget(child: widget.child)
+                        ],
+                      ),
+//-------------------------------------------------------------------------------
+
+                      SizedBox(
+                        height: 4.h,
+                      ),
+                      FutureBuilder<HttpsCallableResult>(
+                        future: _getChildInfo(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<HttpsCallableResult> snapshot) {
+                          if (snapshot.hasError) {
+                            return const Text('ERROR');
+                          } else if (!snapshot.hasData) {
+                            return const Column(children: [
+                              Center(
+                                  child: Text('Loading...',
+                                      textAlign: TextAlign.center))
+                            ]);
+                          }
+
+                          final data = snapshot.data!;
+                          bool weekly = data.data["showWeeklyForms"];
+                          //weekly = true;
+
+                          bool showButton = true;
+                          String dueDate = "";
+
+                          var dateString = data.data["lastWeekSubmitted"];
+                          if (dateString != "0000-00-00") {
+                            var parsedDate = DateTime.parse(dateString);
+                            var now = DateTime.now();
+                            var difference = now.difference(parsedDate).inDays;
+                            if (difference < 7) {
+                              showButton = false;
+
+                              var nextDate = parsedDate.add(Duration(days: 7));
+                              dueDate =
+                                  DateFormat("dd-MM-yyyy").format(nextDate);
+                            }
+                          }
+
+                          String displayText = showButton
+                              ? "Your next weekly supplement check is due. Please click the button below to submit your child's dosage info for the last 7 days."
+                              : "You have already submitted your weekly supplement data for ${widget.child!.name} this week.";
+
+                          if (weekly) {
+                            return Column(children: [
+                              Text(
+                                displayText,
+                                textAlign: TextAlign.left,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .copyWith(fontSize: 18.sp),
+                              ),
+                              SizedBox(
+                                height: 4.h,
+                              ),
+                              showButton
+                                  ? MyButton(
+                                      color: AppColours.dark_blue,
+                                      width: 60.w,
+                                      title: '+ Add Weekly Record',
+                                      func: () {
+                                        Navigator.pushNamed(
+                                            context, addweeklyrecordpage,
+                                            arguments: widget.child);
+                                      },
+                                    )
+                                  : Text(
+                                      "Your next supplement check is due on: $dueDate",
+                                      textAlign: TextAlign.left,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium!
+                                          .copyWith(fontSize: 18.sp),
+                                    ),
+                            ]);
+                          } else {
+                            return Expanded(
+                                child: StreamBuilder(
+                              stream: FireStoreCrud().getRecordsRange(
+                                  childID: widget.child!.id,
+                                  start: lastWeek,
+                                  end: today),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<List<RecordModel>> snapshot) {
+                                if (snapshot.hasError) {
+                                  return _nodatawidget();
+                                }
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const MyCircularIndicator();
+                                }
+
+                                List<RecordModel>? records = formatRecordData(
+                                    snapshot.data, lastWeek, today);
+
+                                return SingleChildScrollView(
+                                    child: Column(children: [
+                                  Text(
+                                    "Below are your child's supplement records for the last seven days. Tap on a record with a blue button to add/edit that record.",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(fontSize: 14.sp),
+                                  ),
+                                  SizedBox(
+                                    height: 3.h,
+                                  ),
+                                  // @imre-patch-8: remove this text box
+                                  // Container(
+                                  //   margin: EdgeInsets.all(10),
+                                  //   padding: EdgeInsets.all(10),
+                                  //   alignment: Alignment.center,
+                                  //   decoration: BoxDecoration(
+                                  //       border: Border.all(
+                                  //           color: AppColours.red,
+                                  //           // Set border color
+                                  //           width: 3.0),
+                                  //       // Set border width
+                                  //       borderRadius: BorderRadius.all(
+                                  //           Radius.circular(
+                                  //               10.0)) // Make rounded corner of border
+                                  //       ),
+                                  //   child: Text(
+                                  //       "Please only start adding supplement records once your child has been discharged home from hospital."),
+                                  // ),
+                                  // end of @imre-patch-8
+                                  ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    physics: const BouncingScrollPhysics(),
+                                    itemCount: records!.length,
+                                    itemBuilder: (context, index) {
+                                      var record = records[index];
+                                      Widget _taskcontainer = RecordContainer(
+                                          record: record, child: widget.child);
+                                      return InkWell(
+                                          onTap: () {
+                                            record.id == "0"
+                                                ? // New Record
+                                                Navigator.pushNamed(
+                                                    context, addrecordpage,
+                                                    arguments: <String,
+                                                        dynamic>{
+                                                        "data": widget.child,
+                                                        "date": record.date
+                                                      })
+                                                : //Edit Record
+                                                index <= 1
+                                                    ? Navigator.pushNamed(
+                                                        context, addrecordpage,
+                                                        arguments: <String,
+                                                            dynamic>{
+                                                            "data": record,
+                                                            "date":
+                                                                DateTime.now()
+                                                          })
+                                                    : null;
+                                          },
+                                          child: index % 2 == 0
+                                              ? BounceInLeft(
+                                                  duration: const Duration(
+                                                      milliseconds: 1000),
+                                                  child: _taskcontainer)
+                                              : BounceInRight(
+                                                  duration: const Duration(
+                                                      milliseconds: 1000),
+                                                  child: _taskcontainer));
+                                    },
+                                  )
+                                ]));
+                              },
+                            ));
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ));
               },
             )));
   }
 
   List<RecordModel>? formatRecordData(
       List<RecordModel>? record, DateTime start, DateTime end) {
-    List<RecordModel>? results = [];
+        List<RecordModel>? results = [];
 
-    DateTime currentDate = end;
+        DateTime currentDate = end;
 
-    String child = widget.child!.id;
-    String studyID = widget.child!.studyID;
+        String child = widget.child!.id;
+        String studyID = widget.child!.studyID;
 
-    for (int i = 0; i < 7; i++) {
-      bool found = false;
+        for (int i = 0; i < 7; i++) {
+          bool found = false;
 
-      if (record != null) {
-        for (RecordModel r in record) {
-          if (r.date.isSameDate(currentDate)) {
-            results.add(r);
-            found = true;
+          if (record != null) {
+            for (RecordModel r in record) {
+              if (r.date.isSameDate(currentDate)) {
+                results.add(r);
+                found = true;
+              }
+            }
           }
+
+          if (!found) {
+            results.add(RecordModel(
+                id: "0",
+                child: child,
+                studyID: studyID,
+                date: currentDate,
+                dateSubmitted: DateTime.now(),
+                supplement: SupplementOptions.fullDose,
+                reasons: [],
+                otherReason: ""));
+          }
+
+          currentDate = currentDate.subtract(Duration(days: 1));
         }
-      }
 
-      if (!found) {
-        results.add(RecordModel(
-            id: "0",
-            child: child,
-            studyID: studyID,
-            date: currentDate,
-            dateSubmitted: DateTime.now(),
-            supplement: SupplementOptions.fullDose,
-            reasons: [],
-            otherReason: ""));
-      }
-
-      currentDate = currentDate.subtract(Duration(days: 1));
-    }
-
-    return results;
+      return results;
   }
 
   Widget _nodatawidget() {
@@ -448,7 +450,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
             textAlign: TextAlign.center,
             style: Theme.of(context)
                 .textTheme
-                .headline1!
+                .displayLarge!
                 .copyWith(fontSize: 16.sp),
           ),
         ],
@@ -481,18 +483,18 @@ class HospitalAdmissionWidget extends StatelessWidget {
                     context: context,
                     barrierDismissible: false,
                     builder: (BuildContext context) => AlertDialog(
-                      content: const Text(
-                          "Thank you for letting us know. A member of your local clinical team will be in touch to ask you about this."),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                          child: const Text('OK'),
-                        )
-                      ],
-                    ));
+                          content: const Text(
+                              "Thank you for letting us know. A member of your local clinical team will be in touch to ask you about this."),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              child: const Text('OK'),
+                            )
+                          ],
+                        ));
               },
               child: const Text('Yes'),
             ),

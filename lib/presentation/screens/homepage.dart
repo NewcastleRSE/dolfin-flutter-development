@@ -6,6 +6,7 @@ import 'package:dolfin_flutter/data/models/child_model.dart';
 import 'package:dolfin_flutter/presentation/widgets/child_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -23,6 +24,7 @@ import 'package:dolfin_flutter/shared/services/notification_service.dart';
 import 'package:dolfin_flutter/shared/styles/colours.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -39,8 +41,8 @@ class _HomePageState extends State<HomePage> {
       text: FirebaseAuth.instance.currentUser!.displayName);
 
   late bool past3;
-  String _versionNo = "v";
-  String _buildNo = "b";
+  final String _versionNo = "v";
+  final String _buildNo = "b";
 
   @override
   void initState() {
@@ -91,7 +93,7 @@ class _HomePageState extends State<HomePage> {
               content: Text(message.notification!.body!),
               actions: [
                 TextButton(
-                  child: Text("Ok"),
+                  child: const Text("Ok"),
                   onPressed: () {
                     Navigator.pushNamed(context, homepage);
                   },
@@ -141,7 +143,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   bool checkDailyNotificationsVisibility() {
-
     var childrenSnapshot = FireStoreCrud()
         .getChildren(parentID: FirebaseAuth.instance.currentUser!.uid);
     // today's date
@@ -233,7 +234,7 @@ class _HomePageState extends State<HomePage> {
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline1!
+                                  .displayLarge!
                                   .copyWith(fontSize: 15.sp),
                             ),
                           ),
@@ -268,6 +269,32 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(
                         height: 3.h,
                       ),
+                      RichText(
+                        text: TextSpan(
+                          text: "You can find the app user guide at \n",
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(fontSize: 10.sp),
+                          children: [
+                          TextSpan(
+                          text: 'https://www.npeu.ox.ac.uk/dolfin/parents/resources',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(fontSize: 10.sp, color: AppColours.light_blue),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              launch(
+                                  'https://www.npeu.ox.ac.uk/dolfin/parents/resources');
+                            },
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 3.h,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -275,7 +302,7 @@ class _HomePageState extends State<HomePage> {
                             DateFormat('dd MMMM').format(currentdate),
                             style: Theme.of(context)
                                 .textTheme
-                                .headline1!
+                                .displayLarge!
                                 .copyWith(fontSize: 17.sp),
                           ),
                           const Spacer(),
@@ -415,7 +442,7 @@ class _HomePageState extends State<HomePage> {
                       'Settings',
                       style: Theme.of(context)
                           .textTheme
-                          .headline1!
+                          .displayLarge!
                           .copyWith(fontSize: 14.sp),
                     ),
                     SizedBox(
@@ -425,7 +452,7 @@ class _HomePageState extends State<HomePage> {
                       'User display name:',
                       style: Theme.of(context)
                           .textTheme
-                          .headline2!
+                          .displayMedium!
                           .copyWith(fontSize: 12.sp),
                     ),
                     SizedBox(
@@ -445,7 +472,7 @@ class _HomePageState extends State<HomePage> {
                       'I want to receive reminders:',
                       style: Theme.of(context)
                           .textTheme
-                          .headline2!
+                          .displayMedium!
                           .copyWith(fontSize: 12.sp),
                     ),
                     SizedBox(
@@ -536,7 +563,7 @@ class _HomePageState extends State<HomePage> {
             textAlign: TextAlign.center,
             style: Theme.of(context)
                 .textTheme
-                .headline1!
+                .displayLarge!
                 .copyWith(fontSize: 16.sp),
           ),
         ],
@@ -573,7 +600,8 @@ class _notificationsSelectorState extends State<notificationsSelector> {
     // note thinks this field is a String evn though saved and updated as bool in Firestore
     bool notifications = true;
     print(docSnapshot.data()!['dailyNotifications']);
-    if (docSnapshot.exists && docSnapshot.data()!['dailyNotifications'] != null) {
+    if (docSnapshot.exists &&
+        docSnapshot.data()!['dailyNotifications'] != null) {
       print('daily notifications in firestore');
       print(docSnapshot.get('dailyNotifications'));
       notifications = docSnapshot.get('dailyNotifications');
@@ -610,7 +638,7 @@ class _notificationsSelectorState extends State<notificationsSelector> {
             onChanged: (value) {
               setState(() {
                 _notifications = NotificationsOptions.daily;
-                 saveDailyNotificationsPref(true);
+                saveDailyNotificationsPref(true);
 
                 // adjust notification preferences in Firestore
                 FirebaseFirestore.instance
@@ -635,7 +663,7 @@ class _notificationsSelectorState extends State<notificationsSelector> {
                     .set(
                         {'dailyNotifications': false}, SetOptions(merge: true));
                 _notifications = NotificationsOptions.weekly;
-                 saveDailyNotificationsPref(false);
+                saveDailyNotificationsPref(false);
               });
             },
           ),
@@ -656,19 +684,21 @@ Widget _showInstructionText(BuildContext context, bool isNotEmpty) {
       SizedBox(
         height: 3.h,
       ),
-      Container(
-        margin: EdgeInsets.all(10),
-        padding: EdgeInsets.all(10),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            border: Border.all(
-                color: AppColours.red, // Set border color
-                width: 3.0),   // Set border width
-            borderRadius: BorderRadius.all(
-                Radius.circular(10.0))// Make rounded corner of border
-        ),
-        child: Text("Please only start adding supplement records once your child has been discharged home from hospital."),
-      )
+      // @imre-patch-8: remove this text-box
+      // Container(
+      //   margin: const EdgeInsets.all(10),
+      //   padding: const EdgeInsets.all(10),
+      //   alignment: Alignment.center,
+      //   decoration: BoxDecoration(
+      //       border: Border.all(
+      //           color: AppColours.red, // Set border color
+      //           width: 3.0), // Set border width
+      //       borderRadius: const BorderRadius.all(
+      //           Radius.circular(10.0)) // Make rounded corner of border
+      //       ),
+      //   child: const Text(
+      //       "Please only start adding supplement records once your child has been discharged home from hospital."),
+      // )
     ]);
   } else {
     return Container();

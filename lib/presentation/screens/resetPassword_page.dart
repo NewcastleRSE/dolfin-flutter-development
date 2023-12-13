@@ -75,71 +75,71 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           if (state is! AuthenticationSuccessState) {
             return SafeArea(
                 child: SingleChildScrollView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  child: Padding(
-                    padding:
+              physics: const NeverScrollableScrollPhysics(),
+              child: Padding(
+                padding:
                     const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
-                    child: Form(
-                      key: _formKey,
-                      child: BounceInDown(
-                        duration: const Duration(milliseconds: 1500),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Please provide your email and you will be sent a link to reset your password.',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1
-                                  ?.copyWith(
+                child: Form(
+                  key: _formKey,
+                  child: BounceInDown(
+                    duration: const Duration(milliseconds: 1500),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Please provide your email and you will be sent a link to reset your password.',
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(
                                   fontSize: 12.sp,
                                   letterSpacing: 2,
                                   fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            MyTextfield(
-                              hint: 'Email Address',
-                              icon: Icons.email,
-                              keyboardtype: TextInputType.emailAddress,
-                              textCapitalization: TextCapitalization.none,
-                              validator: (value) {
-                                return !Validators.isValidEmail(value!)
-                                    ? 'Enter a valid email'
-                                    : null;
-                              },
-                              textEditingController: _emailcontroller,
-                            ),
-                            SizedBox(
-                              height: 4.h,
-                            ),
-                            MyButton(
-                              color: AppColours.light_blue,
-                              width: 80.w,
-                              title: 'Reset password',
-                              func: () {
-                                if (connectivitycubit.state
-                                is ConnectivityOnlineState) {
-                                  resetPassword(context, authcubit);
-                                } else {
-                                  MySnackBar.error(
-                                      message:
-                                      'Please Check Your Internet Connection',
-                                      color: Colors.red,
-                                      context: context);
-                                }
-                              },
-                            ),
-                            SizedBox(
-                              height: 2.h,
-                            ),
-                          ],
                         ),
-                      ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        MyTextfield(
+                          hint: 'Email Address',
+                          icon: Icons.email,
+                          keyboardtype: TextInputType.emailAddress,
+                          textCapitalization: TextCapitalization.none,
+                          validator: (value) {
+                            return !Validators.isValidEmail(value!)
+                                ? 'Enter a valid email'
+                                : null;
+                          },
+                          textEditingController: _emailcontroller,
+                        ),
+                        SizedBox(
+                          height: 4.h,
+                        ),
+                        MyButton(
+                          color: AppColours.light_blue,
+                          width: 80.w,
+                          title: 'Reset password',
+                          func: () {
+                            if (connectivitycubit.state
+                                is ConnectivityOnlineState) {
+                              resetPassword(context, authcubit);
+                            } else {
+                              MySnackBar.error(
+                                  message:
+                                      'Please Check Your Internet Connection',
+                                  color: Colors.red,
+                                  context: context);
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                      ],
                     ),
                   ),
-                ));
+                ),
+              ),
+            ));
           }
           return Container();
         },
@@ -155,13 +155,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     );
   }
 
-
   Future<void> resetPassword(context, AuthenticationCubit cubit) async {
     if (_formKey.currentState!.validate()) {
       print('try to reset');
       try {
-        await FirebaseAuth.instance.sendPasswordResetEmail(
-            email: _emailcontroller.text);
+        await FirebaseAuth.instance
+            .sendPasswordResetEmail(email: _emailcontroller.text);
         MySnackBar.error(
             message: 'Look out for a reset password email in your inbox.',
             color: Colors.green,
@@ -169,19 +168,16 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           MySnackBar.error(
-              message: 'Please check you have entered the correct email address.',
+              message:
+                  'Please check you have entered the correct email address.',
               color: Colors.red,
               context: context);
         }
-      }  catch (e) {
-        print (e);
+      } catch (e) {
+        print(e);
         MySnackBar.error(
-            message: e.toString(),
-            color: Colors.red,
-            context: context);
-
+            message: e.toString(), color: Colors.red, context: context);
       }
     }
   }
-
 }

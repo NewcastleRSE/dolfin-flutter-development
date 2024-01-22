@@ -46,7 +46,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
         : TextEditingController(text: '');
     _recordDate = isEditMode ? widget.record!.date : DateTime.now();
     _childStudyID = isEditMode ? widget.record!.studyID : widget.child!.studyID;
-    _dropdownvalue = isEditMode ? widget.record!.numScoops : "1";
+    _dropdownvalue = isEditMode ? widget.record!.numScoops : "0";
   }
 
   @override

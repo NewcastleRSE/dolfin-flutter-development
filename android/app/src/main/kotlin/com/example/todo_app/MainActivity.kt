@@ -1,4 +1,4 @@
-package uk.ac.ncl.rse.dolfin
+package uk.ac.ncl.rse.dolfin.admin
 
 import io.flutter.embedding.android.FlutterActivity
 

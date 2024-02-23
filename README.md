@@ -105,8 +105,8 @@ If you skip this step, you will have a hard time debugging what is going on with
 
 ### Android
 
-1. Download the relevant `google-services.json` file [from Firebase](https://console.firebase.google.com/project/dolfin-ec4ba/settings/general/android:uk.ac.ncl.rse.dolfin).    
-   To confirm you have the correct file, you will see `uk.ac.ncl.rse.dolfin` under `package-name`.
+1. Download the relevant `google-services.json` file [from Firebase](https://console.firebase.google.com/project/dolfin-ec4ba/settings/general/android:uk.ac.ncl.rse.dolfin.admin).    
+   To confirm you have the correct file, you will see `uk.ac.ncl.rse.dolfin.admin` under `package-name`.
 2. Copy the file to `dolfin-flutter/android/app/` directory
 
 Run the Android App for the first time

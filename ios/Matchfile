@@ -6,7 +6,7 @@ team_id("J3676MPZ85")
 
 type("development") # The default type, can be: appstore, adhoc, enterprise or development
 
-app_identifier(["uk.ac.ncl.rse.dolfin"])
+app_identifier(["uk.ac.ncl.rse.dolfin.admin"])
 username("mark.turner@newcastle.ac.uk") # Your Apple Developer Portal username
 
 # For all available options run `fastlane match --help`

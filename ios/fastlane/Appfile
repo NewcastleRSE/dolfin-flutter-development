@@ -1,4 +1,4 @@
-app_identifier("uk.ac.ncl.rse.dolfin") # The bundle identifier of your app
+app_identifier("uk.ac.ncl.rse.dolfin.admin") # The bundle identifier of your app
 apple_id("mark.turner@newcastle.ac.uk") # Your Apple email address
 
 itc_team_id("331005") # App Store Connect Team ID

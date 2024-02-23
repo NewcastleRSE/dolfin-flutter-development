@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="uk.ac.ncl.rse.dolfin">
+    package="uk.ac.ncl.rse.dolfin.admin">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!-- Required to fetch data from the internet. -->

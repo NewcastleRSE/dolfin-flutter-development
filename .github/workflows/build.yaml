@@ -1,70 +1,71 @@
-on:
-  push:
-    branches:
-      - main
-      # - build-deploy
-
-name: Build and Release Apps
-jobs:
-  build:
-    name: Build Apps
-    runs-on: ubuntu-latest
-    # runs-on: macos-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v1
-      - name: Setup Java 15
-        uses: actions/setup-java@v2
-        with:
-          java-version: '15'
-          distribution: 'adopt'
-      - name: Setup Ruby 2.6
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.6
-          bundler-cache: true
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-      - name: Install Ruby Dependencies
-        working-directory: ./android
-        run: bundle install
-      - name: Create Secrets
-        run: |
-          mkdir -p keys/android
-          echo "$GOOGLE_SERVICES" >> android/app/google-services.json
-          echo "$PLAY_STORE_CREDENTIALS" >> keys/android/play-store-credentials.json
-          echo "$KEY_PROPERTIES" >> android/key.properties
-          echo "NPEU_URL=$NPEU_URL" >> .env
-          echo "CLIENT_ID=$CLIENT_ID" >> .env
-          echo "SCOPE=$SCOPE" >> .env
-          echo "GRANT_TYPE=$GRANT_TYPE" >> .env
-          echo "CLIENT_SECRET=$CLIENT_SECRET" >> .env
-        shell: bash
-        env:
-          GOOGLE_SERVICES: ${{secrets.GOOGLE_SERVICES}}
-          PLAY_STORE_CREDENTIALS: ${{secrets.PLAY_STORE_CREDENTIALS}}
-          KEY_PROPERTIES: ${{secrets.KEY_PROPERTIES}}
-          NPEU_URL: ${{secrets.NPEU_URL}}
-          CLIENT_ID: ${{secrets.CLIENT_ID}}
-          SCOPE: ${{secrets.SCOPE}}
-          GRANT_TYPE: ${{secrets.GRANT_TYPE}}
-          CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
-      - name: Decode Keystore
-        id: decode_keystore
-        uses: timheuer/base64-to-file@v1
-        with:
-          fileDir: 'keys/android/'
-          fileName: 'upload-keystore.jks'
-          encodedString: ${{ secrets.KEYSTORE }}
-      - name: Move keystore
-        working-directory: ./keys/android
-        run: |
-          ls
-          # mv ${{ steps.decode_keystore.outputs.filePath }} .
-      - name: Fastlane Build & Release
-        working-directory: ./android
-        run: bundle exec fastlane alpha
-
-
+# TODO: Add this back -- Ignored these for now, so it won't run after every push...
+#on:
+#  push:
+#    branches:
+#      - main
+#      # - build-deploy
+#
+#name: Build and Release Apps
+#jobs:
+#  build:
+#    name: Build Apps
+#    runs-on: ubuntu-latest
+#    # runs-on: macos-latest
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v1
+#      - name: Setup Java 15
+#        uses: actions/setup-java@v2
+#        with:
+#          java-version: '15'
+#          distribution: 'adopt'
+#      - name: Setup Ruby 2.6
+#        uses: ruby/setup-ruby@v1
+#        with:
+#          ruby-version: 2.6
+#          bundler-cache: true
+#      - name: Setup Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          channel: 'stable'
+#      - name: Install Ruby Dependencies
+#        working-directory: ./android
+#        run: bundle install
+#      - name: Create Secrets
+#        run: |
+#          mkdir -p keys/android
+#          echo "$GOOGLE_SERVICES" >> android/app/google-services.json
+#          echo "$PLAY_STORE_CREDENTIALS" >> keys/android/play-store-credentials.json
+#          echo "$KEY_PROPERTIES" >> android/key.properties
+#          echo "NPEU_URL=$NPEU_URL" >> .env
+#          echo "CLIENT_ID=$CLIENT_ID" >> .env
+#          echo "SCOPE=$SCOPE" >> .env
+#          echo "GRANT_TYPE=$GRANT_TYPE" >> .env
+#          echo "CLIENT_SECRET=$CLIENT_SECRET" >> .env
+#        shell: bash
+#        env:
+#          GOOGLE_SERVICES: ${{secrets.GOOGLE_SERVICES}}
+#          PLAY_STORE_CREDENTIALS: ${{secrets.PLAY_STORE_CREDENTIALS}}
+#          KEY_PROPERTIES: ${{secrets.KEY_PROPERTIES}}
+#          NPEU_URL: ${{secrets.NPEU_URL}}
+#          CLIENT_ID: ${{secrets.CLIENT_ID}}
+#          SCOPE: ${{secrets.SCOPE}}
+#          GRANT_TYPE: ${{secrets.GRANT_TYPE}}
+#          CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
+#      - name: Decode Keystore
+#        id: decode_keystore
+#        uses: timheuer/base64-to-file@v1
+#        with:
+#          fileDir: 'keys/android/'
+#          fileName: 'upload-keystore.jks'
+#          encodedString: ${{ secrets.KEYSTORE }}
+#      - name: Move keystore
+#        working-directory: ./keys/android
+#        run: |
+#          ls
+#          # mv ${{ steps.decode_keystore.outputs.filePath }} .
+#      - name: Fastlane Build & Release
+#        working-directory: ./android
+#        run: bundle exec fastlane alpha
+#
+#

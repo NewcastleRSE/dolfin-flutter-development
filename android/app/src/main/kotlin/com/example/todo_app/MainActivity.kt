@@ -1,4 +1,4 @@
-package uk.ac.ncl.dolfin_dev
+package uk.ac.ncl.rse.dolfin
 
 import io.flutter.embedding.android.FlutterActivity
 

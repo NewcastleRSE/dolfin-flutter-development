@@ -17,17 +17,17 @@ In babies who are born very early or who suffer poor blood supply or lack of oxy
 ### The NPEU team have access to the Firebase database using a service account with a private key. This expires around the beginning of June annually. NPEU will give us  a new public key and we upload this to the service account through the Google console. 
 
 ### Project Team
-**PI(s):** [Jeremy Parr](https://research.ncl.ac.uk/neurodisability/theteam/jeremyparr/)  
-**RSE(s):** 
+**PI:** [Jeremy Parr](https://research.ncl.ac.uk/neurodisability/theteam/jeremyparr/)  
+**RSEs:** 
+* [Imre Draskovits](https://rse.ncldata.dev/team/imre-draskovits) [(@notimre)](https://github.com/notimre)
 * [Mike Simpson](https://rse.ncldata.dev/team/mike-simpson) [(@mdsimpson42)](https://github.com/mdsimpson42) 
 * [Kate Court](https://rse.ncldata.dev/team/kate-court) [(@KateCourt)](https://github.com/KateCourt) 
 * [Mark Turner](https://rse.ncldata.dev/team/mark-turner) [(@markdturner)](https://github.com/markdturner)
-* [Imre Draskovits](https://rse.ncldata.dev/team/imre-draskovits) [(@notimre)](https://github.com/notimre)
 
 ## Project Structure
 
 - [doflin-flutter](https://github.com/NewcastleRSE/dolfin-flutter/): This repository (left side of the diagram)
-- [dolfin-development](https://github.com/NewcastleRSE/dolfin-flutter-development) [DEPRECATED]: This is now included in this repository (right side of the diagram)
+- [dolfin-development](https://github.com/NewcastleRSE/dolfin-flutter-development): This is the development 'DOLFIN Admin App' for NPEU team (right side of the diagram)
 - [dolfin-firebase](https://github.com/NewcastleRSE/dolfin-firebase): Includes Firebase Cloud Funcitons, Push Notifications and Database (top of the diagram)
 
 ## Project Diagram
@@ -45,6 +45,10 @@ The application uses [Flutter](https://flutter.dev/), which is written in [Dart]
 1. Install the following to get started on the project:
 
    * Flutter Framework (this also installs Dart for you, no need to do it explicitly): [Flutter MacOS](https://docs.flutter.dev/get-started/install/macos)
+     * **IMPORTANT NOTES POST INSTALL:**
+     * Must be downgraded to: **Flutter version 3.16.9 channel stable** 
+     * **Do NOT run** `$ dart fix`
+     * **Do NOT adjust** `pubspec.yaml` file! Unless you are keen on predicate logic
    * Xcode available on the [Mac App Store](https://apps.apple.com/us/app/xcode/id497799835?mt=12)
    * Android Studio available from the [Jetbrains Toolbox App](https://www.jetbrains.com/toolbox-app/)
 
@@ -150,18 +154,24 @@ Run the iOS App for the first time
 5. Manually select the iOS Simulator
 6. Wait until it builds
 
-### Building the iOS app to the App Store
-
+### Building the iOS app to the App Store [depricated]
 ```
-fastlane match development
-fastlane match appstore
-pod install
-bundle install
 flutter build ipa
-bundle exec fastlane beta
+```
+Following a successful build, ask Imre to sort the rest out.
+
+### Building the iOS app to the App Store [depricated]
+
+```
+# fastlane match development
+# fastlane match appstore
+# pod install
+# bundle install
+flutter build ipa
+# bundle exec fastlane beta
 ```
 
-### Regenerating the Icons (not sure if needed)
+### Regenerating the Icons (not needed unless there is an error)
 The base icon image is specified in `pubspec.yaml` and the relevant dependencies should be installed automatically.
 To regenerate the icons (for Android and iOS), edit the master image file and then use the following commands:
 

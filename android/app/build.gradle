@@ -52,7 +52,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "uk.ac.ncl.dolfin_dev"
+        applicationId "uk.ac.ncl.rse.dolfin"
         minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
@@ -74,7 +74,7 @@ android {
    }
    buildTypes {
        release {
-           signingConfig signingConfigs.debug
+           signingConfig signingConfigs.release
        }
    }
 }

@@ -982,7 +982,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 9bc34a98d2e0237e1b121915120d4d48ddcf301e
   FirebaseMessagingInterop: e4ff7139aad39ab9149ae6462828ed3b8cdaa86c
   FirebaseSharedSwift: 62e248642c0582324d0390706cadd314687c116b
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   google_sign_in_ios: 8115e3fbe097e6509beb819ed602d47369d9011f
   GoogleDataTransport: 57c22343ab29bc686febbf7cbb13bad167c2d8fe
@@ -1005,4 +1005,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 13f2b9dbc41dd40e6c14b9c7ff7cded0a18a47b5
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.2

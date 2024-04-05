@@ -26,9 +26,10 @@ In babies who are born very early or who suffer poor blood supply or lack of oxy
 
 ## Project Structure
 
-- [doflin-flutter](https://github.com/NewcastleRSE/dolfin-flutter/): This repository (left side of the diagram)
-- [dolfin-development](https://github.com/NewcastleRSE/dolfin-flutter-development): This is the development 'DOLFIN Admin App' for NPEU team (right side of the diagram)
-- [dolfin-firebase](https://github.com/NewcastleRSE/dolfin-firebase): Includes Firebase Cloud Funcitons, Push Notifications and Database (top of the diagram)
+- [doflin-flutter](https://github.com/NewcastleRSE/dolfin-flutter/): Production repository (left side of the diagram)
+- [dolfin-development](https://github.com/NewcastleRSE/dolfin-flutter-development): This repository. DOLFIN Admin app 'dev' branch, created for NPEU team (right side of the diagram)
+- [dolfin-firebase](https://github.com/NewcastleRSE/dolfin-firebase): Includes Firebase Cloud Funcitons, Push Notifications and Database (top left of the diagram)
+- [dolfin-firebase](https://github.com/NewcastleRSE/dolfin-firebase-development): Development Firebase Cloud Funcitons, Push Notifications and Database (top right of the diagram)
 
 ## Project Diagram
 
@@ -154,7 +155,7 @@ Run the iOS App for the first time
 5. Manually select the iOS Simulator
 6. Wait until it builds
 
-### Building the iOS app to the App Store [depricated]
+### Building the iOS app to the App Store
 ```
 flutter build ipa
 ```
@@ -185,7 +186,8 @@ flutter pub run flutter_launcher_icons:main
 - [x] Initial Development  
 - [x] Minimum viable product  
 - [x] Feature-Complete
-- [x] Late 2023 Update
+- [x] Late 2023 Update by Imre
+- [x] Early 2024 Update by Imre
 
 ## Acknowledgements
 This work was funded by a grant from the UK Research Councils, EPSRC grant ref. EP/L012345/1, “Example project title, please update”.

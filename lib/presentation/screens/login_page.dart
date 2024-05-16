@@ -154,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                             } else {
                               MySnackBar.error(
                                   message:
-                                      'Please Check Your Internet Conection',
+                                      'Please Check Your Internet Connection',
                                   color: Colors.red,
                                   context: context);
                             }

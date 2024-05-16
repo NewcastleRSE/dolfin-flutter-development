@@ -393,7 +393,9 @@ if  (data.data["startOfWeek"] >= 0) {
                               },
                             ));
                           }
-} 
+} else {
+  return _norecordswidget();
+}
                         },
                       ),
                     ],
@@ -455,6 +457,30 @@ if  (data.data["startOfWeek"] >= 0) {
           SizedBox(height: 5.h),
           Text(
             'You currently have no records for this child. Add a record to continue.',
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .displayLarge!
+                .copyWith(fontSize: 16.sp),
+          ),
+        ],
+      ),
+    );
+  }
+
+    Widget _norecordswidget() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            MyAssets.clipboard,
+            height: 30.h,
+          ),
+          SizedBox(height: 5.h),
+          Text(
+            'You currently have no records due.',
             textAlign: TextAlign.center,
             style: Theme.of(context)
                 .textTheme

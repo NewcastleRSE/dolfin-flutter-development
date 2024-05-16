@@ -231,6 +231,12 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                           }
 
                           final data = snapshot.data!;
+// if startOfWeek is negative this indicates that the user is in the first week of weekly forms so should not see daily forms or weekly forms
+// if showing forms
+if  (data.data["startOfWeek"] >= 0) {
+
+
+
                           bool weekly = data.data["showWeeklyForms"];
                           //weekly = true;
 
@@ -288,6 +294,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                           .copyWith(fontSize: 18.sp),
                                     ),
                             ]);
+                          
                           } else {
                             return Expanded(
                                 child: StreamBuilder(
@@ -386,6 +393,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                               },
                             ));
                           }
+} 
                         },
                       ),
                     ],

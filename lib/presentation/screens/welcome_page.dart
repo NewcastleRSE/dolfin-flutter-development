@@ -118,7 +118,7 @@ class WelcomePage extends StatelessWidget {
           cubit.signinanonym();
         } else {
           MySnackBar.error(
-              message: 'Please Check Your Internet Conection',
+              message: 'Please Check Your Internet Connection',
               color: Colors.red,
               context: context);
         }

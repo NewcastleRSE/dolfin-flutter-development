@@ -7,6 +7,7 @@ class ChildModel {
   final String parentID;
   final String dob;
   final String parent_email;
+  final bool active;
 
   ChildModel({
     required this.id,
@@ -16,7 +17,8 @@ class ChildModel {
     required this.dischargeDate,
     required this.EDD,
     required this.parentID,
-    required this.parent_email
+    required this.parent_email,
+    required this.active,
   });
 
   factory ChildModel.fromjson(Map<String, dynamic> json, String id) {
@@ -28,7 +30,8 @@ class ChildModel {
         dischargeDate: json['dischargeDate'],
         EDD: json['edd'],
         parentID: json['parent_id'],
-        parent_email: json['parent_email']
+        parent_email: json['parent_email'],
+        active: json['active']
     );
 
   }
@@ -41,7 +44,8 @@ class ChildModel {
       'dischargeDate': dischargeDate,
       'EDD': EDD,
       'parent_id': parentID,
-      'parent_email': parent_email
+      'parent_email': parent_email,
+      'active': active
     };
   }
 }

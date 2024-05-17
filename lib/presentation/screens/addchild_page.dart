@@ -233,6 +233,7 @@ print(details);
                   studyID: _trialIDcontroller.text,
                   parentID: FirebaseAuth.instance.currentUser!.uid,
                   id: '',
+                  active: true,
                   parent_email: parentEmail.toString());
 
               isEditMode
@@ -255,6 +256,7 @@ print(details);
                                       parentID: FirebaseAuth
                                           .instance.currentUser!.uid,
                                       id: widget.child!.id,
+                                       active: true,
                                       parent_email: parentEmail.toString());
                                   Navigator.pushNamed(context, childinfopage,
                                       arguments: updatedChild);

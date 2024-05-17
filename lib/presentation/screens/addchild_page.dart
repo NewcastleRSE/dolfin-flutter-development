@@ -222,11 +222,14 @@ class _AddChildPageState extends State<AddChildPage> {
               var details = await getChildDetails(_trialIDcontroller.text);
 
               String? parentEmail = FirebaseAuth.instance.currentUser!.email;
+              print('HERE---------------');
+print(details);
 
               ChildModel child = ChildModel(
                   dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
                   name: _namecontroller.text,
-                  dischargeDate: details,
+                  dischargeDate: details['discharge'],
+                  EDD: details['edd'],
                   studyID: _trialIDcontroller.text,
                   parentID: FirebaseAuth.instance.currentUser!.uid,
                   id: '',
@@ -246,7 +249,8 @@ class _AddChildPageState extends State<AddChildPage> {
                                       dob: DateFormat('yyyy-MM-dd')
                                           .format(dateOfBirth),
                                       name: _namecontroller.text,
-                                      dischargeDate: details,
+                                      dischargeDate: details['discharge'],
+                                      EDD: details['edd'],
                                       studyID: _trialIDcontroller.text,
                                       parentID: FirebaseAuth
                                           .instance.currentUser!.uid,
@@ -488,7 +492,12 @@ class _AddChildPageState extends State<AddChildPage> {
       final response = await http
           .get(childDatesUrl, headers: {'Authorization': 'Bearer $token'});
       if (response.statusCode == 200) {
+        
         var details = jsonDecode(response.body);
+        var childDetails = {
+          "discharge": '',
+          "edd": ''
+        };
         // if discharge date is null then add null to firestore
         if (details['DISCHARGE_DATE'] == null) {
           return null;
@@ -500,8 +509,24 @@ class _AddChildPageState extends State<AddChildPage> {
           var dischargeStr =
               DateFormat('yyyy-MM-dd').format(dischargeTimestamp);
 
-          return dischargeStr;
+          childDetails['discharge'] = dischargeStr;
+          
         }
+
+             // do same for EDD
+        if (details['EDD'] == null) {
+          return null;
+        } else {
+          // otherwise get date formatted correctly
+          var eddTimestamp = DateTime.parse(details['EDD']);
+
+          // convert timestamp to strings for Firestore
+          var eddStr =
+              DateFormat('yyyy-MM-dd').format(eddTimestamp);
+
+          childDetails['edd'] = eddStr;
+        }
+        return childDetails;
       }
     } catch (err) {
       print(err);

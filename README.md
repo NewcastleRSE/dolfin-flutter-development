@@ -53,6 +53,8 @@ The application uses [Flutter](https://flutter.dev/), which is written in [Dart]
    * Xcode available on the [Mac App Store](https://apps.apple.com/us/app/xcode/id497799835?mt=12)
    * Android Studio available from the [Jetbrains Toolbox App](https://www.jetbrains.com/toolbox-app/)
 
+   If you have an instalation of Flutter already, and installed this using homebrew, you may not be able to downgrade Flutter. If this is the case, remove your Flutter installation and install only the required version using these instructions for [installation](https://docs.flutter.dev/get-started/install/macos/mobile-ios?tab=download#add-flutter-to-your-path) and selecting the correct installation from [here](https://flutter-ko.dev/development/tools/sdk/releases?tab=macos).
+
 2. Determine whether you need Ruby (version manager) on a Mac
 
    Developing on Mac requires you to install additional Ruby versions, which is not interfering with the system built-in one.  

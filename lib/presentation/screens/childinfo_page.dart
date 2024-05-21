@@ -231,6 +231,13 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                           }
 
                           final data = snapshot.data!;
+                          print(data.data);
+// if startOfWeek is negative this indicates that the user is in the first week of weekly forms so should not see daily forms or weekly forms
+// if showing forms
+if  (data.data["startOfWeek"] >= 0) {
+
+
+
                           bool weekly = data.data["showWeeklyForms"];
                           //weekly = true;
 
@@ -288,6 +295,7 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                                           .copyWith(fontSize: 18.sp),
                                     ),
                             ]);
+                          
                           } else {
                             return Expanded(
                                 child: StreamBuilder(
@@ -386,6 +394,9 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
                               },
                             ));
                           }
+} else {
+  return _norecordswidget();
+}
                         },
                       ),
                     ],
@@ -447,6 +458,30 @@ class _ChildInfoPageState extends State<ChildInfoPage> {
           SizedBox(height: 5.h),
           Text(
             'You currently have no records for this child. Add a record to continue.',
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .displayLarge!
+                .copyWith(fontSize: 16.sp),
+          ),
+        ],
+      ),
+    );
+  }
+
+    Widget _norecordswidget() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            MyAssets.clipboard,
+            height: 30.h,
+          ),
+          SizedBox(height: 5.h),
+          Text(
+            'You currently have no records due.',
             textAlign: TextAlign.center,
             style: Theme.of(context)
                 .textTheme

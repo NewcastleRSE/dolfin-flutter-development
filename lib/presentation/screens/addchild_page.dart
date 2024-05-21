@@ -222,14 +222,28 @@ class _AddChildPageState extends State<AddChildPage> {
               var details = await getChildDetails(_trialIDcontroller.text);
 
               String? parentEmail = FirebaseAuth.instance.currentUser!.email;
+             
+// print(details);
+
+// if (details['discharge'] == '') {
+//   // data is missing from db at the moment
+//   details['discharge'] = null;
+// } 
+// if (details['edd'] == '') {
+//   // data is missing from db at the moment
+//   details['edd'] = null;
+// } 
+print(details);
 
               ChildModel child = ChildModel(
                   dob: DateFormat('yyyy-MM-dd').format(dateOfBirth),
                   name: _namecontroller.text,
-                  dischargeDate: details,
+                  dischargeDate: details['discharge'],
+                  EDD: details['edd'],
                   studyID: _trialIDcontroller.text,
                   parentID: FirebaseAuth.instance.currentUser!.uid,
                   id: '',
+                  active: true,
                   parent_email: parentEmail.toString());
 
               isEditMode
@@ -246,11 +260,13 @@ class _AddChildPageState extends State<AddChildPage> {
                                       dob: DateFormat('yyyy-MM-dd')
                                           .format(dateOfBirth),
                                       name: _namecontroller.text,
-                                      dischargeDate: details,
+                                      dischargeDate: details['discharge'],
+                                      EDD: details['edd'],
                                       studyID: _trialIDcontroller.text,
                                       parentID: FirebaseAuth
                                           .instance.currentUser!.uid,
                                       id: widget.child!.id,
+                                       active: true,
                                       parent_email: parentEmail.toString());
                                   Navigator.pushNamed(context, childinfopage,
                                       arguments: updatedChild);
@@ -488,11 +504,15 @@ class _AddChildPageState extends State<AddChildPage> {
       final response = await http
           .get(childDatesUrl, headers: {'Authorization': 'Bearer $token'});
       if (response.statusCode == 200) {
+        
         var details = jsonDecode(response.body);
+        var childDetails = {
+          "discharge": '',
+          "edd": ''
+        };
         // if discharge date is null then add null to firestore
-        if (details['DISCHARGE_DATE'] == null) {
-          return null;
-        } else {
+        if (details['DISCHARGE_DATE'] != null) {
+          
           // otherwise get date formatted correctly
           var dischargeTimestamp = DateTime.parse(details['DISCHARGE_DATE']);
 
@@ -500,8 +520,23 @@ class _AddChildPageState extends State<AddChildPage> {
           var dischargeStr =
               DateFormat('yyyy-MM-dd').format(dischargeTimestamp);
 
-          return dischargeStr;
+          childDetails['discharge'] = dischargeStr;
+          
         }
+
+             // do same for EDD
+        if (details['EDD'] != null) {
+         
+          // otherwise get date formatted correctly
+          var eddTimestamp = DateTime.parse(details['EDD']);
+
+          // convert timestamp to strings for Firestore
+          var eddStr =
+              DateFormat('yyyy-MM-dd').format(eddTimestamp);
+
+          childDetails['edd'] = eddStr;
+        }
+        return childDetails;
       }
     } catch (err) {
       print(err);

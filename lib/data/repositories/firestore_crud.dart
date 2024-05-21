@@ -19,7 +19,7 @@ class FireStoreCrud {
 
   setTimeToEarly(time) {
     // make time midday to avoid problem of timezones
-    return DateTime(time.year, time.month, time.day, 00, 15, 00);
+    return DateTime(time.year, time.month, time.day, 00, 05, 00);
   }
 
   Future<void> addChild({required ChildModel child}) async {

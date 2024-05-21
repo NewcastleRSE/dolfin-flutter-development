@@ -2,8 +2,8 @@ class ChildModel {
   final String id;
   final String studyID;
   final String name;
-  final dischargeDate;
-  final EDD;
+  final String? dischargeDate;
+  final String? EDD;
   final String parentID;
   final String dob;
   final String parent_email;

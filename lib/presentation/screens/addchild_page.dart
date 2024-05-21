@@ -222,7 +222,17 @@ class _AddChildPageState extends State<AddChildPage> {
               var details = await getChildDetails(_trialIDcontroller.text);
 
               String? parentEmail = FirebaseAuth.instance.currentUser!.email;
-              print('HERE---------------');
+             
+// print(details);
+
+// if (details['discharge'] == '') {
+//   // data is missing from db at the moment
+//   details['discharge'] = null;
+// } 
+// if (details['edd'] == '') {
+//   // data is missing from db at the moment
+//   details['edd'] = null;
+// } 
 print(details);
 
               ChildModel child = ChildModel(
@@ -501,9 +511,8 @@ print(details);
           "edd": ''
         };
         // if discharge date is null then add null to firestore
-        if (details['DISCHARGE_DATE'] == null) {
-          return null;
-        } else {
+        if (details['DISCHARGE_DATE'] != null) {
+          
           // otherwise get date formatted correctly
           var dischargeTimestamp = DateTime.parse(details['DISCHARGE_DATE']);
 
@@ -516,9 +525,8 @@ print(details);
         }
 
              // do same for EDD
-        if (details['EDD'] == null) {
-          return null;
-        } else {
+        if (details['EDD'] != null) {
+         
           // otherwise get date formatted correctly
           var eddTimestamp = DateTime.parse(details['EDD']);
 

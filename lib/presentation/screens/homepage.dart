@@ -153,13 +153,19 @@ class _HomePageState extends State<HomePage> {
 
     childrenSnapshot.listen((children) {
       for (final child in children) {
-        DateTime dischargeDate = DateTime.parse(child.dischargeDate!);
+        try {
+          DateTime dischargeDate = DateTime.parse(child.dischargeDate!);
 
         // if it has been over 3 months since hospital discharge show option to turn off daily reminders
         if (daysBetween(dischargeDate, today) >= 84) {
           past3 = true;
           break;
         }
+        } catch (err) {
+          print('error parsing discharge date');
+          print(err);
+        }
+        
       }
     });
     return past3;

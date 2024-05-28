@@ -332,6 +332,16 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                     setState(() {
                       _problem = value;
                       _moreInfoVisible = false;
+// uncheck all the boxes
+                      reason0 = false;
+                      reason1 = false;
+                      reason2 = false;
+                      reason3 = false;
+                      reason4 = false;
+                      reason5 = false;
+// remove other box and text
+_otherReasonVisible = false;
+_reasoncontroller.clear();
                     });
                   },
                 ),
@@ -459,6 +469,8 @@ class _AddWeeklyRecordPageState extends State<AddWeeklyRecordPage> {
                               _otherReasonVisible = true;
                             } else {
                               _otherReasonVisible = false;
+                              // delete text from text box
+                              _reasoncontroller.clear();
                               _reasons
                                   .removeWhere((element) => element == 'Other');
                             }

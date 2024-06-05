@@ -83,7 +83,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
         ? true
         : false;
 
-    _otherReasonVisible = (isEditMode) ? true : false;
+    _otherReasonVisible = isEditMode ?  widget.record!.reasons.contains('Other') : false;
 
     _ranOutVisible = (isEditMode) ? true : false;
 

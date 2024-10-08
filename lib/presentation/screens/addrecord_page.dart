@@ -286,6 +286,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                         onChanged: (bool? value) {
                           setState(() {
                             reason1 = value!;
+                            print(value);
                             if (value == true) {
                               _reasons.add('I have run out');
                               _ranOutVisible = true;
@@ -396,7 +397,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                   ),
                 ),
                 Visibility(
-                  visible: _ranOutVisible,
+                  visible: reason1 == true,
                   child: Text(
                     "If you have run out of supplement, please contact the research team at dolfin@npeu.ox.ac.uk / 01865 617919",
                     style: Theme.of(context)

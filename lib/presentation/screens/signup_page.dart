@@ -269,25 +269,7 @@ class _SignUpPageState extends State<SignUpPage> {
         }
       });
 
-      checkEmail(_emailcontroller.text).then((exists) {
-        if (exists == 1) {
-          cubit.register(
-              fullname: _namecontroller.text,
-              email: _emailcontroller.text,
-              password: _passwordcontroller.text);
-        } else if (exists == 2) {
-          setState(() {
-            isSubmitting = false;
-          });
-          print('parent does not exist in study');
-          MySnackBar.error(
-              message:
-                  "Problem with email, please check you have entered the email you"
-                  " used when you signed up for the study",
-              color: Colors.red,
-              context: context);
-        }
-      });
+
     }
   }
 

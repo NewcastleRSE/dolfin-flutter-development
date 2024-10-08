@@ -500,7 +500,7 @@ _reasoncontroller.clear();
                   ),
                 ),
                 Visibility(
-                  visible: _ranOutVisible,
+                  visible: reason1 == true,
                   child: Text(
                     "If you have run out of supplement, please contact the research team at dolfin@npeu.ox.ac.uk / 01865 617919",
                     style: Theme.of(context)
